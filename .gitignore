@@ -1,11 +1,6 @@
 .sass-cache
 .DS_Store
 _build/
-WebuiCraft.Web/PhotoStore/
-WebuiCraft.Web/imagecache/
-WebuiCraft.Web/assets_dist/
-WebuiCraft.Web/App_Data/Webuicraft.mdf
-WebuiCraft.Web/App_Data/Webuicraft_log.ldf
 
 # Windows image file caches
 Thumbs.db
