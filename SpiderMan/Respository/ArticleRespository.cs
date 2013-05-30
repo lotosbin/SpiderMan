@@ -33,9 +33,5 @@ namespace SpiderMan.Respository {
             }
         }
 
-
-        public override void Update(Task entity) {
-            //// Not necessary for the example
-        }
     }
 }

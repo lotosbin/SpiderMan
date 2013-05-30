@@ -8,9 +8,12 @@ using System.Web;
 namespace SpiderMan.Models {
 
     public class Article : Entity {
-        public string Site { get; set; }
+        public string SourceSite { get; set; }
+        public string SourceLink { get; set; }
+
         public string Title { get; set; }
         public string Content { get; set; }
+        public DateTime PostDate { get; set; }
 
         public int ThumbUps { get; set; }
         public int ThumbDowns { get; set; }
@@ -18,8 +21,5 @@ namespace SpiderMan.Models {
         public int Amount { get; set; }
 
         public List<Comment> Comments { get; set; }
-
-        public DateTime PostDate { get; set; }
-        public string SourceLink { get; set; }
     }
 }

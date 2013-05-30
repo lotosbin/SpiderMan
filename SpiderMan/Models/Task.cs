@@ -11,22 +11,15 @@ namespace SpiderMan.Models {
 
         public int QueueId { get; set; }
 
-        [BsonRepresentation(BsonType.String)]
-        public TaskType Type { get; set; }
+        public TaskModel Model { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public TaskStatus Status { get; set; }
 
-        public string Url { get; set; }
-
-        public int startIndex { get; set; }
-        public int stopIndex { get; set; }
-
-        public string Command { get; set; }
-        public bool ArraysUnion { get; set; }
-
         [BsonDateTimeOptions(DateOnly = true)]
         public DateTime ComplateDate { get; set; }
+
+        public string handlerAgent { get; set; }
         
     }
 }

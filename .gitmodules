@@ -1,0 +1,6 @@
+[submodule "SpiderMan/front_net"]
+	path = SpiderMan/front_net
+	url = git@github.com:zicjin/front_net.git
+[submodule "sharp_net"]
+	path = sharp_net
+	url = git@github.com:zicjin/sharp_net.git
