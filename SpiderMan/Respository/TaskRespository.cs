@@ -15,7 +15,7 @@ namespace SpiderMan.Respository {
                 .SetSortOrder(SortBy<Task>.Descending(g => g.QueueId))
                 .SetLimit(limit)
                 .SetSkip(skip)
-                .SetFields(Fields<Task>.Include(g => g.QueueId, g => g.Status, g => g.Url, g => g.Type));
+                .SetFields(Fields<Task>.Include(g => g.QueueId, g => g.Status, g => g.Model, g => g.ComplateDate));
             return gamesCursor;
         }
     }

@@ -3,8 +3,8 @@ $front_net_path: "/front_net/";
 
 $baseFontSize:  13px;
 $baseLineHeight:  19px;
-$inputBorderRadius: 0;
 $bodyBackground:  #000;
+$baseFontFamily: 'Segoe UI', 'Microsoft Yahei', Arial, Simsun, sans-serif;
 
 $textColor:  #FFEDDD;
 $linkColor:  #C10000;
@@ -33,84 +33,27 @@ $btnDangerBackgroundHighlight:      darken($dgcolor, 8%);
 @import "../front_net/bootstrap/lib/mixins";
 
 @import "../front_net/sass/com";
-@import "../front_net/bootstrap/lib/reset";
-
-// Grid system and page structure
-@import "../front_net/bootstrap/lib/scaffolding";
-@import "../front_net/bootstrap/lib/grid";
-@import "../front_net/bootstrap/lib/layouts";
-
-// Base CSS
-@import "../front_net/bootstrap/lib/type";
-@import "../front_net/bootstrap/lib/code";
-@import "../front_net/bootstrap/lib/forms";
-@import "../front_net/bootstrap/lib/tables";
-
-// Components: common
-@import "../front_net/bootstrap/lib/sprites";
-@import "../front_net/bootstrap/lib/dropdowns";
-@import "../front_net/bootstrap/lib/wells";
-@import "../front_net/bootstrap/lib/component-animations";
-@import "../front_net/bootstrap/lib/close";
-
-// Components: Buttons & Alerts
-@import "../front_net/bootstrap/lib/buttons";
-@import "../front_net/bootstrap/lib/button-groups";
-@import "../front_net/bootstrap/lib/alerts"; // Note: alerts share common CSS with buttons and thus have styles in buttons
-
-// Components: Nav
-@import "../front_net/bootstrap/lib/navs";
-@import "../front_net/bootstrap/lib/navbar";
-@import "../front_net/bootstrap/lib/breadcrumbs";
-@import "../front_net/bootstrap/lib/pagination";
-@import "../front_net/bootstrap/lib/pager";
-
-// Components: Popovers
-@import "../front_net/bootstrap/lib/modals";
-@import "../front_net/bootstrap/lib/tooltip";
-@import "../front_net/bootstrap/lib/popovers";
-
-// Components: Misc
-@import "../front_net/bootstrap/lib/thumbnails";
-@import "../front_net/bootstrap/lib/media";
-@import "../front_net/bootstrap/lib/labels-badges";
-@import "../front_net/bootstrap/lib/progress-bars";
-@import "../front_net/bootstrap/lib/accordion";
-@import "../front_net/bootstrap/lib/carousel";
-@import "../front_net/bootstrap/lib/hero-unit";
-
-@import "../front_net/bootstrap/lib/utilities"; // Has to be last to override when necessary
-
-@import "../front_net/bootstrap/lib/responsive-utilities";
-@import "../front_net/bootstrap/lib/responsive-1200px-min";
-@import "../front_net/bootstrap/lib/responsive-768px-979px";
-@import "../front_net/bootstrap/lib/responsive-767px-max";
-@import "../front_net/bootstrap/lib/responsive-navbar";
+@import "../front_net/sass/reset";
+@import "../front_net/sass/skeleton";
 
 @import "../front_net/module/ms/ms";
-.overlabel {position:relative;}
 
-// Bootstrap
-ul,ol,dl {margin:0;padding:0;list-style:none;}
-form{margin:0;}
-//p, pre {margin: 0.5em 0;}
-//a{cursor: pointer;}
+body{padding:20px 20px 20px 170px;}
+header {position: absolute;left: 0;top:0;width: 155px;z-index: 3;
+	a.site-title{font-size: 1.5em;display: block;margin:20px 0 20px 23px;}
+	ul{list-style-type: none;padding:0;}
+	li{cursor: pointer;padding-left:18px;border-left:6px solid transparent;
+		a{line-height: 29px;}
+		&.selected{border-left:6px solid $wncolor;cursor: default;
+			a{color:$wncolor}
+		}
+	}
+}
 
-header {margin: 0 .7em;position: relative;z-index: -1;
-    p {font-size: 2.5em; margin: 0;}
+form{
+	ol{list-style-type: none;padding:0;}
+	label{display:block;}
 }
-#userSettings {float: right;
-    &>form:before {content: ' | ';}
-    form {display: inline;}
-}
-#menu {list-style-type: none;padding: 0;
-    li {display: inline-block;}
-    li:not(:first-child) {margin-left: .8em;}
-}
-#main-content {min-height: 400px;text-align: center;}
-#unauthorized {margin: 3em 0;text-align: center;
-    ul {list-style: none;padding: 0;margin: 3em 0;}
-    li {display: inline-block;padding: 6px 20px;background-color: #dedede;border: 1px solid gray;border-radius: 5px;}
-    li:first-child {margin-right: 2em;}
-}
-footer {clear: both;margin: 5em 5em .7em 0;}
+h2{border-bottom:1px solid $sucolor;margin: 0 0 0.83em;padding-bottom:5px;}
+table td{padding:5px 10px 5px 0;border-bottom:1px solid $sucolor;}
+footer {position:fixed;bottom:0;left:170px;clear: both;margin: 5em 5em .7em 0;}

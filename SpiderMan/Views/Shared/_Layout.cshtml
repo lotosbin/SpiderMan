@@ -1,49 +1,50 @@
 ﻿<!DOCTYPE html>
 <html lang="zh">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - SpiderMan</title>
-        <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />>
-        <link href="~/Content/master.css" rel="stylesheet" />
-    </head>
-    <body>
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("将你的徽标放置在此处", "Index", "Home")</p>
-                </div>
-                <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("主页", "Index", "Home")</li>
-                            <li>@Html.ActionLink("关于", "About", "Home")</li>
-                            <li>@Html.ActionLink("联系方式", "Contact", "Home")</li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </header>
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
-        </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - I am SpiderMan, bitch!</p>
-                </div>
-            </div>
-        </footer>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - SpiderMan</title>
+    <link href="~/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/master.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <a class="site-title" href="/">SpiderMan</a>
+        <nav>
+            <ul id="menu">
+                <li class="selected">@Html.ActionLink("Task", "Index", "Task")</li>
+                <li>@Html.ActionLink("TaskModel", "Index", "TaskModel")</li>
+                <li>@Html.ActionLink("Site", "Index", "Site")</li>
+                <li class="mt20">@Html.ActionLink("Huanle", "Index", "Huanle")</li>
+                <li>@Html.ActionLink("Dianbo", "Index", "Dianbo")</li>
+                <li>@Html.ActionLink("Shudong", "Index", "Shudong")</li>
+                <li>@Html.ActionLink("Geek", "Index", "Geek")</li>
+                <li class="mt20">@Html.ActionLink("UserName", "Index", "UserName")</li>
+                <li>@Html.ActionLink("Avator", "Index", "Avator")</li>
 
-        @Scripts.Render("~/bundles/base")
-        <script src="~/Scripts/master.js"></script>
-        @RenderSection("scripts", required: false)
-    </body>
+            </ul>
+        </nav>
+        <section id="login">
+            @Html.Partial("_LoginPartial")
+        </section>
+    </header>
+    <div id="body">
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year - I am SpiderMan, bitch!</p>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/base")
+    @*<script src="~/Scripts/master.js"></script>*@
+    @RenderSection("scripts", required: false)
+</body>
 </html>

@@ -23,14 +23,6 @@ namespace SpiderMan.Controllers {
         }
 
         //
-        // GET: /Site/Details/5
-
-        public ActionResult Details(string id) {
-            var site = repo.GetById(id);
-            return View(site);
-        }
-
-        //
         // GET: /Site/Create
 
         public ActionResult Create() {

@@ -11,10 +11,6 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>Site</legend>
-
         <div class="editor-label">
             @Html.LabelFor(model => model.Name)
         </div>
@@ -22,7 +18,6 @@
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
         </div>
-
         <div class="editor-label">
             @Html.LabelFor(model => model.Link)
         </div>
@@ -30,11 +25,9 @@
             @Html.EditorFor(model => model.Link)
             @Html.ValidationMessageFor(model => model.Link)
         </div>
-
         <p>
             <input type="submit" value="Create" />
         </p>
-    </fieldset>
 }
 
 <div>

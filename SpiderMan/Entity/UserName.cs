@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SpiderMan.Models {
 
-    public class User : Entity {
+    public class UserName : Entity {
         public string Name { get; set; }
         public int Usability { get; set; }
         public int UsedTimes { get; set; }

@@ -55,7 +55,7 @@ namespace SpiderMan.App_Start {
             kernel.Bind<MongoRepository<Site>>().To<MongoRepository<Site>>();
             kernel.Bind<MongoRepository<Comment>>().To<MongoRepository<Comment>>();
             kernel.Bind<MongoRepository<TaskModel>>().To<MongoRepository<TaskModel>>();
-            kernel.Bind<MongoRepository<User>>().To<MongoRepository<User>>();
+            kernel.Bind<MongoRepository<UserName>>().To<MongoRepository<UserName>>();
         }
     }
 }
