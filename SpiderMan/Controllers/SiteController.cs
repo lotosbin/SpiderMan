@@ -14,23 +14,14 @@ namespace SpiderMan.Controllers {
             this.repo = _repo;
         }
 
-        //
-        // GET: /Site/
-
         public ActionResult Index() {
             var sites = repo.All();
             return View(sites);
         }
 
-        //
-        // GET: /Site/Create
-
         public ActionResult Create() {
             return View();
         }
-
-        //
-        // POST: /Site/Create
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -43,16 +34,10 @@ namespace SpiderMan.Controllers {
             return RedirectToAction("Index");
         }
 
-        //
-        // GET: /Site/Edit/5
-
         public ActionResult Edit(string id) {
             var site = repo.GetById(id);
             return View(site);
         }
-
-        //
-        // POST: /Site/Edit/5
 
         [HttpPost]
         public ActionResult Edit(Site model) {
@@ -64,19 +49,15 @@ namespace SpiderMan.Controllers {
             return RedirectToAction("Index");
         }
 
-        //
-        // GET: /Site/Delete/5
         public ActionResult Delete(string id) {
             var site = repo.GetById(id);
             return View(site);
         }
 
-        //
-        // POST: /Site/Delete/5
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id) {
             repo.Delete(id);
-            return Json(new { result = true });
+            return RedirectToAction("Index");
         }
     }
 }

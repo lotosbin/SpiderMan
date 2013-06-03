@@ -5,22 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using sharp_net.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace SpiderMan.Models {
     public class TaskModel : Entity {
 
-        [BsonRepresentation(BsonType.String)]
-        public TaskType Type { get; set; }
+        //[BsonRepresentation(BsonType.String)]
+        public int Type { get; set; }
 
         public string Site { get; set; }
         public string Url { get; set; }
 
-        public int startIndex { get; set; }
-        public int stopIndex { get; set; }
+        //public int startIndex { get; set; }
+        //public int stopIndex { get; set; }
+        //public bool ArraysUnion { get; set; }
 
         public string Command { get; set; }
-        public bool ArraysUnion { get; set; }
-
         public int Interval { get; set; }
     }
 }

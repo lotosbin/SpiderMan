@@ -1,0 +1,50 @@
+﻿@model SpiderMan.Models.TaskModel
+@using SpiderMan.Models;
+@using sharp_net.Mvc;
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <ol>
+        <li>
+            @Html.LabelFor(model => model.Type)
+            @Html.DropDownListFor(m => m.Type, ((TaskType)0).ToSelectListItems())
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Site)
+            @Html.DropDownListFor(m => m.Site, (IEnumerable<SelectListItem>)ViewBag.SiteList)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Url)
+            @Html.EditorFor(model => model.Url)
+            @Html.ValidationMessageFor(model => model.Url)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Command)
+            @Html.EditorFor(model => model.Command)
+            @Html.ValidationMessageFor(model => model.Command)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Interval)
+            @Html.EditorFor(model => model.Interval)
+            @Html.ValidationMessageFor(model => model.Interval)
+        </li>
+    </ol>
+    <p>
+        <input type="submit" />
+    </p>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

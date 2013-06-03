@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using sharp_net.Mvc
+<!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -13,16 +14,15 @@
         <a class="site-title" href="/">SpiderMan</a>
         <nav>
             <ul id="menu">
-                <li class="selected">@Html.ActionLink("Task", "Index", "Task")</li>
-                <li>@Html.ActionLink("TaskModel", "Index", "TaskModel")</li>
-                <li>@Html.ActionLink("Site", "Index", "Site")</li>
-                <li class="mt20">@Html.ActionLink("Huanle", "Index", "Huanle")</li>
-                <li>@Html.ActionLink("Dianbo", "Index", "Dianbo")</li>
-                <li>@Html.ActionLink("Shudong", "Index", "Shudong")</li>
-                <li>@Html.ActionLink("Geek", "Index", "Geek")</li>
-                <li class="mt20">@Html.ActionLink("UserName", "Index", "UserName")</li>
-                <li>@Html.ActionLink("Avator", "Index", "Avator")</li>
-
+                <li class="@Html.IsSelected("Task", null)">@Html.ActionLink("Task", "Index", "Task")</li>
+                <li class="@Html.IsSelected("TaskModel", null)">@Html.ActionLink("TaskModel", "Index", "TaskModel")</li>
+                <li class="@Html.IsSelected("Site", null)">@Html.ActionLink("Site", "Index", "Site")</li>
+                <li class="@Html.IsSelected("Huanle", null) mt20">@Html.ActionLink("Huanle", "Index", "Huanle")</li>
+                <li class="@Html.IsSelected("Dianbo", null)">@Html.ActionLink("Dianbo", "Index", "Dianbo")</li>
+                <li class="@Html.IsSelected("Shudong", null)">@Html.ActionLink("Shudong", "Index", "Shudong")</li>
+                <li class="@Html.IsSelected("Geek", null)">@Html.ActionLink("Geek", "Index", "Geek")</li>
+                <li class="@Html.IsSelected("UserName", null) mt20">@Html.ActionLink("UserName", "Index", "UserName")</li>
+                <li class="@Html.IsSelected("Avator", null)">@Html.ActionLink("Avator", "Index", "Avator")</li>
             </ul>
         </nav>
         <section id="login">

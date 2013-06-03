@@ -1,0 +1,25 @@
+﻿@model IEnumerable<SpiderMan.Models.TaskModel>
+@using SpiderMan.Models
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>TaskModels</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table>
+    @foreach (var item in Model) {
+        <tr>
+            <td><a target="_blank" href="@item.Url">@item.Site - @item.Command</a></td>
+            <td>@((TaskType)item.Type)</td>
+            <td>@item.Interval</td>
+            <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>

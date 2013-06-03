@@ -229,7 +229,6 @@
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\TaskModelController.cs" />
     <Compile Include="CustomModelBinders\BsonObjectIdBinder.cs" />
-    <Compile Include="Filters\HandleErrorForJsonAttribute.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1121,6 +1120,10 @@
     <Content Include="Views\Site\Create.cshtml" />
     <Content Include="Views\Site\Edit.cshtml" />
     <Content Include="Views\Site\Delete.cshtml" />
+    <Content Include="Views\TaskModel\Create.cshtml" />
+    <Content Include="Views\TaskModel\Delete.cshtml" />
+    <Content Include="Views\TaskModel\Edit.cshtml" />
+    <Content Include="Views\TaskModel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

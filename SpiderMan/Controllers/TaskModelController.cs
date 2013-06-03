@@ -1,105 +1,74 @@
-﻿using System;
+﻿using MongoRepository;
+using SpiderMan.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using sharp_net.Mvc;
 
-namespace SpiderMan.Controllers
-{
-    public class TaskModelController : Controller
-    {
-        //
-        // GET: /TaskModel/
-
-        public ActionResult Index()
-        {
-            return View();
+namespace SpiderMan.Controllers {
+    public class TaskModelController : Controller {
+        private readonly MongoRepository<TaskModel> repo;
+        private readonly MongoRepository<Site> repo_site;
+        public TaskModelController(MongoRepository<TaskModel> _repo, MongoRepository<Site> _repo_site) {
+            this.repo = _repo;
+            this.repo_site = _repo_site;
         }
 
-        //
-        // GET: /TaskModel/Details/5
-
-        public ActionResult Details(int id)
-        {
-            return View();
+        public ActionResult Index() {
+            var models = repo.All();
+            return View(models);
         }
 
-        //
-        // GET: /TaskModel/Create
-
-        public ActionResult Create()
-        {
+        public ActionResult Create() {
+            ViewBag.SiteList = from site in repo_site.All()
+                               select new SelectListItem() {
+                                   Text = site.Name,
+                                   Value = site.Name
+                               };
             return View();
         }
-
-        //
-        // POST: /TaskModel/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+        public ActionResult Create(TaskModel model) {
+            if (!ModelState.IsValid) {
+                ModelState.AddModelError("", "表单验证失败。");
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+            repo.Add(model);
+            return RedirectToAction("Index");
         }
 
-        //
-        // GET: /TaskModel/Edit/5
-
-        public ActionResult Edit(int id)
-        {
-            return View();
+        public ActionResult Edit(string id) {
+            var model = repo.GetById(id);
+            ViewBag.SiteList = from site in repo_site.All()
+                               select new SelectListItem() {
+                                   Text = site.Name,
+                                   Value = site.Name
+                               };
+            return View(model);
         }
-
-        //
-        // POST: /TaskModel/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+        public ActionResult Edit(TaskModel model) {
+            if (!ModelState.IsValid) {
+                ModelState.AddModelError("", "表单验证失败。");
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+            repo.Update(model);
+            return RedirectToAction("Index");
         }
 
-        //
-        // GET: /TaskModel/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
+        public ActionResult Delete(string id) {
+            var site = repo.GetById(id);
+            return View(site);
         }
 
-        //
-        // POST: /TaskModel/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(string id) {
+            repo.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }
