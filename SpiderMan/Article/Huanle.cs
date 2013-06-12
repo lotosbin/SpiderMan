@@ -7,13 +7,10 @@ using System.Web;
 
 namespace SpiderMan.Models {
 
-    public class Huanle : Entity {
-        public string SourceSite { get; set; }
-        public string SourceLink { get; set; }
+    public class Huanle : Article {
 
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime PostDate { get; set; }
 
         public int ThumbUps { get; set; }
         public int ThumbDowns { get; set; }

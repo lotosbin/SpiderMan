@@ -54,5 +54,8 @@ form{
 	label{display:block;}
 }
 h2{border-bottom:1px solid $sucolor;margin: 0 0 0.83em;padding-bottom:5px;}
-table td{padding:5px 10px 5px 0;border-bottom:1px solid $sucolor;}
+table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid $sucolor;}
+table th{font-style:italic;font-weight:normal;}
 footer {position:fixed;bottom:0;left:170px;clear: both;margin: 5em 5em .7em 0;}
+
+@import "./article";

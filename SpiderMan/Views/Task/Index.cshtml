@@ -1,0 +1,55 @@
+﻿@using SpiderMan.Models
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Agents:</h3>
+<ul id="agentsul"></ul>
+
+<h3>TaskModels:</h3>
+<table>
+    @foreach (var item in ViewBag.TaskModel) {
+        <tr modelid="@item.Id">
+            <td><a target="_blank" class="site_cmd" href="@item.Url">@(item.Site)_@item.Command</a></td>
+            <td class="interval">@item.Interval</td>
+            <td><a class="generate fn-cs">ManualTask</a></td>
+        </tr>
+    }
+</table>
+
+<h3>TasksQueue:</h3>
+<ul id="tasksqueue"></ul>
+
+@section Scripts {
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript">
+    $(function () {
+        var taskHub = $.connection.taskHub;
+        var agentsul = $('#agentsul')
+        taskHub.client.AgentList = function (agents) {
+            agentsul.empty()
+            _.each(agents, function (agent) {
+                var li = $('<li />').appendTo(agentsul)
+                li.text(agent.name + ' - ' + agent.online)
+            })
+        }
+        var tasksqueue = $('#tasksqueue');
+        taskHub.client.broadcast_AddTask = function (newTask) {
+            var li = $('<li />').appendTo(tasksqueue)
+            li.text(newTask.site + ' - ' + newTask.command + ' - ' + newTask.url)
+            .attr('queueid', newTask.Id)
+        };
+        taskHub.client.broadcast_DoneTask = function (doneTask) {
+            var li = $('<li />').appendTo(tasksqueue)
+            li.text(newTask.command + ' - ' + newTask.url)
+        };
+        $.connection.hub.start().done(function () {
+            taskHub.server.joinGroup('broad');
+            $('a.generate').click(function () {
+                var _table = $(this).closest('tr')
+                taskHub.server.ManualTask(_table.attr('modelid'));
+            });
+        });
+    });
+</script>
+}

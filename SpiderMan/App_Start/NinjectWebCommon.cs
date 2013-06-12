@@ -51,7 +51,8 @@ namespace SpiderMan.App_Start {
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel) {
             kernel.Bind<ArticleRespository>().To<ArticleRespository>();
-            kernel.Bind<TaskRespository>().To<TaskRespository>();
+            kernel.Bind<HuanleRespository>().To<HuanleRespository>();
+
             kernel.Bind<MongoRepository<Site>>().To<MongoRepository<Site>>();
             kernel.Bind<MongoRepository<Comment>>().To<MongoRepository<Comment>>();
             kernel.Bind<MongoRepository<TaskModel>>().To<MongoRepository<TaskModel>>();

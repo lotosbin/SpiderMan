@@ -13,8 +13,8 @@
     @Html.ValidationSummary(true)
     <ol>
         <li>
-            @Html.LabelFor(model => model.Type)
-            @Html.DropDownListFor(m => m.Type, ((TaskType)0).ToSelectListItems())
+            @Html.LabelFor(model => model.ArticleType)
+            @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)Model.ArticleType).ToSelectListItems())
         </li>
         <li>
             @Html.LabelFor(model => model.Site)

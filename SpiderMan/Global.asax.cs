@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using MongoDB.Bson;
+using sharp_net;
 using SpiderMan.CustomModelBinders;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace SpiderMan {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+
+            ZicLog4Net.Instance.Config(new string[] { "Grab", "System" }, new ZicGmailConfig());
         }
     }
 }

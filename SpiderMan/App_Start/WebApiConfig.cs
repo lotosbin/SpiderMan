@@ -7,9 +7,16 @@ namespace SpiderMan {
     public static class WebApiConfig {
         public static void Register(HttpConfiguration config) {
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
+                name: "ArticleOne",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { id = @"[a-z0-9]{24}" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ArticleList",
+                routeTemplate: "api/{controller}/{boxer}",
+                defaults: new { boxer = "inbox" }
             );
 
             // 取消注释下面的代码行可对具有 IQueryable 或 IQueryable<T> 返回类型的操作启用查询支持。

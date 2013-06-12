@@ -14,9 +14,10 @@
     @Html.HiddenFor(model => model.Id)
     <ol>
         <li>
-            @Html.LabelFor(model => model.Type)
-            @Html.DropDownListFor(model => model.Type, ((TaskType)Model.Type).ToSelectListItems())
-            @*DropDownListFor中selected永远无效的原因是model相关属性类型不正确。必须是int/string型，不能是枚举*@
+            @Html.LabelFor(model => model.ArticleType)
+            @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)Model.ArticleType).ToSelectListItems())
+            @*DropDownListFor中IEnumerable<SelectListItem>的selected永远无效的原因是
+            Model相关属性值如果不为空，则必然会用于判断selected值，所以必须是int/string型*@
         </li>
         <li>
             @Html.LabelFor(model => model.Site)

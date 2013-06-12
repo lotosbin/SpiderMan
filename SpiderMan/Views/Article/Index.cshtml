@@ -1,0 +1,11 @@
+﻿@using sharp_net
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="articlebox" ng-view></div>
+
+@section Scripts {
+    <script src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js'></script>
+    @Html.JsDoc("/angular_article.js")
+}

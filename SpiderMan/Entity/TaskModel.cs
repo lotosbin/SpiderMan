@@ -11,9 +11,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SpiderMan.Models {
     public class TaskModel : Entity {
-
-        //[BsonRepresentation(BsonType.String)]
-        public int Type { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public int ArticleType { get; set; }
 
         public string Site { get; set; }
         public string Url { get; set; }

@@ -41,8 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="ExtendedMongoMembership">
       <HintPath>..\packages\ExtMongoMembership.1.0.3\lib\ExtendedMongoMembership.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.1\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -217,6 +224,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\HuanleContraller.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -224,11 +232,16 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Article\Article.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="Controllers\TaskHub.cs" />
     <Compile Include="Controllers\TaskModelController.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="CustomModelBinders\BsonObjectIdBinder.cs" />
+    <Compile Include="Enum\eArticleType.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -238,21 +251,20 @@
     <Compile Include="Entity\Avator.cs" />
     <Compile Include="Entity\Comment.cs" />
     <Compile Include="Entity\Site.cs" />
-    <Compile Include="Entity\Task.cs" />
     <Compile Include="Entity\TaskModel.cs" />
-    <Compile Include="Entity\TaskStatus.cs" />
-    <Compile Include="Entity\TaskType.cs" />
+    <Compile Include="Enum\eTaskStatus.cs" />
     <Compile Include="Entity\UserName.cs" />
-    <Compile Include="Entity\SourceStatus.cs" />
+    <Compile Include="Enum\eArticleStatus.cs" />
     <Compile Include="Article\Shudong.cs" />
     <Compile Include="Article\Dianbo.cs" />
     <Compile Include="Article\Finance.cs" />
     <Compile Include="Article\Geek.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Respository\HuanleRespository.cs" />
     <Compile Include="Respository\ArticleRespository.cs" />
-    <Compile Include="Respository\TaskRespository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Viewpartials\index.html" />
     <Content Include="Content\master.css" />
     <Content Include="favicon.ico" />
     <Content Include="front_net\.gitignore" />
@@ -1071,8 +1083,12 @@
     <Content Include="front_net\support\compiler.ps1" />
     <Content Include="front_net\support\compiler_cusfolder.ps1" />
     <Content Include="front_net\support\watch_coffee.ps1" />
+    <Content Include="Content\_article.scss" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\favicon.ico" />
+    <Content Include="Scripts\angular_article.js">
+      <DependentUpon>angular_article.coffee</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery-2.0.2.js" />
     <Content Include="Scripts\jquery-2.0.2.min.js" />
     <Content Include="Scripts\jquery.signalR-1.1.1.js" />
@@ -1124,6 +1140,9 @@
     <Content Include="Views\TaskModel\Delete.cshtml" />
     <Content Include="Views\TaskModel\Edit.cshtml" />
     <Content Include="Views\TaskModel\Index.cshtml" />
+    <Content Include="Views\Task\Index.cshtml" />
+    <Content Include="Views\Article\Index.cshtml" />
+    <Content Include="Scripts\angular_article.coffee" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

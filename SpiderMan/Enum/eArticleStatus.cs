@@ -4,10 +4,9 @@ using System.Linq;
 using System.Web;
 
 namespace SpiderMan.Models {
-    public enum TaskStatus {
-        Standby,
-        Executing,
-        Complate,
-        Fail
+    public enum eArticleStatus {
+        Verifying,
+        Available,
+        Disabled
     }
 }

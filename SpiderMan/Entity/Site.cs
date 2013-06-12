@@ -12,5 +12,7 @@ namespace SpiderMan.Models {
         [Required]
         public string Name { get; set; }
         public string Link { get; set; }
+        public int GrabInterval { get; set; }
+        public int Status { get; set; }
     }
 }

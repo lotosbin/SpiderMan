@@ -1,4 +1,6 @@
 ﻿@model SpiderMan.Models.Site
+@using SpiderMan.Models;
+@using sharp_net.Mvc;
 
 @{
     ViewBag.Title = "Create";
@@ -9,23 +11,25 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-        <div class="editor-label">
+    <ol>
+        <li>
+            @Html.LabelFor(model => model.Status)
+            @Html.DropDownListFor(m => m.Status, ((eSiteStatus)0).ToSelectListItems())
+        </li>
+        <li>
             @Html.LabelFor(model => model.Name)
-        </div>
-        <div class="editor-field">
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
-        </div>
-        <div class="editor-label">
+        </li>
+        <li>
             @Html.LabelFor(model => model.Link)
-        </div>
-        <div class="editor-field">
             @Html.EditorFor(model => model.Link)
             @Html.ValidationMessageFor(model => model.Link)
-        </div>
-        <p>
-            <input type="submit" value="Create" />
-        </p>
+        </li>
+    </ol>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
 }
 
 <div>

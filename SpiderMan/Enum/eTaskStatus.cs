@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 
 namespace SpiderMan.Models {
-    public enum TaskType {
-        Once,
-        Repeat,
-        UpdateEvaluate
+    public enum eTaskStatus {
+        Standby,
+        Executing,
+        Fail
     }
 }

@@ -1,37 +1,48 @@
-﻿using SpiderMan.Models;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
+﻿using MongoRepository;
+using sharp_net;
+using SpiderMan.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using MongoRepository;
 
 namespace SpiderMan.Respository {
-    public class ArticleRespository : MongoRepository<Huanle> {
-        public IEnumerable<Huanle> GetArticles(int limit, int skip) {
-            var qiubaisCursor = this.Collection.FindAllAs<Huanle>()
-                .SetSortOrder(SortBy<Huanle>.Descending(g => g.Amount))
-                .SetLimit(limit)
-                .SetSkip(skip)
-                .SetFields(Fields<Huanle>.Include(g => g.Content, g => g.ThumbUps, g => g.ThumbDowns, g => g.Comments));
-            return qiubaisCursor;
-        }
+    public class ArticleRespository {
+        private MongoRepository<Huanle> huanleRepo;
+        private MongoRepository<Dianbo> dianboRepo;
+        private MongoRepository<Finance> financeRepo;
+        private MongoRepository<Geek> geekRepo;
+        private MongoRepository<Shudong> shudongeRepo;
 
-        public void AddComment(string articleId, Comment comment) {
-            var updateResult = this.Collection.Update(
-                    Query<Huanle>.EQ(p => p.Id, articleId),
-                    Update<Huanle>.Push(p => p.Comments, comment),
-                    new MongoUpdateOptions {
-                        WriteConcern = WriteConcern.Acknowledged
-                    });
-
-            if (updateResult.DocumentsAffected == 0) {
-                //// Something went wrong
-
+        public MongoRepository<Huanle> HuanleRepo {
+            get {
+                if (huanleRepo == null) huanleRepo = new MongoRepository<Huanle>();
+                return huanleRepo;
             }
         }
-
+        public MongoRepository<Dianbo> DianboRepo {
+            get {
+                if (dianboRepo == null) dianboRepo = new MongoRepository<Dianbo>();
+                return dianboRepo;
+            }
+        }
+        public MongoRepository<Finance> FinanceRepo {
+            get {
+                if (financeRepo == null) financeRepo = new MongoRepository<Finance>();
+                return financeRepo;
+            }
+        }
+        public MongoRepository<Geek> GeekRepo {
+            get {
+                if (geekRepo == null) geekRepo = new MongoRepository<Geek>();
+                return geekRepo;
+            }
+        }
+        public MongoRepository<Shudong> ShudongRepo {
+            get {
+                if (shudongeRepo == null) shudongeRepo = new MongoRepository<Shudong>();
+                return shudongeRepo;
+            }
+        }
     }
 }
