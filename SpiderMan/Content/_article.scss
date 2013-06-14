@@ -1,4 +1,9 @@
 ﻿#articlebox{position:relative;padding-left:200px;}
-ul#itemlist{width:200px;position:absolute;top:0;left:0;border-right:1px solid $sucolor;
-	li{border-bottom:1px solid $sucolor}
+#itemlist{width:200px;position:absolute;top:0;left:0;border-right:1px solid $sucolor;
+	li{border-bottom:1px solid $sucolor;height:100px;overflow:hidden;line-height:20px;}
+	h4{font-weight:bold;line-height:24px;}
+	input{position:absolute;top:40px;left:5px;}
+}
+#itembox{
+
 }

@@ -26,28 +26,28 @@
     $(function () {
         var taskHub = $.connection.taskHub;
         var agentsul = $('#agentsul')
-        taskHub.client.AgentList = function (agents) {
+        taskHub.client.agentList = function (agents) {
             agentsul.empty()
             _.each(agents, function (agent) {
                 var li = $('<li />').appendTo(agentsul)
-                li.text(agent.name + ' - ' + agent.online)
+                li.text(agent.name + ' - ' + (agent.online ? "online" : "offline") + ' - ' + agent.connectionid)
             })
         }
         var tasksqueue = $('#tasksqueue');
-        taskHub.client.broadcast_AddTask = function (newTask) {
+        taskHub.client.broadcastAddTask = function (newTask) {
             var li = $('<li />').appendTo(tasksqueue)
             li.text(newTask.site + ' - ' + newTask.command + ' - ' + newTask.url)
             .attr('queueid', newTask.Id)
         };
-        taskHub.client.broadcast_DoneTask = function (doneTask) {
+        taskHub.client.broadcastDoneTask = function (doneTask) {
             var li = $('<li />').appendTo(tasksqueue)
             li.text(newTask.command + ' - ' + newTask.url)
         };
         $.connection.hub.start().done(function () {
-            taskHub.server.joinGroup('broad');
+            taskHub.server.registerBoard();
             $('a.generate').click(function () {
                 var _table = $(this).closest('tr')
-                taskHub.server.ManualTask(_table.attr('modelid'));
+                taskHub.server.manualTask(_table.attr('modelid'));
             });
         });
     });

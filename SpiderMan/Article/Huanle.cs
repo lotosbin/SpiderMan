@@ -10,11 +10,9 @@ namespace SpiderMan.Models {
     public class Huanle : Article {
 
         public string Title { get; set; }
-        public string Content { get; set; }
 
         public int ThumbUps { get; set; }
         public int ThumbDowns { get; set; }
-        public int Score { get; set; }
         public int Amount { get; set; }
 
         public List<Comment> Comments { get; set; }

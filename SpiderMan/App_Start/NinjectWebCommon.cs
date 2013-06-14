@@ -12,6 +12,7 @@ namespace SpiderMan.App_Start {
     using SpiderMan.Respository;
     using MongoRepository;
     using SpiderMan.Models;
+    using System.Web.Http;
 
     public static class NinjectWebCommon {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -42,8 +43,15 @@ namespace SpiderMan.App_Start {
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
             RegisterServices(kernel);
+
+            //Ninject.Web.WebApi don't support mvc4 now. fix issus form http://stackoverflow.com/a/10855037/346701
+            GlobalConfiguration.Configuration.DependencyResolver = new SpiderMan.App_Start.NinjectDependencyResolver(kernel);
+
+            Kernel = kernel;
             return kernel;
         }
+
+        public static IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Load your modules or register your services here!

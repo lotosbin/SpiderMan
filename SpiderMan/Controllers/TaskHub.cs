@@ -3,6 +3,7 @@ using MongoRepository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using sharp_net;
+using SpiderMan.App_Start;
 using SpiderMan.Models;
 using SpiderMan.Respository;
 using System;
@@ -12,6 +13,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
+using Ninject;
 
 namespace SpiderMan.Controllers {
     public class TaskHub : Hub {
@@ -22,37 +24,60 @@ namespace SpiderMan.Controllers {
         MongoRepository<Site> siteRepo;
         ArticleRespository articleRepo;
 
-        public TaskHub(MongoRepository<TaskModel> _taskModeRepo, MongoRepository<Site> _siteRepo, ArticleRespository _articleRepo) {
-            taskModeRepo = _taskModeRepo;
-            siteRepo = _siteRepo;
-            articleRepo = _articleRepo;
+        public TaskHub() {
+            taskModeRepo = NinjectWebCommon.Kernel.Get<MongoRepository<TaskModel>>();
+            siteRepo = NinjectWebCommon.Kernel.Get<MongoRepository<Site>>();
+            articleRepo = NinjectWebCommon.Kernel.Get<ArticleRespository>();
 
             var models = taskModeRepo.All();
             foreach (var model in models) {
                 Timer timer = new Timer(1000 * model.Interval);
                 timer.Elapsed += delegate { GenerateTask(model); };
-                timer.AutoReset = true;
                 timer.Enabled = true;
             }
+        }
 
+        public void RegisterBoard() {
+            JoinGroup("broad");
+            Clients.Client(Context.ConnectionId).agentList(agents);
+        }
+
+        public void RegisterAgent(string name) {
+            var offlineAgent = agents.SingleOrDefault(d => d.Name == name);
+            if (offlineAgent != null) {
+                offlineAgent.ConnectionId = Context.ConnectionId;
+                offlineAgent.Online = true;
+                foreach (var timer in offlineAgent.Timer) timer.Start();
+            } else {
+                var agent = new Agent {
+                    ConnectionId = Context.ConnectionId,
+                    Name = name,
+                    Online = true
+                };
+                agents.Add(agent);
+                GenerateAgentProcess(agent);
+            }
+            Clients.Group("broad").agentList(agents);
+        }
+
+        private void GenerateAgentProcess(Agent agent) {
             var sites = siteRepo.All();
+            agent.Timer = new List<Timer>();
             foreach (var site in sites) {
-                foreach (var agent in agents) {
-                    Timer timer = new Timer(1000 * site.GrabInterval);
-                    timer.Elapsed += delegate { ProcessTesk(site, agent); };
-                    timer.AutoReset = true;
-                    timer.Enabled = true;
-                }
+                Timer timer = new Timer(1000 * site.GrabInterval);
+                timer.Elapsed += delegate { ProcessTesk(site, agent); };
+                timer.Enabled = true;
+                agent.Timer.Add(timer);
             }
         }
 
-        public void ProcessTesk(Site site, Agent agent) {
+        private void ProcessTesk(Site site, Agent agent) {
             var task = tasks.Where(d => d.Site == site.Name).FirstOrDefault();
             if (task != null)
-                Clients.Client(agent.ConnectionId).processTesk(task);
+                Clients.Client(agent.ConnectionId).castTesk(task);
         }
 
-        public void GenerateTask(TaskModel model) {
+        private SpiderTask GenerateTask(TaskModel model) {
             var newTask = new SpiderTask {
                 Id = Guid.NewGuid(),
                 Site = model.Site,
@@ -61,14 +86,17 @@ namespace SpiderMan.Controllers {
                 ArticleType = (eArticleType)model.ArticleType
             };
             tasks.Add(newTask);
-            Clients.Group("broad").broadcast_AddTask(newTask);
+            Clients.Group("broad").broadcastAddTask(newTask);
+            return newTask;
         }
 
-        public void PostData(SpiderTask task, string datajson) {
+        public void PostData(string taskjson, string datajson) {
+            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
             if (task.Status == eTaskStatus.Fail) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
                 return;
             }
+            Clients.Group("broad").broadcastDoneTask(task);
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
                     var huanle = (Huanle)JsonConvert.DeserializeObject(datajson, typeof(Huanle));
@@ -95,22 +123,14 @@ namespace SpiderMan.Controllers {
             }
         }
 
-        public void registerAgent(string name) {
-            if (!agents.Any(d => d.ConnectionId == Context.ConnectionId)) return;
-            agents.Add(new Agent {
-                ConnectionId = Context.ConnectionId,
-                LastActionTimes = new Dictionary<string, DateTime>(),
-                Name = name
-            });
-            Clients.Group("broad").AgentList(agents);
+        public void JoinGroup(string groupName) {
+            Groups.Add(Context.ConnectionId, groupName);
         }
 
         public void ManualTask(string modelid) {
             var model = taskModeRepo.GetById(modelid);
-            GenerateTask(model);
+            Clients.Client(agents.Where(d=>d.Online).Single().ConnectionId).castTesk(GenerateTask(model));
         }
-
-
 
         public override Task OnConnected() {
             return base.OnConnected();
@@ -120,7 +140,8 @@ namespace SpiderMan.Controllers {
             var agent = agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = false;
-                Clients.Group("broad").AgentList(agents);
+                foreach (var timer in agent.Timer) timer.Stop();
+                Clients.Group("broad").agentList(agents);
             }
             return base.OnDisconnected();
         }
@@ -129,7 +150,8 @@ namespace SpiderMan.Controllers {
             var agent = agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = true;
-                Clients.Group("broad").AgentList(agents);
+                foreach (var timer in agent.Timer) timer.Start();
+                Clients.Group("broad").agentList(agents);
             }
             return base.OnReconnected();
         }
@@ -145,12 +167,14 @@ namespace SpiderMan.Controllers {
         public string Url { get; set; }
         [JsonProperty("status")]
         public eTaskStatus Status { get; set; }
-        [JsonProperty("error")]
+        [JsonIgnore]
         public string Error { get; set; }
         [JsonProperty("handler")]
         public string Handler { get; set; }
         [JsonProperty("spend")]
         public string Spend { get; set; }
+        [JsonProperty("grabdate")]
+        public DateTime GrabDate { get; set; }
         [JsonProperty("articletype")]
         public eArticleType ArticleType { get; set; }
     }
@@ -160,9 +184,9 @@ namespace SpiderMan.Controllers {
         public string ConnectionId { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonIgnore]
-        public IDictionary<string, DateTime> LastActionTimes { get; set; }
         [JsonProperty("online")]
         public bool Online { get; set; }
+        [JsonIgnore]
+        public IList<Timer> Timer { get; set; }
     }
 }

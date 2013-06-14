@@ -8,12 +8,15 @@ using System.Web;
 namespace SpiderMan.Models {
 
     public class Article : Entity {
-        public eArticleStatus ArticleStatusEnum {
-            get { return (eArticleStatus)ArticleStatus; }
+        public eArticleStatus ArticleStatus {
+            get { return (eArticleStatus)Status; }
         }
-        public int ArticleStatus { get; set; }
+        public int Status { get; set; }
         public string SourceSite { get; set; }
         public string SourceLink { get; set; }
         public DateTime CreatDate { get; set; }
+
+        public string Content { get; set; }
+        public int Score { get; set; }
     }
 }

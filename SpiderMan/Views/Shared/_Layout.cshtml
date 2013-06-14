@@ -17,11 +17,13 @@
                 <li class="@Html.IsSelected("Task", null)">@Html.ActionLink("Task", "Index", "Task")</li>
                 <li class="@Html.IsSelected("TaskModel", null)">@Html.ActionLink("TaskModel", "Index", "TaskModel")</li>
                 <li class="@Html.IsSelected("Site", null)">@Html.ActionLink("Site", "Index", "Site")</li>
-                <li class="@Html.IsSelected("Huanle", null) mt20">@Html.ActionLink("Huanle", "Index", "Huanle")</li>
-                <li class="@Html.IsSelected("Dianbo", null)">@Html.ActionLink("Dianbo", "Index", "Dianbo")</li>
-                <li class="@Html.IsSelected("Shudong", null)">@Html.ActionLink("Shudong", "Index", "Shudong")</li>
-                <li class="@Html.IsSelected("Geek", null)">@Html.ActionLink("Geek", "Index", "Geek")</li>
-                <li class="@Html.IsSelected("Finance", null)">@Html.ActionLink("Finance", "Index", "Finance")</li>
+
+                <li class=" mt20"><a href="~/article/#/huanle">Huanle</a></li>
+                <li class=""><a href="~/article/#/dianbo">Dianbo</a></li>
+                <li class=""><a href="~/article/#/shudong">Shudong</a></li>
+                <li class=""><a href="~/article/#/geek">Geek</a></li>
+                <li class=""><a href="~/article/#/finance">Finance</a></li>
+
                 <li class="@Html.IsSelected("UserName", null) mt20">@Html.ActionLink("UserName", "Index", "UserName")</li>
                 <li class="@Html.IsSelected("Avator", null)">@Html.ActionLink("Avator", "Index", "Avator")</li>
             </ul>
@@ -30,12 +32,7 @@
             @Html.Partial("_LoginPartial")
         </section>
     </header>
-    <div id="body">
-        @RenderSection("featured", required: false)
-        <section class="content-wrapper main-content clear-fix">
-            @RenderBody()
-        </section>
-    </div>
+    <div id="body">@RenderBody()</div>
     <footer>
         <div class="content-wrapper">
             <div class="float-left">

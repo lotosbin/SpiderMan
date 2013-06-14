@@ -264,7 +264,7 @@
     <Compile Include="Respository\ArticleRespository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Viewpartials\index.html" />
+    <Content Include="Partials\index.html" />
     <Content Include="Content\master.css" />
     <Content Include="favicon.ico" />
     <Content Include="front_net\.gitignore" />

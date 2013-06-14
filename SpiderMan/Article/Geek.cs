@@ -9,8 +9,6 @@ namespace SpiderMan.Models {
 
     public class Geek : Article {
         public string Title { get; set; }
-        public string Content { get; set; }
-
         public List<Comment> Comments { get; set; }
     }
 }

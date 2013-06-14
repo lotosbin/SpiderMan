@@ -9,8 +9,6 @@ namespace SpiderMan.Models {
 
     public class Shudong : Article {
 
-        public string Content { get; set; }
-
         public List<Comment> Comments { get; set; }
     }
 }

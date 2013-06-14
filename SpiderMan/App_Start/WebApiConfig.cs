@@ -9,14 +9,14 @@ namespace SpiderMan {
             config.Routes.MapHttpRoute(
                 name: "ArticleOne",
                 routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional },
+                defaults: null,
                 constraints: new { id = @"[a-z0-9]{24}" }
             );
 
             config.Routes.MapHttpRoute(
                 name: "ArticleList",
                 routeTemplate: "api/{controller}/{boxer}",
-                defaults: new { boxer = "inbox" }
+                defaults: new { boxer = "verifying" }
             );
 
             // 取消注释下面的代码行可对具有 IQueryable 或 IQueryable<T> 返回类型的操作启用查询支持。

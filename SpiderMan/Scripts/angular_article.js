@@ -4,10 +4,10 @@ angular.module('spiderman', []).config([
   '$routeProvider', function($routeProvider) {
     var articlesConfig;
     articlesConfig = {
-      templateUrl: '/Viewpartials/index.html',
+      templateUrl: '/Partials/index.html',
       controller: ArticleListCtrl
     };
-    return $routeProvider.when('/articles', articlesConfig).when('/articles/:article', articlesConfig).when('/articles/:article/:inbox', articlesConfig).otherwise({
+    return $routeProvider.when('/', articlesConfig).when('/:article', articlesConfig).when('/:article/:boxer', articlesConfig).otherwise({
       redirectTo: '/articles'
     });
   }
@@ -17,17 +17,21 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
   if (!$routeParams.article) {
     $scope.article = 'huanle';
   }
-  if (!$routeParams.inbox) {
-    $scope.inbox = 'inbox';
+  if (!$routeParams.boxer) {
+    $scope.boxer = 'inbox';
   }
-  $http.get("/api/articles/" + $scope.article + "/" + $scope.inbox).success(function(data) {
-    return $scope.articles = data;
+  $http.get("/api/" + $scope.article + "/" + $scope.boxer).success(function(data) {
+    if (_.isArray(data)) {
+      $scope.articles = data;
+      return $scope.view = data[0];
+    } else {
+      $scope.view = data;
+      return $scope.viewmodel = 'single';
+    }
   });
-  $scope.GoSinglePage = function(articleId) {
-    return window.location = '/article/item/' + articleId;
-  };
+  $scope.SinglePage = function(articleId) {};
   $scope.GetMore = function(nextIndex) {
-    return $http.get("/api/articles/" + $scope.article + "/" + $scope.inbox).success(function(data) {
+    return $http.get("/api/" + $scope.article + "/" + $scope.inbox).success(function(data) {
       return $scope.articles = _.union($scope.articles, data);
     });
   };

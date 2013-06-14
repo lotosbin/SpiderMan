@@ -1,0 +1,20 @@
+﻿
+<ul id="itemlist" ng-show="{{viewmodel == 'single' && 'false'||'true'}}">
+    <li ng-repeat="article in articles" ng-click="SingleView(article.Id)" >
+        <input type="checkbox" name="select" value="" />
+        <h4>{{article.Title}}</h4>
+        <span>{{article.Content}}</span>
+    </li>
+</ul>
+<div id="itembox">
+    <h3>{{view.Title}}</h3>
+    <p>
+        <span>{{view.CreatDate}}</span>
+        | <span>{{view.Score}}</span>
+        | <span>{{view.StatusName}}</span>
+        | <span>{{view.SourceLink}}</span>
+    </p>
+    <p>
+        {{view.Content}}
+    </p>
+</div>
