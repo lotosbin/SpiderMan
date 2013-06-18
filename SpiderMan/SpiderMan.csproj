@@ -242,6 +242,7 @@
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="CustomModelBinders\BsonObjectIdBinder.cs" />
     <Compile Include="Enum\eArticleType.cs" />
+    <Compile Include="Enum\eCommandType.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -266,7 +267,6 @@
   <ItemGroup>
     <Content Include="Partials\index.html" />
     <Content Include="Content\master.css" />
-    <Content Include="favicon.ico" />
     <Content Include="front_net\.gitignore" />
     <Content Include="front_net\bootstrap\amd-ext\bootstrap-bootpag.js" />
     <Content Include="front_net\bootstrap\amd-ext\bootstrap-datepicker.js" />

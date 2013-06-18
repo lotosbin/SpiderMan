@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SpiderMan.Models {
     public class TaskModel : Entity {
-        [BsonRepresentation(BsonType.String)]
+        //[BsonRepresentation(BsonType.String)]
         public int ArticleType { get; set; }
 
         public string Site { get; set; }
@@ -22,6 +22,8 @@ namespace SpiderMan.Models {
         //public bool ArraysUnion { get; set; }
 
         public string Command { get; set; }
+        public int CommandType { get; set; }
+        public string Encoding { get; set; }
         public int Interval { get; set; }
     }
 }

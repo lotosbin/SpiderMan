@@ -1,1 +1,1 @@
-coffee -w -c -b ./grabscripts
+coffee -w -c -b ./

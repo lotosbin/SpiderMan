@@ -5,6 +5,7 @@ using SpiderMan.CustomModelBinders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -17,6 +18,10 @@ namespace SpiderMan {
 
     public class MvcApplication : System.Web.HttpApplication {
         protected void Application_Start() {
+            //Encoding oldDefault = GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedEncodings[0];
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedEncodings.Add(oldDefault);
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedEncodings.RemoveAt(0);
+
             RouteTable.Routes.MapHubs(new HubConfiguration() { EnableCrossDomain = true });
 
             //http://www.drdobbs.com/database/mongodb-with-c-deep-dive/240152181

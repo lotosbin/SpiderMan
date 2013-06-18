@@ -14,11 +14,13 @@
     @foreach (var item in Model) {
         <tr>
             <td><a target="_blank" href="@item.Url">@item.Site - @item.Command</a></td>
-            <td>@((TaskType)item.Type)</td>
+            <td>@((eArticleType)item.ArticleType)</td>
+            <td>@((eCommandType)item.CommandType)</td>
+            <td>@item.Encoding</td>
             <td>@item.Interval</td>
             <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }

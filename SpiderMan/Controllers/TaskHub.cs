@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
 using Ninject;
+using System.Text;
 
 namespace SpiderMan.Controllers {
     public class TaskHub : Hub {
@@ -33,7 +34,7 @@ namespace SpiderMan.Controllers {
             foreach (var model in models) {
                 Timer timer = new Timer(1000 * model.Interval);
                 timer.Elapsed += delegate { GenerateTask(model); };
-                timer.Enabled = true;
+                timer.Enabled = false;
             }
         }
 
@@ -82,6 +83,8 @@ namespace SpiderMan.Controllers {
                 Id = Guid.NewGuid(),
                 Site = model.Site,
                 Command = model.Command,
+                CommandType = (eCommandType)model.CommandType,
+                Encoding = model.Encoding,
                 Url = model.Url,
                 ArticleType = (eArticleType)model.ArticleType
             };
@@ -90,37 +93,72 @@ namespace SpiderMan.Controllers {
             return newTask;
         }
 
+        private JsonSerializerSettings JsonSetting {
+            get {
+                return new JsonSerializerSettings {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
+            }
+        }
+
         public void PostData(string taskjson, string datajson) {
-            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
+            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask), JsonSetting);
             if (task.Status == eTaskStatus.Fail) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
                 return;
             }
-            Clients.Group("broad").broadcastDoneTask(task);
+            if (task.Encoding == "gbk")
+                datajson = datajson.Replace("u", @"\u");
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
-                    var huanle = (Huanle)JsonConvert.DeserializeObject(datajson, typeof(Huanle));
-                    articleRepo.HuanleRepo.Add(huanle);
+                    if (task.CommandType == eCommandType.List) {
+                        var data = (IEnumerable<Huanle>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Huanle>));
+                        articleRepo.HuanleRepo.Add(data);
+                    } else {
+                        var data = (Huanle)JsonConvert.DeserializeObject(datajson, typeof(Huanle));
+                        articleRepo.HuanleRepo.Add(data);
+                    }
                     break;
                 case eArticleType.Shudong:
-                    var shudong = (Shudong)JsonConvert.DeserializeObject(datajson, typeof(Shudong));
-                    articleRepo.ShudongRepo.Add(shudong);
+                    if (task.CommandType == eCommandType.List) {
+                        var data = (IEnumerable<Shudong>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Shudong>));
+                        articleRepo.ShudongRepo.Add(data);
+                    } else {
+                        var data = (Shudong)JsonConvert.DeserializeObject(datajson, typeof(Shudong));
+                        articleRepo.ShudongRepo.Add(data);
+                    }
                     break;
                 case eArticleType.Dianbo:
-                    var dianbo = (Dianbo)JsonConvert.DeserializeObject(datajson, typeof(Dianbo));
-                    articleRepo.DianboRepo.Add(dianbo);
+                    if (task.CommandType == eCommandType.List) {
+                        var data = (IEnumerable<Dianbo>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Dianbo>));
+                        articleRepo.DianboRepo.Add(data);
+                    } else {
+                        var data = (Dianbo)JsonConvert.DeserializeObject(datajson, typeof(Dianbo));
+                        articleRepo.DianboRepo.Add(data);
+                    }
                     break;
                 case eArticleType.Finance:
-                    var finance = (Finance)JsonConvert.DeserializeObject(datajson, typeof(Finance));
-                    articleRepo.FinanceRepo.Add(finance);
+                    if (task.CommandType == eCommandType.List) {
+                        var data = (IEnumerable<Finance>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Finance>));
+                        articleRepo.FinanceRepo.Add(data);
+                    } else {
+                        var data = (Finance)JsonConvert.DeserializeObject(datajson, typeof(Finance));
+                        articleRepo.FinanceRepo.Add(data);
+                    }
                     break;
                 case eArticleType.Geek:
-                    var geek = (Geek)JsonConvert.DeserializeObject(datajson, typeof(Geek));
-                    articleRepo.GeekRepo.Add(geek);
+                    if (task.CommandType == eCommandType.List) {
+                        var data = (IEnumerable<Geek>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Geek>));
+                        articleRepo.GeekRepo.Add(data);
+                    } else {
+                        var data = (Geek)JsonConvert.DeserializeObject(datajson, typeof(Geek));
+                        articleRepo.GeekRepo.Add(data);
+                    }
                     break;
                 default:
                     break;
             }
+            Clients.Group("broad").broadcastDoneTask(task);
         }
 
         public void JoinGroup(string groupName) {
@@ -129,7 +167,7 @@ namespace SpiderMan.Controllers {
 
         public void ManualTask(string modelid) {
             var model = taskModeRepo.GetById(modelid);
-            Clients.Client(agents.Where(d=>d.Online).Single().ConnectionId).castTesk(GenerateTask(model));
+            Clients.Client(agents.Where(d => d.Online).Single().ConnectionId).castTesk(GenerateTask(model));
         }
 
         public override Task OnConnected() {
@@ -158,25 +196,30 @@ namespace SpiderMan.Controllers {
     }
 
     public class SpiderTask {
+        [JsonProperty("id")]
         public Guid Id { get; set; }
+        [JsonProperty("status")]
+        public eTaskStatus Status { get; set; }
+        [JsonProperty("articletype")]
+        public eArticleType ArticleType { get; set; }
         [JsonProperty("site")]
         public string Site { get; set; }
         [JsonProperty("command")]
         public string Command { get; set; }
+        [JsonProperty("commandtype")]
+        public eCommandType CommandType { get; set; }
         [JsonProperty("url")]
         public string Url { get; set; }
-        [JsonProperty("status")]
-        public eTaskStatus Status { get; set; }
-        [JsonIgnore]
-        public string Error { get; set; }
         [JsonProperty("handler")]
         public string Handler { get; set; }
+        [JsonProperty("error")]
+        public string Error { get; set; }
         [JsonProperty("spend")]
-        public string Spend { get; set; }
+        public int Spend { get; set; }
         [JsonProperty("grabdate")]
         public DateTime GrabDate { get; set; }
-        [JsonProperty("articletype")]
-        public eArticleType ArticleType { get; set; }
+        [JsonProperty("encoding")]
+        public string Encoding { get; set; }
     }
 
     public class Agent {

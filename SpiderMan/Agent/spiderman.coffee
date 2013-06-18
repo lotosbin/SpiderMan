@@ -5,11 +5,12 @@ if system.args.length isnt 3
 agentName = system.args[1]
 serverUrl = system.args[2]
 _ = require './underscore-min'
+nta = require './native2asic'
 fs = require 'fs'
 
 websocket = require("webpage").create()
 websocket.settings.localToRemoteUrlAccessEnabled = true
-websocket.onConsoleMessage = (info) -> console.log "~ Websocket_Console: " + info
+websocket.onConsoleMessage = (info) -> console.log "~Websocket_Console: " + info
 websocket.onCallback = (info) ->
   switch info.command
     when "CastTesk"
@@ -43,39 +44,46 @@ CastTesk = (task)->
     if trace
       trace.forEach (t)->
         msgStack.push " -> " + t.file + ": " + t.line + (t.function ? " (in function '" + t.function + "')" : "")
-    task.status = 'fail'
-    task.error = msgStack.join("\n")
-    PostData task, {}
-    pageGrab.close()
+    console.log '~EvaluateError: ' + msgStack.join("\n")
 
-  task.grabdate = Date.now()
+  task.grabdate = DisplayNowDate()
   pageGrab.open encodeURI(task.url), (status) -> 
     if status isnt 'success'
       task.status = 'fail'
       task.error = 'Unable to access page'
+      console.log '~Unable to access page'
       PostData task, {}
     else
       pageGrab.injectJs 'jquery.1.8.3.min.js'
       pageGrab.injectJs "grabscripts/#{task.site}_#{task.command}.js"
       gbdate = pageGrab.evaluate ->
-        return xhGrab()
-      GrabDone_time = (Date.now() - task.grabdate)/1000
+        return spGrab()
+      GrabDone_time = (Date.now() - task.grabdate)
       task.spend = GrabDone_time
+      if task.encoding == "gbk"
+        if task.commandtype == 1
+          _.each gbdate, (item, i)->
+            gbdate[i] = nta.obj2asciiobj item
+        else
+          gbdate = nta.obj2asciiobj gbdate
       PostData task, gbdate
     pageGrab.close()
 
-postsocket = require("webpage").create()
-postsocket.settings.localToRemoteUrlAccessEnabled = true
-postsocket.onConsoleMessage = (info) -> console.log "~ Postsocket_Console: " + info
-postsocket.injectJs './jquery.1.8.3.min.js'
-postsocket.injectJs './jquery.signalR-1.1.1.min.js'
-postsocket.includeJs serverUrl + '/signalr/hubs'
 PostData = (task, data)->
-  postsocket.evaluate (task, data, serverUrl)->
-    $.support.cors = false #todo: don't understand
-    $.connection.hub.url = serverUrl + '/signalr'
+  task = JSON.stringify task
+  data = JSON.stringify data
+  console.log "PostData: " + task + " - " + data
+  websocket.evaluate (task, data, serverUrl)->
     taskHub = $.connection.taskHub
-    console.log "CastTesk 1: " + (JSON.stringify task)
-    $.connection.hub.start().done ->
-      taskHub.server.postData (JSON.stringify task), (JSON.stringify data)
+    taskHub.server.postData task, data
   , task, data, serverUrl
+
+DisplayNowDate = ->
+  time = new Date()
+  yyyy = time.getFullYear()
+  mm = time.getMonth()+1
+  dd = time.getDate()
+  hour = time.getHours()
+  minute = time.getMinutes()
+  seconds = time.getSeconds()
+  return yyyy+'-'+mm+'-'+dd+' '+hour+':'+minute+':'+seconds
