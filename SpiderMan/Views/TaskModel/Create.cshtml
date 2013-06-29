@@ -1,6 +1,7 @@
 ﻿@model SpiderMan.Models.TaskModel
 @using SpiderMan.Models;
 @using sharp_net.Mvc;
+@using sharp_net.Repositories;
 
 @{
     ViewBag.Title = "Create";
@@ -13,8 +14,12 @@
     @Html.ValidationSummary(true)
     <ol>
         <li>
+            @Html.LabelFor(model => model.Act)
+            @Html.DropDownListFor(model => model.Act, ((eAct)0).ToSelectListItems())
+        </li>
+        <li>
             @Html.LabelFor(model => model.ArticleType)
-            @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)Model.ArticleType).ToSelectListItems())
+            @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)0).ToSelectListItems())
         </li>
         <li>
             @Html.LabelFor(model => model.Site)
@@ -32,7 +37,7 @@
         </li>
         <li>
             @Html.LabelFor(model => model.CommandType)
-            @Html.DropDownListFor(model => model.CommandType, ((eCommandType)Model.CommandType).ToSelectListItems())
+            @Html.DropDownListFor(model => model.CommandType, ((eCommandType)0).ToSelectListItems())
         </li>
         <li>
             @Html.LabelFor(model => model.Encoding)

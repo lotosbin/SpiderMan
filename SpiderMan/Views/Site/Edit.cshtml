@@ -1,4 +1,6 @@
 ﻿@model SpiderMan.Models.Site
+@using sharp_net.Repositories;
+@using sharp_net.Mvc;
 
 @{
     ViewBag.Title = "Edit";
@@ -12,6 +14,10 @@
     @Html.HiddenFor(model => model.Id)
     <ol>
         <li>
+            @Html.LabelFor(model => model.Act)
+            @Html.DropDownListFor(model => model.Act, ((eAct)Model.Act).ToSelectListItems())
+        </li>
+        <li>
             @Html.LabelFor(model => model.Name)
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
@@ -20,6 +26,11 @@
             @Html.LabelFor(model => model.Link)
             @Html.EditorFor(model => model.Link)
             @Html.ValidationMessageFor(model => model.Link)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.GrabInterval)
+            @Html.EditorFor(model => model.GrabInterval)
+            @Html.ValidationMessageFor(model => model.GrabInterval)
         </li>
     </ol>
     <p>

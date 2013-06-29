@@ -15,27 +15,44 @@ using System.Timers;
 using System.Web;
 using Ninject;
 using System.Text;
+using MongoDB.Driver.Builders;
+using sharp_net.Repositories;
 
 namespace SpiderMan.Controllers {
     public class TaskHub : Hub {
 
         private static IList<SpiderTask> tasks = new List<SpiderTask>();
         private static IList<Agent> agents = new List<Agent>();
-        MongoRepository<TaskModel> taskModeRepo;
-        MongoRepository<Site> siteRepo;
-        ArticleRespository articleRepo;
+        Respositorys repos;
 
         public TaskHub() {
-            taskModeRepo = NinjectWebCommon.Kernel.Get<MongoRepository<TaskModel>>();
-            siteRepo = NinjectWebCommon.Kernel.Get<MongoRepository<Site>>();
-            articleRepo = NinjectWebCommon.Kernel.Get<ArticleRespository>();
+            repos = NinjectWebCommon.Kernel.Get<Respositorys>();
 
-            var models = taskModeRepo.All();
+            var models = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
             foreach (var model in models) {
                 Timer timer = new Timer(1000 * model.Interval);
-                timer.Elapsed += delegate { GenerateTask(model); };
-                timer.Enabled = false;
+                //timer.Elapsed += delegate { GenerateTask(model); };
+                timer.Enabled = true;
             }
+        }
+
+        private SpiderTask GenerateTask(TaskModel model) {
+            var newTask = new SpiderTask {
+                Id = Guid.NewGuid(),
+                Site = model.Site,
+                Command = model.Command,
+                CommandType = (eCommandType)model.CommandType,
+                Encoding = model.Encoding,
+                Url = model.Url,
+                ArticleType = (eArticleType)model.ArticleType
+            };
+            tasks.Add(newTask);
+            Clients.Group("broad").broadcastAddTask(newTask);
+            return newTask;
+        }
+
+        public void JoinGroup(string groupName) {
+            Groups.Add(Context.ConnectionId, groupName);
         }
 
         public void RegisterBoard() {
@@ -58,101 +75,98 @@ namespace SpiderMan.Controllers {
                 agents.Add(agent);
                 GenerateAgentProcess(agent);
             }
+            JoinGroup("agent");
             Clients.Group("broad").agentList(agents);
         }
 
         private void GenerateAgentProcess(Agent agent) {
-            var sites = siteRepo.All();
+            var sites = repos.SiteRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
             agent.Timer = new List<Timer>();
             foreach (var site in sites) {
                 Timer timer = new Timer(1000 * site.GrabInterval);
-                timer.Elapsed += delegate { ProcessTesk(site, agent); };
+                //timer.Elapsed += delegate { ProcessTesk(site, agent); };
                 timer.Enabled = true;
                 agent.Timer.Add(timer);
             }
         }
 
         private void ProcessTesk(Site site, Agent agent) {
-            var task = tasks.Where(d => d.Site == site.Name).FirstOrDefault();
-            if (task != null)
+            var task = tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
+            if (task != null) {
+                task.Status = eTaskStatus.Executing;
                 Clients.Client(agent.ConnectionId).castTesk(task);
-        }
-
-        private SpiderTask GenerateTask(TaskModel model) {
-            var newTask = new SpiderTask {
-                Id = Guid.NewGuid(),
-                Site = model.Site,
-                Command = model.Command,
-                CommandType = (eCommandType)model.CommandType,
-                Encoding = model.Encoding,
-                Url = model.Url,
-                ArticleType = (eArticleType)model.ArticleType
-            };
-            tasks.Add(newTask);
-            Clients.Group("broad").broadcastAddTask(newTask);
-            return newTask;
+            }
         }
 
         private JsonSerializerSettings JsonSetting {
             get {
                 return new JsonSerializerSettings {
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
+                    
                 };
             }
         }
 
         public void PostData(string taskjson, string datajson) {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask), JsonSetting);
+            //tasks = tasks.Where(d => d.Id != task.Id).ToList();
+            tasks.Remove(task);
             if (task.Status == eTaskStatus.Fail) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
                 return;
             }
-            if (task.Encoding == "gbk")
-                datajson = datajson.Replace("u", @"\u");
+            //if (task.Encoding == "gbk") {
+            //    datajson = datajson.Replace("u", @"\u");
+            //    //byte[] unicodeBytes = Encoding.Unicode.GetBytes(datajson);
+            //    //byte[] asciiBytes = Encoding.Convert(Encoding.Unicode, Encoding.ASCII, unicodeBytes);
+            //    //char[] asciiChars = new char[Encoding.ASCII.GetCharCount(asciiBytes, 0, asciiBytes.Length)];
+            //    //Encoding.ASCII.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0);
+            //    //datajson = new string(asciiChars);
+            //}
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
                     if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Huanle>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Huanle>));
-                        articleRepo.HuanleRepo.Add(data);
+                        var data = (IEnumerable<Huanle>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Huanle>), JsonSetting);
+                        repos.HuanleRepo.Add(data);
                     } else {
                         var data = (Huanle)JsonConvert.DeserializeObject(datajson, typeof(Huanle));
-                        articleRepo.HuanleRepo.Add(data);
+                        repos.HuanleRepo.Add(data);
                     }
                     break;
                 case eArticleType.Shudong:
                     if (task.CommandType == eCommandType.List) {
                         var data = (IEnumerable<Shudong>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Shudong>));
-                        articleRepo.ShudongRepo.Add(data);
+                        repos.ShudongRepo.Add(data);
                     } else {
                         var data = (Shudong)JsonConvert.DeserializeObject(datajson, typeof(Shudong));
-                        articleRepo.ShudongRepo.Add(data);
+                        repos.ShudongRepo.Add(data);
                     }
                     break;
                 case eArticleType.Dianbo:
                     if (task.CommandType == eCommandType.List) {
                         var data = (IEnumerable<Dianbo>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Dianbo>));
-                        articleRepo.DianboRepo.Add(data);
+                        repos.DianboRepo.Add(data);
                     } else {
                         var data = (Dianbo)JsonConvert.DeserializeObject(datajson, typeof(Dianbo));
-                        articleRepo.DianboRepo.Add(data);
+                        repos.DianboRepo.Add(data);
                     }
                     break;
                 case eArticleType.Finance:
                     if (task.CommandType == eCommandType.List) {
                         var data = (IEnumerable<Finance>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Finance>));
-                        articleRepo.FinanceRepo.Add(data);
+                        repos.FinanceRepo.Add(data);
                     } else {
                         var data = (Finance)JsonConvert.DeserializeObject(datajson, typeof(Finance));
-                        articleRepo.FinanceRepo.Add(data);
+                        repos.FinanceRepo.Add(data);
                     }
                     break;
                 case eArticleType.Geek:
                     if (task.CommandType == eCommandType.List) {
                         var data = (IEnumerable<Geek>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Geek>));
-                        articleRepo.GeekRepo.Add(data);
+                        repos.GeekRepo.Add(data);
                     } else {
                         var data = (Geek)JsonConvert.DeserializeObject(datajson, typeof(Geek));
-                        articleRepo.GeekRepo.Add(data);
+                        repos.GeekRepo.Add(data);
                     }
                     break;
                 default:
@@ -161,24 +175,24 @@ namespace SpiderMan.Controllers {
             Clients.Group("broad").broadcastDoneTask(task);
         }
 
-        public void JoinGroup(string groupName) {
-            Groups.Add(Context.ConnectionId, groupName);
-        }
-
         public void ManualTask(string modelid) {
-            var model = taskModeRepo.GetById(modelid);
-            Clients.Client(agents.Where(d => d.Online).Single().ConnectionId).castTesk(GenerateTask(model));
+            var model = repos.TaskModelRepo.GetById(modelid);
+            SpiderTask task = GenerateTask(model);
+            Clients.Client(agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
         }
 
-        public override Task OnConnected() {
-            return base.OnConnected();
-        }
+        //public override Task OnConnected() {
+        //    return base.OnConnected();
+        //}
 
         public override Task OnDisconnected() {
             var agent = agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = false;
-                foreach (var timer in agent.Timer) timer.Stop();
+                foreach (var timer in agent.Timer) {
+                    timer.Stop();
+                    timer.Close();
+                }
                 Clients.Group("broad").agentList(agents);
             }
             return base.OnDisconnected();
@@ -195,41 +209,4 @@ namespace SpiderMan.Controllers {
         }
     }
 
-    public class SpiderTask {
-        [JsonProperty("id")]
-        public Guid Id { get; set; }
-        [JsonProperty("status")]
-        public eTaskStatus Status { get; set; }
-        [JsonProperty("articletype")]
-        public eArticleType ArticleType { get; set; }
-        [JsonProperty("site")]
-        public string Site { get; set; }
-        [JsonProperty("command")]
-        public string Command { get; set; }
-        [JsonProperty("commandtype")]
-        public eCommandType CommandType { get; set; }
-        [JsonProperty("url")]
-        public string Url { get; set; }
-        [JsonProperty("handler")]
-        public string Handler { get; set; }
-        [JsonProperty("error")]
-        public string Error { get; set; }
-        [JsonProperty("spend")]
-        public int Spend { get; set; }
-        [JsonProperty("grabdate")]
-        public DateTime GrabDate { get; set; }
-        [JsonProperty("encoding")]
-        public string Encoding { get; set; }
-    }
-
-    public class Agent {
-        [JsonProperty("connectionid")]
-        public string ConnectionId { get; set; }
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("online")]
-        public bool Online { get; set; }
-        [JsonIgnore]
-        public IList<Timer> Timer { get; set; }
-    }
 }

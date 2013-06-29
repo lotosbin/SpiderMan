@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<SpiderMan.Models.TaskModel>
 @using SpiderMan.Models
+@using sharp_net.Repositories;
 
 @{
     ViewBag.Title = "Index";
@@ -14,6 +15,7 @@
     @foreach (var item in Model) {
         <tr>
             <td><a target="_blank" href="@item.Url">@item.Site - @item.Command</a></td>
+            <td>@((eAct)item.Act)</td>
             <td>@((eArticleType)item.ArticleType)</td>
             <td>@((eCommandType)item.CommandType)</td>
             <td>@item.Encoding</td>

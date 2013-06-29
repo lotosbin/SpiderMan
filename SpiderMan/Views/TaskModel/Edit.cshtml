@@ -1,4 +1,5 @@
 ﻿@model SpiderMan.Models.TaskModel
+@using sharp_net.Repositories;
 @using SpiderMan.Models;
 @using sharp_net.Mvc;
 
@@ -13,6 +14,10 @@
     @Html.ValidationSummary(true)
     @Html.HiddenFor(model => model.Id)
     <ol>
+        <li>
+            @Html.LabelFor(model => model.Act)
+            @Html.DropDownListFor(model => model.Act, ((eAct)Model.Act).ToSelectListItems())
+        </li>
         <li>
             @Html.LabelFor(model => model.ArticleType)
             @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)Model.ArticleType).ToSelectListItems())

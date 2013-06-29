@@ -14,22 +14,24 @@ angular.module('spiderman', []).config([
 ]);
 
 ArticleListCtrl = function($scope, $http, $routeParams) {
-  if (!$routeParams.article) {
-    $scope.article = 'huanle';
-  }
-  if (!$routeParams.boxer) {
-    $scope.boxer = 'inbox';
-  }
+  var articles;
+  $scope.article = $routeParams.article ? $routeParams.article : 'huanle';
+  $scope.boxer = $routeParams.boxer ? $routeParams.boxer : 'verifying';
+  articles = [];
   $http.get("/api/" + $scope.article + "/" + $scope.boxer).success(function(data) {
     if (_.isArray(data)) {
-      $scope.articles = data;
+      $scope.articles = articles = data;
       return $scope.view = data[0];
     } else {
       $scope.view = data;
       return $scope.viewmodel = 'single';
     }
   });
-  $scope.SinglePage = function(articleId) {};
+  $scope.ViewOne = function(articleId) {
+    return $scope.view = _.where(articles, {
+      id: articleId
+    })[0];
+  };
   $scope.GetMore = function(nextIndex) {
     return $http.get("/api/" + $scope.article + "/" + $scope.inbox).success(function(data) {
       return $scope.articles = _.union($scope.articles, data);

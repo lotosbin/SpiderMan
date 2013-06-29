@@ -9,7 +9,7 @@ using System.Web;
 using MongoRepository;
 
 namespace SpiderMan.Respository {
-    public class HuanleRespository : ArticleRespository {
+    public class HuanleRespository : Respositorys {
         public IEnumerable<Huanle> GetArticles(int limit, int skip) {
             var qiubaisCursor = HuanleRepo.Collection.FindAllAs<Huanle>()
                 .SetSortOrder(SortBy<Huanle>.Descending(g => g.Amount))

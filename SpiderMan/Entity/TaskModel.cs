@@ -11,8 +11,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SpiderMan.Models {
     public class TaskModel : Entity {
+        public int Act { get; set; }
+
         //[BsonRepresentation(BsonType.String)]
         public int ArticleType { get; set; }
+        public eArticleType ArticleTypeEnum {
+            get {
+                return (eArticleType)ArticleType;
+            }
+        }
 
         public string Site { get; set; }
         public string Url { get; set; }
@@ -24,6 +31,7 @@ namespace SpiderMan.Models {
         public string Command { get; set; }
         public int CommandType { get; set; }
         public string Encoding { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "必须大于0")]
         public int Interval { get; set; }
     }
 }

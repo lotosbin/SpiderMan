@@ -16,7 +16,7 @@ namespace SpiderMan {
             config.Routes.MapHttpRoute(
                 name: "ArticleList",
                 routeTemplate: "api/{controller}/{boxer}",
-                defaults: new { boxer = "verifying" }
+                defaults: new { controller = "huanle", boxer = "verifying" }
             );
 
             // 取消注释下面的代码行可对具有 IQueryable 或 IQueryable<T> 返回类型的操作启用查询支持。

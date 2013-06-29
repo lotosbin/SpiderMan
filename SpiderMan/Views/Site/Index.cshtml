@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<SpiderMan.Models.Site>
+@using sharp_net.Repositories;
 
 @{
     ViewBag.Title = "Index";
@@ -13,6 +14,8 @@
     @foreach (var item in Model) {
         <tr>
             <td><a target="_blank" href="@item.Link">@item.Name</a></td>
+            <td>@((eAct)item.Act)</td>
+            <td>@item.GrabInterval</td>
             <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Id })
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })

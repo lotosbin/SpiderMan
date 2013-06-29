@@ -6,23 +6,22 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using sharp_net.Mvc;
+using SpiderMan.Respository;
 
 namespace SpiderMan.Controllers {
     public class TaskModelController : Controller {
-        private readonly MongoRepository<TaskModel> repo;
-        private readonly MongoRepository<Site> repo_site;
-        public TaskModelController(MongoRepository<TaskModel> _repo, MongoRepository<Site> _repo_site) {
+        private readonly Respositorys repo;
+        public TaskModelController(Respositorys _repo) {
             this.repo = _repo;
-            this.repo_site = _repo_site;
         }
 
         public ActionResult Index() {
-            var models = repo.All();
+            var models = repo.TaskModelRepo.Collection.FindAll();
             return View(models);
         }
 
         public ActionResult Create() {
-            ViewBag.SiteList = from site in repo_site.All()
+            ViewBag.SiteList = from site in repo.SiteRepo.Collection.FindAll()
                                select new SelectListItem() {
                                    Text = site.Name,
                                    Value = site.Name
@@ -36,13 +35,13 @@ namespace SpiderMan.Controllers {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);
             }
-            repo.Add(model);
+            repo.TaskModelRepo.Add(model);
             return RedirectToAction("Index");
         }
 
         public ActionResult Edit(string id) {
-            var model = repo.GetById(id);
-            ViewBag.SiteList = from site in repo_site.All()
+            var model = repo.TaskModelRepo.GetById(id);
+            ViewBag.SiteList = from site in repo.SiteRepo.Collection.FindAll()
                                select new SelectListItem() {
                                    Text = site.Name,
                                    Value = site.Name
@@ -56,18 +55,18 @@ namespace SpiderMan.Controllers {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);
             }
-            repo.Update(model);
+            repo.TaskModelRepo.Update(model);
             return RedirectToAction("Index");
         }
 
         public ActionResult Delete(string id) {
-            var site = repo.GetById(id);
+            var site = repo.TaskModelRepo.GetById(id);
             return View(site);
         }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id) {
-            repo.Delete(id);
+            repo.TaskModelRepo.Delete(id);
             return RedirectToAction("Index");
         }
     }
