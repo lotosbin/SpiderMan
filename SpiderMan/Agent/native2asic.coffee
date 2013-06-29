@@ -6,7 +6,7 @@ exports.obj2asciiobj = (data)->
 
 exports.str2ascii = (str)->
 	str.replace /[\u007f-\uffff]/g, (c)->
-		'\u'+('0000'+c.charCodeAt(0).toString(16)).slice(-4)
+		"/u"+('0000'+c.charCodeAt(0).toString(16)).slice(-4)
 
 # if task.encoding == "gbk"
 #   if _.isArray gbdate

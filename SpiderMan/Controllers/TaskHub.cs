@@ -17,36 +17,21 @@ using Ninject;
 using System.Text;
 using MongoDB.Driver.Builders;
 using sharp_net.Repositories;
+using Newtonsoft.Json.Linq;
+using SpiderMan.Help;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace SpiderMan.Controllers {
+
     public class TaskHub : Hub {
-
-        private static IList<SpiderTask> tasks = new List<SpiderTask>();
-        private static IList<Agent> agents = new List<Agent>();
-        Respositorys repos;
-
+        private Respositorys repos;
         public TaskHub() {
             repos = NinjectWebCommon.Kernel.Get<Respositorys>();
-
-            var models = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
-            foreach (var model in models) {
-                Timer timer = new Timer(1000 * model.Interval);
-                //timer.Elapsed += delegate { GenerateTask(model); };
-                timer.Enabled = true;
-            }
         }
 
         private SpiderTask GenerateTask(TaskModel model) {
-            var newTask = new SpiderTask {
-                Id = Guid.NewGuid(),
-                Site = model.Site,
-                Command = model.Command,
-                CommandType = (eCommandType)model.CommandType,
-                Encoding = model.Encoding,
-                Url = model.Url,
-                ArticleType = (eArticleType)model.ArticleType
-            };
-            tasks.Add(newTask);
+            var newTask = TaskQueue.Instance.GenerateTask(model);
             Clients.Group("broad").broadcastAddTask(newTask);
             return newTask;
         }
@@ -57,116 +42,75 @@ namespace SpiderMan.Controllers {
 
         public void RegisterBoard() {
             JoinGroup("broad");
-            Clients.Client(Context.ConnectionId).agentList(agents);
+            Clients.Client(Context.ConnectionId).agentList(TaskQueue.agents);
         }
 
         public void RegisterAgent(string name) {
-            var offlineAgent = agents.SingleOrDefault(d => d.Name == name);
+            var offlineAgent = TaskQueue.agents.SingleOrDefault(d => d.Name == name);
             if (offlineAgent != null) {
                 offlineAgent.ConnectionId = Context.ConnectionId;
                 offlineAgent.Online = true;
                 foreach (var timer in offlineAgent.Timer) timer.Start();
             } else {
-                var agent = new Agent {
+                var newagent = new Agent {
                     ConnectionId = Context.ConnectionId,
                     Name = name,
                     Online = true
                 };
-                agents.Add(agent);
-                GenerateAgentProcess(agent);
+                TaskQueue.agents.Add(newagent);
+                TaskQueue.Instance.GenerateAgentProcess(newagent);
             }
             JoinGroup("agent");
-            Clients.Group("broad").agentList(agents);
-        }
-
-        private void GenerateAgentProcess(Agent agent) {
-            var sites = repos.SiteRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
-            agent.Timer = new List<Timer>();
-            foreach (var site in sites) {
-                Timer timer = new Timer(1000 * site.GrabInterval);
-                //timer.Elapsed += delegate { ProcessTesk(site, agent); };
-                timer.Enabled = true;
-                agent.Timer.Add(timer);
-            }
+            Clients.Group("broad").agentList(TaskQueue.agents);
         }
 
         private void ProcessTesk(Site site, Agent agent) {
-            var task = tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
+            var task = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
             if (task != null) {
                 task.Status = eTaskStatus.Executing;
                 Clients.Client(agent.ConnectionId).castTesk(task);
             }
         }
 
-        private JsonSerializerSettings JsonSetting {
-            get {
-                return new JsonSerializerSettings {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    
-                };
-            }
-        }
+        static readonly MatchEvaluator replacer = m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString();
 
         public void PostData(string taskjson, string datajson) {
-            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask), JsonSetting);
-            //tasks = tasks.Where(d => d.Id != task.Id).ToList();
-            tasks.Remove(task);
+            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
+            TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
             if (task.Status == eTaskStatus.Fail) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
                 return;
             }
-            //if (task.Encoding == "gbk") {
-            //    datajson = datajson.Replace("u", @"\u");
-            //    //byte[] unicodeBytes = Encoding.Unicode.GetBytes(datajson);
-            //    //byte[] asciiBytes = Encoding.Convert(Encoding.Unicode, Encoding.ASCII, unicodeBytes);
-            //    //char[] asciiChars = new char[Encoding.ASCII.GetCharCount(asciiBytes, 0, asciiBytes.Length)];
-            //    //Encoding.ASCII.GetChars(asciiBytes, 0, asciiBytes.Length, asciiChars, 0);
-            //    //datajson = new string(asciiChars);
-            //}
+            if (task.Encoding == "gbk") {
+                datajson = Regex.Replace(datajson, @"/u([a-fA-F0-9]{4})", replacer);
+            }
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
                     if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Huanle>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Huanle>), JsonSetting);
+                        //因为Mongodb Respository's Entity 有DataContract特性，所以无法被json.net序列化
+                        var data = JsonHelper.JsonDeserialize<IEnumerable<Huanle>>(datajson);
                         repos.HuanleRepo.Add(data);
                     } else {
-                        var data = (Huanle)JsonConvert.DeserializeObject(datajson, typeof(Huanle));
+                        var data = JsonHelper.JsonDeserialize<Huanle>(datajson);
                         repos.HuanleRepo.Add(data);
                     }
                     break;
                 case eArticleType.Shudong:
                     if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Shudong>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Shudong>));
+                        var data = JsonHelper.JsonDeserialize<IEnumerable<Shudong>>(datajson);
                         repos.ShudongRepo.Add(data);
                     } else {
-                        var data = (Shudong)JsonConvert.DeserializeObject(datajson, typeof(Shudong));
+                        var data = JsonHelper.JsonDeserialize<Shudong>(datajson);
                         repos.ShudongRepo.Add(data);
                     }
                     break;
                 case eArticleType.Dianbo:
                     if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Dianbo>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Dianbo>));
+                        var data = JsonHelper.JsonDeserialize<IEnumerable<Dianbo>>(datajson);
                         repos.DianboRepo.Add(data);
                     } else {
-                        var data = (Dianbo)JsonConvert.DeserializeObject(datajson, typeof(Dianbo));
+                        var data = JsonHelper.JsonDeserialize<Dianbo>(datajson);
                         repos.DianboRepo.Add(data);
-                    }
-                    break;
-                case eArticleType.Finance:
-                    if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Finance>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Finance>));
-                        repos.FinanceRepo.Add(data);
-                    } else {
-                        var data = (Finance)JsonConvert.DeserializeObject(datajson, typeof(Finance));
-                        repos.FinanceRepo.Add(data);
-                    }
-                    break;
-                case eArticleType.Geek:
-                    if (task.CommandType == eCommandType.List) {
-                        var data = (IEnumerable<Geek>)JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Geek>));
-                        repos.GeekRepo.Add(data);
-                    } else {
-                        var data = (Geek)JsonConvert.DeserializeObject(datajson, typeof(Geek));
-                        repos.GeekRepo.Add(data);
                     }
                     break;
                 default:
@@ -178,32 +122,28 @@ namespace SpiderMan.Controllers {
         public void ManualTask(string modelid) {
             var model = repos.TaskModelRepo.GetById(modelid);
             SpiderTask task = GenerateTask(model);
-            Clients.Client(agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
+            Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
         }
 
-        //public override Task OnConnected() {
-        //    return base.OnConnected();
-        //}
-
         public override Task OnDisconnected() {
-            var agent = agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
+            var agent = TaskQueue.agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = false;
                 foreach (var timer in agent.Timer) {
                     timer.Stop();
                     timer.Close();
                 }
-                Clients.Group("broad").agentList(agents);
+                Clients.Group("broad").agentList(TaskQueue.agents);
             }
             return base.OnDisconnected();
         }
 
         public override Task OnReconnected() {
-            var agent = agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
+            var agent = TaskQueue.agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = true;
                 foreach (var timer in agent.Timer) timer.Start();
-                Clients.Group("broad").agentList(agents);
+                Clients.Group("broad").agentList(TaskQueue.agents);
             }
             return base.OnReconnected();
         }

@@ -58,8 +58,9 @@ namespace SpiderMan.App_Start {
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel) {
-            kernel.Bind<Respositorys>().To<Respositorys>();
-            kernel.Bind<HuanleRespository>().To<HuanleRespository>();
+            //Todo: 不理解为什么没有bind的情况下controller构造函数依然能得到对象实体
+            //kernel.Bind<Respositorys>().To<Respositorys>();
+            //kernel.Bind<HuanleRespository>().To<HuanleRespository>();
         }
     }
 }

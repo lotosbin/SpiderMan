@@ -6,7 +6,6 @@ agentName = system.args[1]
 serverUrl = system.args[2]
 _ = require './underscore-min'
 nta = require './native2asic'
-datehelp = require './datehelp'
 
 websocket = require("webpage").create()
 websocket.settings.localToRemoteUrlAccessEnabled = true
@@ -45,7 +44,7 @@ CastTesk = (task)->
         msgStack.push " -> " + t.file + ": " + t.line + (t.function ? " (in function '" + t.function + "')" : "")
     console.log '~EvaluateError: ' + msgStack.join("\n")
 
-  task.grabdate = datehelp.DisplayNowDate()
+  
   now = Date.now()
   pageGrab.open encodeURI(task.url), (status) -> 
     gbdate = {}

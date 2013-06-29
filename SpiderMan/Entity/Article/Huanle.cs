@@ -8,12 +8,12 @@ using System.Web;
 namespace SpiderMan.Models {
 
     public class Huanle : Article {
-
         public string Title { get; set; }
 
         public int ThumbUps { get; set; }
         public int ThumbDowns { get; set; }
         public int Amount { get; set; }
+        public int Hot { get; set; }
 
         public List<Comment> Comments { get; set; }
     }

@@ -8,7 +8,7 @@ using System.Web;
 namespace SpiderMan.Models {
 
     public class Finance : Article {
-
+        public int Hot { get; set; }
         public string Title { get; set; }
         public List<Comment> Comments { get; set; }
     }
