@@ -1,3 +1,12 @@
+_ = {}
+`
+['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'].forEach(function(name) {
+	_['is' + name] = function(obj) {
+	  return toString.call(obj) == '[object ' + name + ']';
+	};
+})
+`
+
 exports.obj2asciiobj = (data)->
 	for key of data
 		if data.hasOwnProperty(key) 
@@ -5,8 +14,9 @@ exports.obj2asciiobj = (data)->
 	return data
 
 exports.str2ascii = (str)->
+	if not _.isString str then return str
 	str.replace /[\u007f-\uffff]/g, (c)->
-		"/u"+('0000'+c.charCodeAt(0).toString(16)).slice(-4)
+		"zx"+('0000'+c.charCodeAt(0).toString(16)).slice(-4)
 
 # if task.encoding == "gbk"
 #   if _.isArray gbdate
@@ -14,3 +24,7 @@ exports.str2ascii = (str)->
 #       gbdate[i] = nta.obj2asciiobj item
 #   else
 #     gbdate = nta.obj2asciiobj gbdate
+
+# if (task.Encoding == "gbk") {
+#     datajson = Regex.Replace(datajson, @"zx([a-fA-F0-9]{4})", replacer);
+# }

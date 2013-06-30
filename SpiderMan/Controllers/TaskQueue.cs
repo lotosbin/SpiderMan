@@ -22,8 +22,7 @@ namespace SpiderMan.Controllers {
         public static IList<SpiderTask> tasks;
         public static IList<Agent> agents;
         private static Respositorys repos;
-
-        static readonly TaskQueue instance = new TaskQueue();
+        public static readonly TaskQueue Instance;
 
         // http://www.yoda.arachsys.com/csharp/singleton.html 线程安全的模式
         // 静态构造函数用于初始化任何静态数据，或用于执行仅需执行一次的特定操作。在创建第一个实例或引用任何静态成员之前将调用静态构造函数。
@@ -31,6 +30,7 @@ namespace SpiderMan.Controllers {
             tasks = new List<SpiderTask>();
             agents = new List<Agent>();
             repos = new Respositorys();
+            Instance = new TaskQueue();
             var models = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
             foreach (var model in models) {
                 Timer timer = new Timer(1000 * model.Interval);
@@ -40,12 +40,6 @@ namespace SpiderMan.Controllers {
         }
 
         TaskQueue() { }
-
-        public static TaskQueue Instance {
-            get {
-                return instance;
-            }
-        }
 
         public SpiderTask GenerateTask(TaskModel model) {
             var newTask = new SpiderTask {

@@ -5,7 +5,6 @@ if system.args.length isnt 3
 agentName = system.args[1]
 serverUrl = system.args[2]
 _ = require './underscore-min'
-nta = require './native2asic'
 
 websocket = require("webpage").create()
 websocket.settings.localToRemoteUrlAccessEnabled = true
@@ -15,13 +14,14 @@ websocket.onCallback = (info) ->
     when "CastTesk"
       CastTesk info.task
 websocket.injectJs './jquery.1.8.3.min.js'
-websocket.injectJs './jquery.signalR-1.1.1.min.js'
+websocket.injectJs './jquery.signalR-1.1.2.min.js'
 websocket.includeJs serverUrl + '/signalr/hubs', ->
   websocket.evaluate (serverUrl, agentName)->
     $.support.cors = false #todo: don't understand now
     $.connection.hub.url = serverUrl + '/signalr'
     taskHub = $.connection.taskHub
     $.connection.hub.start().done ->
+      $.support.cors = true
       #console.log taskHub.connection.id
       taskHub.server.registerAgent agentName
     taskHub.client.castTesk = (task) ->
@@ -44,31 +44,27 @@ CastTesk = (task)->
         msgStack.push " -> " + t.file + ": " + t.line + (t.function ? " (in function '" + t.function + "')" : "")
     console.log '~EvaluateError: ' + msgStack.join("\n")
 
-  
   now = Date.now()
   pageGrab.open encodeURI(task.url), (status) -> 
     gbdate = {}
     if status isnt 'success'
-      task.status = 'fail'
+      task.status = 2 #Fail
       task.error = 'Unable to access page'
-      #console.log '~Unable to access page'
     else
       pageGrab.injectJs 'jquery.1.8.3.min.js'
       pageGrab.injectJs "grabscripts/#{task.site}_#{task.command}.js"
       gbdate = pageGrab.evaluate ->
         return spGrab()
       task.spend = (Date.now() - now)
-      if task.encoding == "gbk"
-        if _.isArray gbdate
-          _.each gbdate, (item, i)->
-            gbdate[i] = nta.obj2asciiobj item
-        else
-          gbdate = nta.obj2asciiobj gbdate
     pageGrab.close()
-    task = JSON.stringify task
-    gbdate = JSON.stringify gbdate
-    console.log "~PostData: " + gbdate
-    websocket.evaluate (task, data)->
+    websocket.evaluate (serverUrl, task, data)->
+      _task = JSON.stringify task
       taskHub = $.connection.taskHub
-      taskHub.server.postData task, data
-    , task, gbdate
+      taskHub.server.doneTask task
+      if task.status = 2
+        _data = JSON.stringify data
+        #console.log "~PostData: " + _data
+        $.post serverUrl + "/task/postdata",
+          taskjson: _task
+          datajson: _data
+    , serverUrl, task, gbdate

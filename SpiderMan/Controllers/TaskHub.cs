@@ -72,57 +72,22 @@ namespace SpiderMan.Controllers {
             }
         }
 
-        static readonly MatchEvaluator replacer = m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString();
-
-        public void PostData(string taskjson, string datajson) {
+        public void DoneTask(string taskjson) {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
             TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
+            Clients.Group("broad").broadcastRemoveTask(task);
             if (task.Status == eTaskStatus.Fail) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
                 return;
             }
-            if (task.Encoding == "gbk") {
-                datajson = Regex.Replace(datajson, @"/u([a-fA-F0-9]{4})", replacer);
-            }
-            switch (task.ArticleType) {
-                case eArticleType.Huanle:
-                    if (task.CommandType == eCommandType.List) {
-                        //因为Mongodb Respository's Entity 有DataContract特性，所以无法被json.net序列化
-                        var data = JsonHelper.JsonDeserialize<IEnumerable<Huanle>>(datajson);
-                        repos.HuanleRepo.Add(data);
-                    } else {
-                        var data = JsonHelper.JsonDeserialize<Huanle>(datajson);
-                        repos.HuanleRepo.Add(data);
-                    }
-                    break;
-                case eArticleType.Shudong:
-                    if (task.CommandType == eCommandType.List) {
-                        var data = JsonHelper.JsonDeserialize<IEnumerable<Shudong>>(datajson);
-                        repos.ShudongRepo.Add(data);
-                    } else {
-                        var data = JsonHelper.JsonDeserialize<Shudong>(datajson);
-                        repos.ShudongRepo.Add(data);
-                    }
-                    break;
-                case eArticleType.Dianbo:
-                    if (task.CommandType == eCommandType.List) {
-                        var data = JsonHelper.JsonDeserialize<IEnumerable<Dianbo>>(datajson);
-                        repos.DianboRepo.Add(data);
-                    } else {
-                        var data = JsonHelper.JsonDeserialize<Dianbo>(datajson);
-                        repos.DianboRepo.Add(data);
-                    }
-                    break;
-                default:
-                    break;
-            }
-            Clients.Group("broad").broadcastDoneTask(task);
         }
 
         public void ManualTask(string modelid) {
             var model = repos.TaskModelRepo.GetById(modelid);
-            SpiderTask task = GenerateTask(model);
-            Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
+            if (model != null) {
+                SpiderTask task = GenerateTask(model);
+                Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
+            }
         }
 
         public override Task OnDisconnected() {
