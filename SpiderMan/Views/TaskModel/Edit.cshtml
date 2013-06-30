@@ -43,11 +43,6 @@
             @Html.DropDownListFor(model => model.CommandType, ((eCommandType)Model.CommandType).ToSelectListItems())
         </li>
         <li>
-            @Html.LabelFor(model => model.Encoding)
-            @Html.EditorFor(model => model.Encoding)
-            @Html.ValidationMessageFor(model => model.Encoding)
-        </li>
-        <li>
             @Html.LabelFor(model => model.Interval)
             @Html.EditorFor(model => model.Interval)
             @Html.ValidationMessageFor(model => model.Interval)

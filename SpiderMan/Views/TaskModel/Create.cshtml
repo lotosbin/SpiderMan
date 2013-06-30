@@ -14,10 +14,6 @@
     @Html.ValidationSummary(true)
     <ol>
         <li>
-            @Html.LabelFor(model => model.Act)
-            @Html.DropDownListFor(model => model.Act, ((eAct)0).ToSelectListItems())
-        </li>
-        <li>
             @Html.LabelFor(model => model.ArticleType)
             @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)0).ToSelectListItems())
         </li>
@@ -38,11 +34,6 @@
         <li>
             @Html.LabelFor(model => model.CommandType)
             @Html.DropDownListFor(model => model.CommandType, ((eCommandType)0).ToSelectListItems())
-        </li>
-        <li>
-            @Html.LabelFor(model => model.Encoding)
-            @Html.EditorFor(model => model.Encoding)
-            @Html.ValidationMessageFor(model => model.Encoding)
         </li>
         <li>
             @Html.LabelFor(model => model.Interval)

@@ -15,22 +15,14 @@ namespace SpiderMan.Models {
 
         //[BsonRepresentation(BsonType.String)]
         public int ArticleType { get; set; }
-        public eArticleType ArticleTypeEnum {
-            get {
-                return (eArticleType)ArticleType;
-            }
-        }
 
+        [Required]
         public string Site { get; set; }
+        [Required]
         public string Url { get; set; }
-
-        //public int startIndex { get; set; }
-        //public int stopIndex { get; set; }
-        //public bool ArraysUnion { get; set; }
-
+        [Required]
         public string Command { get; set; }
         public int CommandType { get; set; }
-        public string Encoding { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "必须大于0")]
         public int Interval { get; set; }
     }

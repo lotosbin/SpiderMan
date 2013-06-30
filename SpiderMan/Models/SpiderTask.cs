@@ -24,7 +24,5 @@ namespace SpiderMan.Models {
         public string Error { get; set; }
         [JsonProperty("spend")]
         public int Spend { get; set; }
-        [JsonProperty("encoding")]
-        public string Encoding { get; set; }
     }
 }

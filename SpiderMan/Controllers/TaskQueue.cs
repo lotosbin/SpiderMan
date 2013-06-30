@@ -47,7 +47,6 @@ namespace SpiderMan.Controllers {
                 Site = model.Site,
                 Command = model.Command,
                 CommandType = (eCommandType)model.CommandType,
-                Encoding = model.Encoding,
                 Url = model.Url,
                 ArticleType = (eArticleType)model.ArticleType
             };
