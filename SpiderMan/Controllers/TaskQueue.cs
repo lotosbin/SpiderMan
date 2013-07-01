@@ -24,6 +24,7 @@ namespace SpiderMan.Controllers {
         public static IEnumerable<TaskModel> taskModels;
         public static IEnumerable<Site> sites;
         public static Respositorys repos;
+        public static TaskHub firsthub;
         public static readonly TaskQueue Instance;
 
         // http://www.yoda.arachsys.com/csharp/singleton.html 线程安全的模式
@@ -41,6 +42,35 @@ namespace SpiderMan.Controllers {
         }
 
         TaskQueue() { }
+
+        public SpiderTask GenerateTask(TaskModel model) {
+            var newTask = new SpiderTask {
+                Id = Guid.NewGuid(),
+                Site = model.Site,
+                Command = model.Command,
+                CommandType = (eCommandType)model.CommandType,
+                Url = model.Url,
+                ArticleType = (eArticleType)model.ArticleType
+            };
+            tasks.Add(newTask);
+            firsthub.Clients.Group("broad").broadcastAddTask(newTask);
+            return newTask;
+        }
+
+        public void ModelTimerBuild() {
+            foreach (var model in TaskQueue.taskModels) {
+                model.Timer = new Timer(1000 * model.Interval);
+                model.Timer.Elapsed += delegate { GenerateTask(model); };
+                model.Timer.Enabled = true;
+            }
+        }
+
+        public void ModelTimerReBuild() {
+            //复写taskModels并不会中止其Timer，必须手动中止
+            foreach (var model in TaskQueue.taskModels) model.Timer.Close();
+            taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            ModelTimerBuild();
+        }
 
     }
 }

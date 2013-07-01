@@ -17,29 +17,12 @@ namespace SpiderMan.Controllers {
 
     public class TaskHub : Hub {
 
-        //TaskHub在每次有客户端与服务端建立链接时都会新建一个实例。所以Timer的存在导致第一个TaskHub实例用户不会销毁，知道app中止。
+        //TaskHub在每次有客户端与服务端建立链接时都会新建一个实例。所以Timer的存在导致第一个TaskHub实例永远不被销毁，直至app中止。
         public TaskHub() {
-            foreach (var model in TaskQueue.taskModels) {
-                if (model.Timer == null) {
-                    model.Timer = new Timer(1000 * model.Interval);
-                    model.Timer.Elapsed += delegate { GenerateTask(model); };
-                    model.Timer.Enabled = true;
-                }
+            if (TaskQueue.firsthub == null) {
+                TaskQueue.firsthub = this;
+                TaskQueue.Instance.ModelTimerBuild();
             }
-        }
-
-        public SpiderTask GenerateTask(TaskModel model) {
-            var newTask = new SpiderTask {
-                Id = Guid.NewGuid(),
-                Site = model.Site,
-                Command = model.Command,
-                CommandType = (eCommandType)model.CommandType,
-                Url = model.Url,
-                ArticleType = (eArticleType)model.ArticleType
-            };
-            TaskQueue.tasks.Add(newTask);
-            Clients.Group("broad").broadcastAddTask(newTask);
-            return newTask;
         }
 
         public void RegisterBoard() {
@@ -48,11 +31,11 @@ namespace SpiderMan.Controllers {
         }
 
         public void RegisterAgent(string name) {
-            var offlineAgent = TaskQueue.agents.SingleOrDefault(d => d.Name == name);
-            if (offlineAgent != null) {
-                offlineAgent.ConnectionId = Context.ConnectionId;
-                offlineAgent.Online = true;
-                foreach (var timer in offlineAgent.Timer) timer.Start();
+            var agent = TaskQueue.agents.SingleOrDefault(d => d.Name == name);
+            if (agent != null) {
+                agent.ConnectionId = Context.ConnectionId;
+                agent.Online = true;
+                foreach (var timer in agent.Timer) timer.Start();
             } else {
                 var newagent = new Agent {
                     ConnectionId = Context.ConnectionId,
@@ -116,7 +99,7 @@ namespace SpiderMan.Controllers {
         public void ManualModel(string modelid) {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) {
-                var task = GenerateTask(model);
+                var task = TaskQueue.Instance.GenerateTask(model);
                 Clients.Group("broad").broadcastAddTask(task);
                 Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
             }

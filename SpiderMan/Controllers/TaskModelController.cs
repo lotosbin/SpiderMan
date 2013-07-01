@@ -36,6 +36,7 @@ namespace SpiderMan.Controllers {
                 return View(model);
             }
             repo.TaskModelRepo.Add(model);
+            TaskQueue.Instance.ModelTimerReBuild();
             return RedirectToAction("Index");
         }
 
@@ -56,6 +57,7 @@ namespace SpiderMan.Controllers {
                 return View(model);
             }
             repo.TaskModelRepo.Update(model);
+            TaskQueue.Instance.ModelTimerReBuild();
             return RedirectToAction("Index");
         }
 
@@ -67,6 +69,7 @@ namespace SpiderMan.Controllers {
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id) {
             repo.TaskModelRepo.Delete(id);
+            TaskQueue.Instance.ModelTimerReBuild();
             return RedirectToAction("Index");
         }
     }
