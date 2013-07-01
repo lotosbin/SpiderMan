@@ -25,5 +25,10 @@ namespace SpiderMan.Models {
         public int CommandType { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "必须大于0")]
         public int Interval { get; set; }
+
+        [BsonIgnore]
+        public System.Timers.Timer Timer { get; set; }
+        [BsonIgnore]
+        public bool EnableTimer { get; set; }
     }
 }

@@ -21,7 +21,9 @@ namespace SpiderMan.Controllers {
     public sealed class TaskQueue {
         public static IList<SpiderTask> tasks;
         public static IList<Agent> agents;
-        private static Respositorys repos;
+        public static IEnumerable<TaskModel> taskModels;
+        public static IEnumerable<Site> sites;
+        public static Respositorys repos;
         public static readonly TaskQueue Instance;
 
         // http://www.yoda.arachsys.com/csharp/singleton.html 线程安全的模式
@@ -30,40 +32,15 @@ namespace SpiderMan.Controllers {
             tasks = new List<SpiderTask>();
             agents = new List<Agent>();
             repos = new Respositorys();
+            
+            //注意必须使用ToList避免懒惰加载，否则在每次调用taskModels对象时会再次查询，从而清空已被赋值过的Timer属性。
+            //这里应该是mongo driver或mongo Respository的特殊模式。
+            taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            sites = repos.SiteRepo.Collection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
             Instance = new TaskQueue();
-            var models = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
-            foreach (var model in models) {
-                Timer timer = new Timer(1000 * model.Interval);
-                //timer.Elapsed += delegate { GenerateTask(model); };
-                timer.Enabled = true;
-            }
         }
 
         TaskQueue() { }
-
-        public SpiderTask GenerateTask(TaskModel model) {
-            var newTask = new SpiderTask {
-                Id = Guid.NewGuid(),
-                Site = model.Site,
-                Command = model.Command,
-                CommandType = (eCommandType)model.CommandType,
-                Url = model.Url,
-                ArticleType = (eArticleType)model.ArticleType
-            };
-            tasks.Add(newTask);
-            return newTask;
-        }
-
-        public void GenerateAgentProcess(Agent agent) {
-            var sites = repos.SiteRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal));
-            agent.Timer = new List<Timer>();
-            foreach (var site in sites) {
-                Timer timer = new Timer(1000 * site.GrabInterval);
-                //timer.Elapsed += delegate { ProcessTesk(site, agent); };
-                timer.Enabled = true;
-                agent.Timer.Add(timer);
-            }
-        }
 
     }
 }

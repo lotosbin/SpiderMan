@@ -7,25 +7,38 @@
 <ul id="agentsul"></ul>
 
 <h3>TaskModels:</h3>
-<table>
+<table id="taskModels">
     @foreach (var item in ViewBag.TaskModel) {
         <tr modelid="@item.Id">
             <td><a target="_blank" class="site_cmd" href="@item.Url">@(item.Site)_@item.Command</a></td>
             <td class="interval">@item.Interval</td>
-            <td><a class="generate fn-cs">ManualTask</a></td>
+            <td>
+                <button class="action">Stop</button>
+                <button class="manualOne">ManualOne</button>
+            </td>
         </tr>
     }
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <button id="stopAllModel">StopAllModel</button>
+            <button id="startAllModel">StartAllModel</button>
+        </td>
+    </tr>
 </table>
 
 <h3>TasksQueue:</h3>
 <ul id="tasksqueue"></ul>
 
 @section Scripts {
+    <script src="~/Scripts/jquery.signalR-1.1.2.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
         $(function () {
             var taskHub = $.connection.taskHub;
             var agentsul = $('#agentsul')
+            var taskmodels = $('#taskModels')
             taskHub.client.agentList = function (agents) {
                 agentsul.empty()
                 _.each(agents, function (agent) {
@@ -42,11 +55,31 @@
             taskHub.client.broadcastRemoveTask = function (removeTask) {
                 $("li[tid='" + removeTask.id + "']", tasksqueue).remove();
             };
+            taskHub.client.broadcastExeTask = function (exeTask) {
+                $("li[tid='" + exeTask.id + "']", tasksqueue).append(" --executing");
+            };
             $.connection.hub.start().done(function () {
                 taskHub.server.registerBoard();
-                $('a.generate').click(function () {
+                $('button.manualOne', taskmodels).click(function () {
                     var _table = $(this).closest('tr')
-                    taskHub.server.manualTask(_table.attr('modelid'));
+                    taskHub.server.manualModel(_table.attr('modelid'));
+                });
+                $('button.action', taskmodels).click(function () {
+                    _this = $(this);
+                    var modelid = _this.closest('tr').attr('modelid')
+                    if (_this.text() == 'Stop') {
+                        taskHub.server.stopModel(modelid);
+                        _this.text('Start')
+                    } else {
+                        taskHub.server.startModel(modelid);
+                        _this.text('Stop')
+                    }
+                });
+                $('#stopAllModel').on('click', function () {
+                    $('button.action:contains("Stop")', taskmodels).click()
+                });
+                $('#startAllModel').on('click', function () {
+                    $('button.action:contains("Start")', taskmodels).click()
                 });
             });
         });

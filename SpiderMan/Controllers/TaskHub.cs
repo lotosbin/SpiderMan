@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNet.SignalR;
-using MongoRepository;
+using MongoDB.Driver.Builders;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using sharp_net;
-using SpiderMan.App_Start;
+using sharp_net.Repositories;
 using SpiderMan.Models;
 using SpiderMan.Respository;
 using System;
@@ -13,35 +12,38 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
-using Ninject;
-using System.Text;
-using MongoDB.Driver.Builders;
-using sharp_net.Repositories;
-using Newtonsoft.Json.Linq;
-using SpiderMan.Help;
-using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace SpiderMan.Controllers {
 
     public class TaskHub : Hub {
-        private Respositorys repos;
+
+        //TaskHub在每次有客户端与服务端建立链接时都会新建一个实例。所以Timer的存在导致第一个TaskHub实例用户不会销毁，知道app中止。
         public TaskHub() {
-            repos = NinjectWebCommon.Kernel.Get<Respositorys>();
+            foreach (var model in TaskQueue.taskModels) {
+                if (model.Timer == null) {
+                    model.Timer = new Timer(1000 * model.Interval);
+                    model.Timer.Elapsed += delegate { GenerateTask(model); };
+                    model.Timer.Enabled = true;
+                }
+            }
         }
 
-        private SpiderTask GenerateTask(TaskModel model) {
-            var newTask = TaskQueue.Instance.GenerateTask(model);
+        public SpiderTask GenerateTask(TaskModel model) {
+            var newTask = new SpiderTask {
+                Id = Guid.NewGuid(),
+                Site = model.Site,
+                Command = model.Command,
+                CommandType = (eCommandType)model.CommandType,
+                Url = model.Url,
+                ArticleType = (eArticleType)model.ArticleType
+            };
+            TaskQueue.tasks.Add(newTask);
             Clients.Group("broad").broadcastAddTask(newTask);
             return newTask;
         }
 
-        public void JoinGroup(string groupName) {
-            Groups.Add(Context.ConnectionId, groupName);
-        }
-
         public void RegisterBoard() {
-            JoinGroup("broad");
+            Groups.Add(Context.ConnectionId, "broad");
             Clients.Client(Context.ConnectionId).agentList(TaskQueue.agents);
         }
 
@@ -58,16 +60,27 @@ namespace SpiderMan.Controllers {
                     Online = true
                 };
                 TaskQueue.agents.Add(newagent);
-                TaskQueue.Instance.GenerateAgentProcess(newagent);
+                GenerateAgentProcess(newagent);
             }
-            JoinGroup("agent");
+            Groups.Add(Context.ConnectionId, "agent");
             Clients.Group("broad").agentList(TaskQueue.agents);
+        }
+
+        private void GenerateAgentProcess(Agent agent) {
+            agent.Timer = new List<Timer>();
+            foreach (var site in TaskQueue.sites) {
+                Timer timer = new Timer(1000 * site.GrabInterval);
+                timer.Elapsed += delegate { ProcessTesk(site, agent); };
+                timer.Enabled = true;
+                agent.Timer.Add(timer);
+            }
         }
 
         private void ProcessTesk(Site site, Agent agent) {
             var task = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
             if (task != null) {
                 task.Status = eTaskStatus.Executing;
+                Clients.Group("broad").broadcastExeTask(task);
                 Clients.Client(agent.ConnectionId).castTesk(task);
             }
         }
@@ -76,28 +89,15 @@ namespace SpiderMan.Controllers {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
             TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
             Clients.Group("broad").broadcastRemoveTask(task);
-            if (task.Status == eTaskStatus.Fail) {
+            if (task.Status == eTaskStatus.Fail)
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
-                return;
-            }
-        }
-
-        public void ManualTask(string modelid) {
-            var model = repos.TaskModelRepo.GetById(modelid);
-            if (model != null) {
-                SpiderTask task = GenerateTask(model);
-                Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
-            }
         }
 
         public override Task OnDisconnected() {
             var agent = TaskQueue.agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);
             if (agent != null) {
                 agent.Online = false;
-                foreach (var timer in agent.Timer) {
-                    timer.Stop();
-                    timer.Close();
-                }
+                foreach (var timer in agent.Timer) timer.Stop();
                 Clients.Group("broad").agentList(TaskQueue.agents);
             }
             return base.OnDisconnected();
@@ -112,6 +112,30 @@ namespace SpiderMan.Controllers {
             }
             return base.OnReconnected();
         }
-    }
 
+        public void ManualModel(string modelid) {
+            var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
+            if (model != null) {
+                var task = GenerateTask(model);
+                Clients.Group("broad").broadcastAddTask(task);
+                Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
+            }
+        }
+
+        public void StopModel(string modelid) {
+            var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
+            if (model != null) model.Timer.Stop();
+        }
+
+        public void StartModel(string modelid) {
+            var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
+            if (model != null) model.Timer.Start();
+        }
+
+        public void ToggleALlModel(bool isStart) {
+            foreach (var model in TaskQueue.taskModels) {
+                model.Timer.Enabled = isStart ? true : false;
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 $baseFontSize:  13px;
 $baseLineHeight:  19px;
-$bodyBackground:  #000;
+$bodyBackground:  #1f1f1f;
 $baseFontFamily: 'Segoe UI', 'Microsoft Yahei', Arial, Simsun, sans-serif;
 
 $textColor:  #FFEDDD;
@@ -37,7 +37,7 @@ $btnDangerBackgroundHighlight:      darken($dgcolor, 8%);
 
 @import "../front_net/module/ms/ms";
 
-body{padding:20px 20px 20px 170px;}
+body{padding:20px 20px 20px 200px;}
 header {position: absolute;left: 0;top:0;width: 155px;z-index: 3;
 	a.site-title{font-size: 1.5em;display: block;margin:20px 0 20px 23px;}
 	ul{list-style-type: none;padding:0;}
@@ -54,8 +54,9 @@ form{
 	label{display:block;}
 }
 h2{border-bottom:1px solid $sucolor;margin: 0 0 0.83em;padding-bottom:5px;}
+h3{margin:1.5em 0 0.5em;}
 table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid $sucolor;}
 table th{font-style:italic;font-weight:normal;}
-footer {position:fixed;bottom:0;left:170px;clear: both;margin: 5em 5em .7em 0;}
+footer {position:fixed;bottom:0;left:200px;clear: both;margin: 5em 5em .7em 0;}
 
 @import "./article";
