@@ -25,6 +25,7 @@ exports.str2ascii = (str)->
 #   else
 #     gbdate = nta.obj2asciiobj gbdate
 
+# static readonly MatchEvaluator replacer = m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString();
 # if (task.Encoding == "gbk") {
 #     datajson = Regex.Replace(datajson, @"zx([a-fA-F0-9]{4})", replacer);
 # }

@@ -114,11 +114,5 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) model.Timer.Start();
         }
-
-        public void ToggleALlModel(bool isStart) {
-            foreach (var model in TaskQueue.taskModels) {
-                model.Timer.Enabled = isStart ? true : false;
-            }
-        }
     }
 }

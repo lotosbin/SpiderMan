@@ -9,13 +9,10 @@ using SpiderMan.Models;
 using SpiderMan.Respository;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -31,8 +28,7 @@ namespace SpiderMan.Controllers {
             ViewBag.TaskModel = repos.TaskModelRepo.Collection.FindAll();
             return View();
         }
-
-        static readonly MatchEvaluator replacer = m => ((char)int.Parse(m.Groups[1].Value, NumberStyles.AllowHexSpecifier)).ToString();
+        
         // 关于在web api使用FormDataCollection http://goo.gl/PjJGf
         [HttpPost]
         public void PostData(string taskjson, string datajson) {
