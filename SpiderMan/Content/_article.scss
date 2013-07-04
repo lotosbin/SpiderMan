@@ -3,6 +3,7 @@
 	li{border-bottom:1px solid #555;height:72px;overflow:hidden;line-height:22px;
 		position:relative;padding-left:20px;cursor:pointer;border-left:2px solid transparent;
 		&.viewing{border-left:2px solid $linkColor}
+		&.loadmore{border:none;height:24px;}
 	}
 	a.h4{font-weight:bold;line-height:24px;}
 	input.check{position:absolute;top:0;left:0;height:80px;width:16px;cursor:pointer;}

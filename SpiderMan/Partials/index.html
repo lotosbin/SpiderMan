@@ -10,6 +10,7 @@
         <a class="h4" href="{{article.SourceLink}}" target="_blank">{{article.Title}}</a>
         <span>{{article.Content}}</span>
     </li>
+    <li ng-show="hasmore" class="loadmore" ng-click="Loadmore()">加载更多 ...</li>
 </ul>
 <div id="itembox">
     <a class="h3" href="{{view.SourceLink}}" target="_blank">{{view.Title}}</a>

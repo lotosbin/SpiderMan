@@ -43,8 +43,14 @@ header {position: absolute;left: 0;top:0;width: 155px;z-index: 3;
 	ul{list-style-type: none;padding:0;}
 	li{cursor: pointer;padding-left:18px;border-left:6px solid transparent;
 		a{line-height: 29px;}
+		a.extand{margin-left:6px;font-size:12px;display:none;line-height:26px;
+			&.selected{color:lighten($wncolor, 20%);}
+		}
 		&.selected{border-left:6px solid $wncolor;cursor: default;
 			a{color:$wncolor}
+		}
+		&:hover{
+			a.extand{display:inline!important;}
 		}
 	}
 }

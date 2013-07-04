@@ -13,17 +13,29 @@ ArticleListCtrl = ($scope, $http, $routeParams)->
     $scope.boxerOrId = if $routeParams.boxerOrId then $routeParams.boxerOrId else 'verifying'
 
     $('#menu>li').removeClass('selected').filter('.article-' + $scope.article).addClass 'selected'
+    $('#menu>li>a.extand').hide().removeClass('selected')
+    if $scope.boxerOrId is 'available' or $scope.boxerOrId is 'disable'
+        $('#menu>li.selected>a.extand').show().filter(":contains('#{$scope.boxerOrId.substring(0,3)}')").addClass('selected')
 
     articles = []
+    pager = 0
     $http.get("/api/#{$scope.article}/#{$scope.boxerOrId}").success (data)->
         if _.isArray(data)
             data[0].viewing = true
             $scope.articles = articles = data
             $scope.view = data[0]
+            if data.length == 100
+                $scope.hasmore = true
         else
             $scope.view = data
             $scope.viewmodel = 'single'
-
+    $scope.Loadmore = ->
+        $http.get("/api/#{$scope.article}/#{$scope.boxerOrId}/#{}").success (data)->
+            data[0].viewing = true
+            $scope.articles = articles = data
+            $scope.view = data[0]
+            if data.length == 100
+                $scope.hasmore = true
     $scope.ViewOne = (articleId)->
         _.each articles, (item)-> item.viewing = false
         one = _.where(articles, {Id: articleId})[0]

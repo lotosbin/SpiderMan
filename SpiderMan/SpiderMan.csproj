@@ -1126,6 +1126,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <None Include="Scripts\master.coffee" />
+    <Content Include="Scripts\master.js">
+      <DependentUpon>master.coffee</DependentUpon>
+    </Content>
     <Content Include="Scripts\underscore-min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

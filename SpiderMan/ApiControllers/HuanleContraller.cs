@@ -31,12 +31,15 @@ namespace SpiderMan.ApiControllers {
 
         // GET api/huanle/verifying
         [ActionName("Get")]
-        public IEnumerable<Huanle> GetList(string boxer) {
+        public IEnumerable<Huanle> GetList(string boxer, int pager) {
             boxer = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(boxer);
             var result = from d in repos.HuanleRepo.Collection.AsQueryable<Huanle>()
                          where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
                          select d;
-            return result;
+            if (pager == 0)
+                return result.Take(100);
+            else
+                return result.Skip(100 * pager).Take(100);
         }
 
         // PUT api/huanle/51c07bbec32d92328066b256

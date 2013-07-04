@@ -15,8 +15,8 @@ namespace SpiderMan {
 
             config.Routes.MapHttpRoute(
                 name: "ArticleList",
-                routeTemplate: "api/{controller}/{boxer}",
-                defaults: new { controller = "huanle", boxer = "verifying" }
+                routeTemplate: "api/{controller}/{boxer}/{pager}",
+                defaults: new { controller = "huanle", boxer = "verifying", pager = 0 }
             );
 
             config.Routes.MapHttpRoute(
