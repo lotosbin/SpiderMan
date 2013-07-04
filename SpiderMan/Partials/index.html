@@ -1,18 +1,22 @@
-﻿
+﻿<p id="actionbar">
+    <button ng-click="SelectAll()">SelectAll</button>
+    <button ng-click="UnSelectAll()">UnSelectAll</button>
+    <button ng-click="Available()">Available</button>
+    <button ng-click="Disabled()">Disabled</button>
+</p>
 <ul id="itemlist" ng-show="{{viewmodel == 'single' && 'false'||'true'}}">
-    <li ng-repeat="article in articles" ng-click="ViewOne(article.Id)" >
-        <input type="checkbox" name="select" value="" class="check" />
-        <h4>{{article.Title}}</h4>
+    <li ng-repeat="article in articles" ng-click="ViewOne(article.Id)" class="{{article.viewing && 'viewing'||''}}" >
+        <input type="checkbox" name="select" value="" class="check" ng-model="article.checked" ng-click="Checkbox(article.Id)"/>
+        <a class="h4" href="{{article.SourceLink}}" target="_blank">{{article.Title}}</a>
         <span>{{article.Content}}</span>
     </li>
 </ul>
 <div id="itembox">
-    <h3>{{view.Title}}</h3>
+    <a class="h3" href="{{view.SourceLink}}" target="_blank">{{view.Title}}</a>
     <p>
         <span>{{view.CreatDate}}</span>
-        | <span>{{view.Score}}</span>
-        | <span>{{view.StatusName}}</span>
-        | <span>{{view.SourceLink}}</span>
+        <span class="ml10">{{view.Score}}</span>
+        <span class="ml10">{{view.StatusName}}</span>
     </p>
     <p>
         {{view.Content}}

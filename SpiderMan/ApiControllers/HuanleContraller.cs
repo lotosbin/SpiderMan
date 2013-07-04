@@ -33,22 +33,22 @@ namespace SpiderMan.ApiControllers {
         [ActionName("Get")]
         public IEnumerable<Huanle> GetList(string boxer) {
             boxer = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(boxer);
-            int articleStatus = (int)Enum.Parse(typeof(eArticleStatus), boxer);
             var result = from d in repos.HuanleRepo.Collection.AsQueryable<Huanle>()
-                         where d.Status == articleStatus
+                         where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
                          select d;
             return result;
         }
 
-        // PUT api/huanle/5
+        // PUT api/huanle/51c07bbec32d92328066b256
         [HandleErrorForJsonAttribute]
-        public void Put(string id, Huanle value) {
-            Huanle item = repos.HuanleRepo.GetById(id);
+        public void Put(Huanle value) {
+            if (value.Comments.Count == 1 && value.Comments.First().Id == null)
+                value.Comments = null; //ToDo: Json Convert issus, i don't know why.
             var updateResult = repos.HuanleRepo.Collection.Update(
-                Query<Huanle>.EQ(p => p.Id, id),
+                Query<Huanle>.EQ(p => p.Id, value.Id),
                 Update<Huanle>.Replace(value),
                 new MongoUpdateOptions {
-                    WriteConcern = WriteConcern.Acknowledged
+                    WriteConcern = WriteConcern.Acknowledged //ToDo: i don't know what's means.
                 });
 
             if (updateResult.DocumentsAffected == 0) {
@@ -56,7 +56,7 @@ namespace SpiderMan.ApiControllers {
             }
         }
 
-        // DELETE api/huanle/5
+        // DELETE api/huanle/51c07bbec32d92328066b256
         public void Delete(string id) {
             repos.HuanleRepo.Delete(id);
         }

@@ -53,10 +53,10 @@ form{
 	ol{list-style-type: none;padding:0;}
 	label{display:block;}
 }
-h2{border-bottom:1px solid $sucolor;margin: 0 0 0.83em;padding-bottom:5px;}
+h2{border-bottom:1px solid #555;margin: 0 0 0.83em;padding-bottom:5px;}
 h3{margin:1.5em 0 0.5em;}
-table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid $sucolor;}
+table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid #555;}
 table th{font-style:italic;font-weight:normal;}
-footer {position:fixed;bottom:0;left:200px;clear: both;margin: 5em 5em .7em 0;}
+footer {position:fixed;bottom:5px;left:5px;}
 
 @import "./article";

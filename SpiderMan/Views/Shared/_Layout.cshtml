@@ -1,6 +1,6 @@
 ﻿@using sharp_net.Mvc
 <!DOCTYPE html>
-<html lang="zh" ng-app="spiderman">
+<html ng-app="spiderman">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
@@ -18,11 +18,11 @@
                 <li class="@Html.IsSelected("TaskModel", null)">@Html.ActionLink("TaskModel", "Index", "TaskModel")</li>
                 <li class="@Html.IsSelected("Site", null)">@Html.ActionLink("Site", "Index", "Site")</li>
 
-                <li class=" mt20"><a href="~/article/#/huanle">Huanle</a></li>
-                <li class=""><a href="~/article/#/dianbo">Dianbo</a></li>
-                <li class=""><a href="~/article/#/shudong">Shudong</a></li>
-                <li class=""><a href="~/article/#/geek">Geek</a></li>
-                <li class=""><a href="~/article/#/finance">Finance</a></li>
+                <li class="article-huanle mt20"><a href="~/article/#/huanle">Huanle</a>[<a>avail</a>,<a>dis</a>]</li>
+                <li class="article-dianbo"><a href="~/article/#/dianbo">Dianbo</a></li>
+                <li class="article-shudong"><a href="~/article/#/shudong">Shudong</a></li>
+                <li class="article-geek"><a href="~/article/#/geek">Geek</a></li>
+                <li class="article-finance"><a href="~/article/#/finance">Finance</a></li>
 
                 <li class="@Html.IsSelected("UserName", null) mt20">@Html.ActionLink("UserName", "Index", "UserName")</li>
                 <li class="@Html.IsSelected("Avator", null)">@Html.ActionLink("Avator", "Index", "Avator")</li>
@@ -31,15 +31,11 @@
         <section id="login">
             @Html.Partial("_LoginPartial")
         </section>
+        <footer>
+            &copy; @DateTime.Now.Year - I am SpiderMan, bitch!
+        </footer>
     </header>
     <div id="body">@RenderBody()</div>
-    <footer>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p>&copy; @DateTime.Now.Year - I am SpiderMan, bitch!</p>
-            </div>
-        </div>
-    </footer>
 
     @Scripts.Render("~/bundles/base")
     @*<script src="~/Scripts/master.js"></script>*@
