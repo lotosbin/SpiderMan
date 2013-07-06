@@ -37,9 +37,9 @@ namespace SpiderMan.ApiControllers {
                          where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
                          select d;
             if (pager == 0)
-                return result.Take(100);
+                return result.Take(30);
             else
-                return result.Skip(100 * pager).Take(100);
+                return result.Skip(30 * pager).Take(30);
         }
 
         // PUT api/huanle/51c07bbec32d92328066b256

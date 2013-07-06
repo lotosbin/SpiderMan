@@ -1,6 +1,6 @@
-﻿var ArticleListCtrl;
+﻿var ArticleListCtrl, app, calculateLayout, getArticleStatusInt;
 
-angular.module('spiderman', []).config([
+app = angular.module('spiderman', []).config([
   '$routeProvider', function($routeProvider) {
     var articlesConfig;
     articlesConfig = {
@@ -13,26 +13,59 @@ angular.module('spiderman', []).config([
   }
 ]);
 
+app.directive('ngShortcut', function() {
+  return {
+    restrict: 'A',
+    replace: true,
+    scope: true,
+    link: function(scope, iElement, iAttrs) {
+      return $(document).on('keypress', function(e) {
+        return scope.$apply(scope.keyPressed(e));
+      });
+    }
+  };
+});
+
+getArticleStatusInt = function(name) {
+  switch (name) {
+    case "verifying":
+      return 0;
+    case "available":
+      return 1;
+    case "disabled":
+      return 2;
+    default:
+      return 0;
+  }
+};
+
+calculateLayout = function() {
+  return $('#itemlist').height($(window).height() - 20);
+};
+
 ArticleListCtrl = function($scope, $http, $routeParams) {
-  var articles, pager;
+  var AutoSelectFirst, articleType, boxerOrId, pager;
   $scope.$on('$viewContentLoaded', function() {
-    return $('#itemlist').height($(window).height() - 20);
+    var lazyLayout;
+    calculateLayout();
+    lazyLayout = _.debounce(calculateLayout, 500);
+    return $(window).resize(lazyLayout);
   });
-  $scope.article = $routeParams.article ? $routeParams.article : 'huanle';
-  $scope.boxerOrId = $routeParams.boxerOrId ? $routeParams.boxerOrId : 'verifying';
+  articleType = $routeParams.article ? $routeParams.article : 'huanle';
+  boxerOrId = $routeParams.boxerOrId ? $routeParams.boxerOrId : 'verifying';
+  $scope.articleStatusInt = getArticleStatusInt(boxerOrId);
   $('#menu>li').removeClass('selected').filter('.article-' + $scope.article).addClass('selected');
   $('#menu>li>a.extand').hide().removeClass('selected');
-  if ($scope.boxerOrId === 'available' || $scope.boxerOrId === 'disable') {
-    $('#menu>li.selected>a.extand').show().filter(":contains('" + ($scope.boxerOrId.substring(0, 3)) + "')").addClass('selected');
+  if (boxerOrId === 'available' || boxerOrId === 'disable') {
+    $('#menu>li.selected>a.extand').show().filter(":contains('" + (boxerOrId.substring(0, 3)) + "')").addClass('selected');
   }
-  articles = [];
   pager = 0;
-  $http.get("/api/" + $scope.article + "/" + $scope.boxerOrId).success(function(data) {
+  $http.get("/api/" + articleType + "/" + boxerOrId).success(function(data) {
     if (_.isArray(data)) {
       data[0].viewing = true;
-      $scope.articles = articles = data;
+      $scope.articles = data;
       $scope.view = data[0];
-      if (data.length === 100) {
+      if (data.length === 30) {
         return $scope.hasmore = true;
       }
     } else {
@@ -41,9 +74,9 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
     }
   });
   $scope.Loadmore = function() {
-    return $http.get("/api/" + $scope.article + "/" + $scope.boxerOrId + "/").success(function(data) {
+    return $http.get("/api/" + articleType + "/" + boxerOrId + "/" + pager).success(function(data) {
       data[0].viewing = true;
-      $scope.articles = articles = data;
+      $scope.articles = data;
       $scope.view = data[0];
       if (data.length === 100) {
         return $scope.hasmore = true;
@@ -52,10 +85,10 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
   };
   $scope.ViewOne = function(articleId) {
     var one;
-    _.each(articles, function(item) {
+    _.each($scope.articles, function(item) {
       return item.viewing = false;
     });
-    one = _.where(articles, {
+    one = _.where($scope.articles, {
       Id: articleId
     })[0];
     one.viewing = true;
@@ -63,7 +96,7 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
   };
   $scope.Checkbox = function(articleId) {
     var one, _ref;
-    one = _.where(articles, {
+    one = _.where($scope.articles, {
       Id: articleId
     })[0];
     return one.checked = (_ref = one.checked) != null ? _ref : {
@@ -71,30 +104,132 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
     };
   };
   $scope.SelectAll = function() {
-    return _.each(articles, function(item) {
+    return _.each($scope.articles, function(item) {
       return item.checked = true;
     });
   };
   $scope.UnSelectAll = function() {
-    return _.each(articles, function(item) {
+    return _.each($scope.articles, function(item) {
       return item.checked = false;
     });
   };
+  AutoSelectFirst = function() {
+    var lis;
+    lis = $('#itemlist>li:visible');
+    if (!lis.filter('.viewing').size()) {
+      return lis.first().click();
+    }
+  };
   $scope.Available = function() {
-    return _.each(articles, function(item) {
+    var PushToAjaxlist, ajaxlist;
+    ajaxlist = [];
+    PushToAjaxlist = function(item) {
+      item.Status = 1;
+      return ajaxlist.push($.ajax({
+        url: "/api/" + articleType + "/" + item.Id,
+        type: 'PUT',
+        data: item
+      }));
+    };
+    _.each($scope.articles, function(item) {
       if (item.checked) {
-        item.Status = 1;
-        return $.ajax({
-          url: "/api/" + $scope.article + "/" + item.Id,
-          type: 'PUT',
-          data: item
-        }).done(function() {
-          return alert('ok');
-        }).fail(function() {
-          return alert('fail');
-        });
+        return PushToAjaxlist(item);
       }
     });
+    if (ajaxlist.length === 0) {
+      PushToAjaxlist($scope.view);
+    }
+    return $.when.apply($, ajaxlist).done(function() {
+      return AutoSelectFirst();
+    }).fail(function() {
+      return alert('fail!');
+    });
+  };
+  $scope.Disabled = function() {
+    var PushToAjaxlist, ajaxlist;
+    ajaxlist = [];
+    PushToAjaxlist = function(item) {
+      item.Status = 2;
+      return ajaxlist.push($.ajax({
+        url: "/api/" + articleType + "/" + item.Id,
+        type: 'PUT',
+        data: item
+      }));
+    };
+    _.each($scope.articles, function(item) {
+      if (item.checked) {
+        return PushToAjaxlist(item);
+      }
+    });
+    if (ajaxlist.length === 0) {
+      PushToAjaxlist($scope.view);
+    }
+    return $.when.apply($, ajaxlist).done(function() {
+      return AutoSelectFirst();
+    }).fail(function() {
+      return alert('fail!');
+    });
+  };
+  $scope.GoVerify = function() {
+    var PushToAjaxlist, ajaxlist;
+    ajaxlist = [];
+    PushToAjaxlist = function(item) {
+      item.Status = 0;
+      return ajaxlist.push($.ajax({
+        url: "/api/" + articleType + "/" + item.Id,
+        type: 'PUT',
+        data: item
+      }));
+    };
+    _.each($scope.articles, function(item) {
+      if (item.checked) {
+        return PushToAjaxlist(item);
+      }
+    });
+    if (ajaxlist.length === 0) {
+      PushToAjaxlist($scope.view);
+    }
+    return $.when.apply($, ajaxlist).done(function() {
+      return AutoSelectFirst();
+    }).fail(function() {
+      return alert('fail!');
+    });
+  };
+  $scope.Delete = function() {
+    var PushToAjaxlist, ajaxlist;
+    ajaxlist = [];
+    PushToAjaxlist = function(item) {
+      ajaxlist.push($.ajax({
+        url: "/api/" + articleType + "/" + item.Id,
+        type: 'Delete'
+      }));
+      return $scope.articles = _.without($scope.articles, item);
+    };
+    _.each($scope.articles, function(item) {
+      if (item.checked) {
+        return PushToAjaxlist(item);
+      }
+    });
+    if (ajaxlist.length === 0) {
+      PushToAjaxlist($scope.view);
+    }
+    return $.when.apply($, ajaxlist).done(function() {
+      return AutoSelectFirst();
+    }).fail(function() {
+      return alert('fail!');
+    });
+  };
+  $scope.keyPressed = function(e) {
+    switch (e.which) {
+      case 97:
+        return $scope.Available();
+      case 100:
+        return $scope.Disabled();
+      case 118:
+        return $scope.GoVerify();
+      case 101:
+        return $scope.Delete();
+    }
   };
 };
 

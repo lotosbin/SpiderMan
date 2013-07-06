@@ -1,17 +1,20 @@
-﻿<p id="actionbar">
-    <button ng-click="SelectAll()">SelectAll</button>
-    <button ng-click="UnSelectAll()">UnSelectAll</button>
-    <button ng-click="Available()">Available</button>
-    <button ng-click="Disabled()">Disabled</button>
-</p>
-<ul id="itemlist" ng-show="{{viewmodel == 'single' && 'false'||'true'}}">
-    <li ng-repeat="article in articles" ng-click="ViewOne(article.Id)" class="{{article.viewing && 'viewing'||''}}" >
+﻿<ul id="itemlist" ng-show="{{viewmodel == 'single' && 'false'||'true'}}">
+    <li ng-repeat="article in articles" ng-show="article.Status == articleStatusInt" 
+        ng-click="ViewOne(article.Id)" class="{{article.viewing && 'viewing'||''}}" >
         <input type="checkbox" name="select" value="" class="check" ng-model="article.checked" ng-click="Checkbox(article.Id)"/>
         <a class="h4" href="{{article.SourceLink}}" target="_blank">{{article.Title}}</a>
         <span>{{article.Content}}</span>
     </li>
     <li ng-show="hasmore" class="loadmore" ng-click="Loadmore()">加载更多 ...</li>
 </ul>
+<p id="actionbar" ng-shortcut>
+    <button ng-click="SelectAll()">SelectAll</button>
+    <button ng-click="UnSelectAll()">UnSelectAll</button>
+    <button ng-click="Available()"><b>A</b>vailable</button>
+    <button ng-click="Disabled()"><b>D</b>isabled</button>
+    <button ng-click="Delete()">D<b>e</b>lete</button>
+    <button ng-click="GoVerify()">Go<b>V</b>erify</button>
+</p>
 <div id="itembox">
     <a class="h3" href="{{view.SourceLink}}" target="_blank">{{view.Title}}</a>
     <p>
