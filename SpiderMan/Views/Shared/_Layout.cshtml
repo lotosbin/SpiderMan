@@ -1,13 +1,15 @@
 ﻿@using sharp_net.Mvc
+
+@using sharp_net.Mvc
 <!DOCTYPE html>
 <html ng-app="spiderman">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <title>@ViewBag.Title - SpiderMan</title>
-    <link href="~/Images/spidertocat.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/Images/spidertocat.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
-    <link href="~/Content/master.css" rel="stylesheet" />
+    @Styles.Render("~/Content/master.css")
 </head>
 <body>
     <header>
@@ -48,7 +50,7 @@
     <div id="body">@RenderBody()</div>
 
     @Scripts.Render("~/bundles/base")
-    @*<script src="~/Scripts/master.js"></script>*@
+    @*<script src="/Scripts/master.js"></script>*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

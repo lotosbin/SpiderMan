@@ -8,12 +8,10 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using SpiderMan.Filters;
 using SpiderMan.Models;
 
 namespace SpiderMan.Controllers {
     [Authorize]
-    [InitializeSimpleMembership]
     public class AccountController : Controller {
         //
         // GET: /Account/Login
@@ -48,7 +46,7 @@ namespace SpiderMan.Controllers {
         public ActionResult LogOff() {
             WebSecurity.Logout();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Task");
         }
 
         //
@@ -71,7 +69,7 @@ namespace SpiderMan.Controllers {
                 try {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Task");
                 } catch (MembershipCreateUserException e) {
                     ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
                 }
@@ -86,7 +84,7 @@ namespace SpiderMan.Controllers {
             if (Url.IsLocalUrl(returnUrl)) {
                 return Redirect(returnUrl);
             } else {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Task");
             }
         }
 
