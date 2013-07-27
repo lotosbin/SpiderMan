@@ -45,8 +45,8 @@ namespace SpiderMan.ApiControllers {
         // PUT api/huanle/51c07bbec32d92328066b256
         [HandleErrorForJsonAttribute]
         public void Put(Huanle value) {
-            if (value.Comments.Count == 1 && value.Comments.First().Id == null)
-                value.Comments = null; //ToDo: Json Convert issus, i don't know why.
+            //if (value.Comments.Count == 1 && value.Comments.First().Id == null)
+            //    value.Comments = null; //ToDo: Json Convert issus, i don't know why.
             var updateResult = repos.HuanleRepo.Collection.Update(
                 Query<Huanle>.EQ(p => p.Id, value.Id),
                 Update<Huanle>.Replace(value),

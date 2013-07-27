@@ -10,9 +10,18 @@
 <h2>Create</h2>
 
 @using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
     <ol>
+        <li>
+            @Html.LabelFor(model => model.Name)
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Act)
+            @Html.DropDownListFor(model => model.Act, ((eAct)0).ToSelectListItems())
+        </li>
         <li>
             @Html.LabelFor(model => model.ArticleType)
             @Html.DropDownListFor(model => model.ArticleType, ((eArticleType)0).ToSelectListItems())
@@ -39,6 +48,11 @@
             @Html.LabelFor(model => model.Interval)
             @Html.EditorFor(model => model.Interval)
             @Html.ValidationMessageFor(model => model.Interval)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.DelayStart)
+            @Html.EditorFor(model => model.DelayStart)
+            @Html.ValidationMessageFor(model => model.DelayStart)
         </li>
     </ol>
     <p>

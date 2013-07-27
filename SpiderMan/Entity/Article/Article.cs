@@ -20,11 +20,13 @@ namespace SpiderMan.Models {
         [DataMember]
         public string SourceLink { get; set; }
         [DataMember]
-        public DateTime CreatDate { get; set; }
+        public DateTime BrithDate { get; set; }
         [DataMember]
         public string Content { get; set; }
         [DataMember]
         public DateTime GrabDate { get; set; }
+
+        public string ProviderId { get; set; }
 
         public void Init(SpiderTask task) {
             SourceSite = task.Site;

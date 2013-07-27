@@ -9,6 +9,7 @@ using sharp_net.Mvc;
 using SpiderMan.Respository;
 
 namespace SpiderMan.Controllers {
+    [Authorize]
     public class TaskModelController : Controller {
         private readonly Respositorys repo;
         public TaskModelController(Respositorys _repo) {
@@ -30,6 +31,7 @@ namespace SpiderMan.Controllers {
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(TaskModel model) {
             if (!ModelState.IsValid) {
                 ModelState.AddModelError("", "表单验证失败。");
@@ -51,6 +53,7 @@ namespace SpiderMan.Controllers {
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(TaskModel model) {
             if (!ModelState.IsValid) {
                 ModelState.AddModelError("", "表单验证失败。");
@@ -67,6 +70,7 @@ namespace SpiderMan.Controllers {
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id) {
             repo.TaskModelRepo.Delete(id);
             TaskQueue.Instance.ModelTimerReBuild();

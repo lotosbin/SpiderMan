@@ -7,8 +7,8 @@ window.spGrab = function() {
     _this = $(this);
     atcul = _this.children('.bar').children('ul');
     item = {
-      Title: $.trim(_this.children('.detail').text()),
-      Content: $.trim(_this.children('.content').html()),
+      ProviderId: _this.attr('id').match(/\d+/g)[0],
+      Content: $.trim(_this.children('.content').html() + $.trim(_this.children('.thumb').html())),
       ThumbUps: $.trim($('li', atcul).first().text()),
       ThumbDowns: $.trim($('li', atcul).eq(1).text())
     };

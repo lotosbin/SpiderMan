@@ -16,7 +16,6 @@ namespace SpiderMan.Respository {
         private MongoRepository<Huanle> huanleRepo;
         private MongoRepository<Dianbo> dianboRepo;
         private MongoRepository<Finance> financeRepo;
-        private MongoRepository<Geek> geekRepo;
         private MongoRepository<Shudong> shudongeRepo;
 
         public MongoRepository<Site> SiteRepo {
@@ -60,12 +59,6 @@ namespace SpiderMan.Respository {
             get {
                 if (financeRepo == null) financeRepo = new MongoRepository<Finance>();
                 return financeRepo;
-            }
-        }
-        public MongoRepository<Geek> GeekRepo {
-            get {
-                if (geekRepo == null) geekRepo = new MongoRepository<Geek>();
-                return geekRepo;
             }
         }
         public MongoRepository<Shudong> ShudongRepo {

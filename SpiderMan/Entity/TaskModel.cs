@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SpiderMan.Models {
     public class TaskModel : Entity {
         public int Act { get; set; }
+        public string Name { get; set; }
 
         //[BsonRepresentation(BsonType.String)]
         public int ArticleType { get; set; }
@@ -25,6 +26,7 @@ namespace SpiderMan.Models {
         public int CommandType { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "必须大于0")]
         public int Interval { get; set; }
+        public int DelayStart { get; set; }
 
         [BsonIgnore]
         public System.Timers.Timer Timer { get; set; }

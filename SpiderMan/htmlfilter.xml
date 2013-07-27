@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <tag name="a">
+    <attr name="href">^[a-zA-Z]+://.+$</attr>
+    <attr name="title">.+</attr>
+  </tag>
+  <tag name="img">
+    <attr name="src">^[a-zA-Z]+://.+$</attr>
+    <attr name="title">.+</attr>
+  </tag>
+</config>

@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoRepository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using sharp_net.Infrastructure;
 using sharp_net.Mvc;
 using SpiderMan.Help;
 using SpiderMan.Models;
@@ -30,9 +31,13 @@ namespace SpiderMan.Controllers {
         }
         
         // 关于在web api使用FormDataCollection http://goo.gl/PjJGf
+        // 不要使用gbk编码提交，很容易产生字符串错误从而无法提交。
         [HttpPost]
+        [ValidateInput(false)]
         public void PostData(string taskjson, string datajson) {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
+            datajson = FilterConfig.htmlFilter.Filter(datajson);
+
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
                     if (task.CommandType == eCommandType.List) {

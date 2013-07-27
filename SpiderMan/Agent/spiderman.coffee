@@ -13,7 +13,7 @@ websocket.onCallback = (info) ->
   switch info.command
     when "CastTesk"
       CastTesk info.task
-websocket.injectJs './jquery.1.8.3.min.js'
+websocket.injectJs './jquery.1.10.2.min.js'
 websocket.injectJs './jquery.signalR-1.1.2.min.js'
 websocket.includeJs serverUrl + '/signalr/hubs', ->
   websocket.evaluate (serverUrl, agentName)->
@@ -22,6 +22,9 @@ websocket.includeJs serverUrl + '/signalr/hubs', ->
     taskHub = $.connection.taskHub
     $.connection.hub.start().done ->
       $.support.cors = true
+      $.post serverUrl + "/task/postdata",
+        taskjson: '{"articletype":0,"command":"getList","commandtype":1,"error":"","id":"48f2caef-cec5-4236-875d-85defd1fcbc1","site":"qiushibaike","spend":2779,"status":1,"url":"zxczxczxc"}'
+        datajson: '<img src="http://zxvsdfsa" />asda<p>sadasd</p>sdasd<a title="cvdsfsdaf" href="http://www.google.com">xcvxcv</a>，<a><img src="http://zxvsdfsa" /></a>vxcv'
       #console.log taskHub.connection.id
       taskHub.server.registerAgent agentName
     taskHub.client.castTesk = (task) ->
@@ -36,7 +39,6 @@ CastTesk = (task)->
   pageGrab = require("webpage").create()
   pageGrab.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36'
   pageGrab.settings.loadImages = false
-
   pageGrab.onError = (msg, trace) ->
     msgStack = [msg]
     if trace
@@ -51,7 +53,7 @@ CastTesk = (task)->
       task.status = 2 #Fail
       task.error = 'Unable to access page'
     else
-      pageGrab.injectJs 'jquery.1.8.3.min.js'
+      pageGrab.injectJs 'jquery.1.10.2.min.js'
       pageGrab.injectJs "grabscripts/#{task.site}_#{task.command}.js"
       gbdate = pageGrab.evaluate ->
         return spGrab()
@@ -61,9 +63,12 @@ CastTesk = (task)->
       _task = JSON.stringify task
       taskHub = $.connection.taskHub
       taskHub.server.doneTask task
-      if task.status = 2
+      if task.status != 2 #Fail
         _data = JSON.stringify data
-        #console.log "~PostData: " + _data
+        console.log "PostData: " + _data
+        console.log "TaskData: " + _task
+        #使用signalr有内容长度限制
+        $.support.cors = true
         $.post serverUrl + "/task/postdata",
           taskjson: _task
           datajson: _data

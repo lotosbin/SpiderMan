@@ -28,7 +28,7 @@ websocket.onCallback = function(info) {
   }
 };
 
-websocket.injectJs('./jquery.1.8.3.min.js');
+websocket.injectJs('./jquery.1.10.2.min.js');
 
 websocket.injectJs('./jquery.signalR-1.1.2.min.js');
 
@@ -40,6 +40,10 @@ websocket.includeJs(serverUrl + '/signalr/hubs', function() {
     taskHub = $.connection.taskHub;
     $.connection.hub.start().done(function() {
       $.support.cors = true;
+      $.post(serverUrl + "/task/postdata", {
+        taskjson: '{"articletype":0,"command":"getList","commandtype":1,"error":"","id":"48f2caef-cec5-4236-875d-85defd1fcbc1","site":"qiushibaike","spend":2779,"status":1,"url":"zxczxczxc"}',
+        datajson: '<img src="http://zxvsdfsa" />asda<p>sadasd</p>sdasd<a title="cvdsfsdaf" href="http://www.google.com">xcvxcv</a>，<a><img src="http://zxvsdfsa" /></a>vxcv'
+      });
       return taskHub.server.registerAgent(agentName);
     });
     return taskHub.client.castTesk = function(task) {
@@ -80,7 +84,7 @@ CastTesk = function(task) {
       task.status = 2;
       task.error = 'Unable to access page';
     } else {
-      pageGrab.injectJs('jquery.1.8.3.min.js');
+      pageGrab.injectJs('jquery.1.10.2.min.js');
       pageGrab.injectJs("grabscripts/" + task.site + "_" + task.command + ".js");
       gbdate = pageGrab.evaluate(function() {
         return spGrab();
@@ -93,8 +97,11 @@ CastTesk = function(task) {
       _task = JSON.stringify(task);
       taskHub = $.connection.taskHub;
       taskHub.server.doneTask(task);
-      if (task.status = 2) {
+      if (task.status !== 2) {
         _data = JSON.stringify(data);
+        console.log("PostData: " + _data);
+        console.log("TaskData: " + _task);
+        $.support.cors = true;
         return $.post(serverUrl + "/task/postdata", {
           taskjson: _task,
           datajson: _data

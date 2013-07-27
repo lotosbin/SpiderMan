@@ -15,23 +15,23 @@ namespace SpiderMan.Respository {
                 .SetSortOrder(SortBy<Huanle>.Descending(g => g.Amount))
                 .SetLimit(limit)
                 .SetSkip(skip)
-                .SetFields(Fields<Huanle>.Include(g => g.Content, g => g.ThumbUps, g => g.ThumbDowns, g => g.Comments));
+                .SetFields(Fields<Huanle>.Include(g => g.Content, g => g.ThumbUps, g => g.ThumbDowns));
             return qiubaisCursor;
         }
 
-        public void AddComment(string articleId, Comment comment) {
-            var updateResult = HuanleRepo.Collection.Update(
-                    Query<Huanle>.EQ(p => p.Id, articleId),
-                    Update<Huanle>.Push(p => p.Comments, comment),
-                    new MongoUpdateOptions {
-                        WriteConcern = WriteConcern.Acknowledged
-                    });
+        //public void AddComment(string articleId, Comment comment) {
+        //    var updateResult = HuanleRepo.Collection.Update(
+        //            Query<Huanle>.EQ(p => p.Id, articleId),
+        //            Update<Huanle>.Push(p => p.Comments, comment),
+        //            new MongoUpdateOptions {
+        //                WriteConcern = WriteConcern.Acknowledged
+        //            });
 
-            if (updateResult.DocumentsAffected == 0) {
-                //// Something went wrong
+        //    if (updateResult.DocumentsAffected == 0) {
+        //        //// Something went wrong
 
-            }
-        }
+        //    }
+        //}
 
     }
 }

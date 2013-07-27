@@ -66,10 +66,12 @@ namespace SpiderMan.Controllers {
         }
 
         public void ModelTimerReBuild() {
-            //复写taskModels并不会中止其Timer，必须手动中止
-            foreach (var model in TaskQueue.taskModels) model.Timer.Close();
-            taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
-            ModelTimerBuild();
+            if (TaskQueue.firsthub != null) {
+                //复写taskModels并不会中止其Timer，必须手动中止
+                foreach (var model in TaskQueue.taskModels) model.Timer.Close();
+                taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+                ModelTimerBuild();
+            }
         }
 
     }

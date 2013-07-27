@@ -13,17 +13,15 @@ namespace SpiderMan.Models {
     [DataContract]
     public class Huanle : Article {
         [DataMember]
-        public string Title { get; set; }
-        [DataMember]
         public int ThumbUps { get; set; }
         [DataMember]
         public int ThumbDowns { get; set; }
         [DataMember]
         public int Amount { get; set; }
         [DataMember]
-        public int Hot { get; set; }
+        public int Grade { get; set; }
 
-        [DataMember]
-        public List<Comment> Comments { get; set; }
+        //[DataMember]
+        //public List<Comment> Comments { get; set; }
     }
 }

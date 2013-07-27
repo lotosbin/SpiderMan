@@ -1,1 +1,0 @@
-phantomjs --script-encoding=gbk --output-encoding=gbk spiderman.coffee localdev http://localhost:35403

@@ -5,7 +5,7 @@ window.spGrab = function() {
   _this = $('div.col1:first>.block');
   atcul = _this.children('.bar').children('ul');
   item = {
-    Content: $.trim(_this.children('.content').text()),
+    Content: $.trim(_this.children('.content').html()),
     ThumbUps: $.trim($('li', atcul).first().text()),
     ThumbDowns: $.trim($('li', atcul).eq(1).text())
   };
