@@ -22,9 +22,6 @@ websocket.includeJs serverUrl + '/signalr/hubs', ->
     taskHub = $.connection.taskHub
     $.connection.hub.start().done ->
       $.support.cors = true
-      $.post serverUrl + "/task/postdata",
-        taskjson: '{"articletype":0,"command":"getList","commandtype":1,"error":"","id":"48f2caef-cec5-4236-875d-85defd1fcbc1","site":"qiushibaike","spend":2779,"status":1,"url":"zxczxczxc"}'
-        datajson: '<img src="http://zxvsdfsa" />asda<p>sadasd</p>sdasd<a title="cvdsfsdaf" href="http://www.google.com">xcvxcv</a>，<a><img src="http://zxvsdfsa" /></a>vxcv'
       #console.log taskHub.connection.id
       taskHub.server.registerAgent agentName
     taskHub.client.castTesk = (task) ->
@@ -65,8 +62,7 @@ CastTesk = (task)->
       taskHub.server.doneTask task
       if task.status != 2 #Fail
         _data = JSON.stringify data
-        console.log "PostData: " + _data
-        console.log "TaskData: " + _task
+        #console.log "PostData: " + _data
         #使用signalr有内容长度限制
         $.support.cors = true
         $.post serverUrl + "/task/postdata",
