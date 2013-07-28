@@ -1,13 +1,15 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoRepository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using sharp_net.Infrastructure;
 using sharp_net.Mvc;
 using SpiderMan.Help;
 using SpiderMan.Models;
-using SpiderMan.Respository;
+using sharp_net.Mongo;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +22,19 @@ using System.Web.Mvc;
 namespace SpiderMan.Controllers {
 
     public class TaskController : Controller {
-        private readonly Respositorys repos;
-        public TaskController(Respositorys _repos) {
-            this.repos = _repos;
+        private readonly MongoCollection<TaskModel> taskModelCollection;
+        private readonly MongoCollection<Huanle> huanleCollection;
+        private readonly MongoCollection<Dianbo> dianboCollection;
+        private readonly MongoCollection<Shudong> shudongCollection;
+        public TaskController(IMongoRepo<TaskModel> taskmodel_repo, IMongoRepo<Huanle> huanle_repo, IMongoRepo<Dianbo> dianbo_repo, IMongoRepo<Shudong> shudong_repo) {
+            this.taskModelCollection = taskmodel_repo.Collection;
+            this.huanleCollection = huanle_repo.Collection;
+            this.dianboCollection = dianbo_repo.Collection;
+            this.shudongCollection = shudong_repo.Collection;
         }
 
         public ActionResult Index() {
-            ViewBag.TaskModel = repos.TaskModelRepo.Collection.FindAll();
+            ViewBag.TaskModel = taskModelCollection.FindAll();
             return View();
         }
         
@@ -41,37 +49,37 @@ namespace SpiderMan.Controllers {
             switch (task.ArticleType) {
                 case eArticleType.Huanle:
                     if (task.CommandType == eCommandType.List) {
-                        //因为Mongodb Respository's Entity有DataContract特性，所以无法被json.net序列化，只能使用DataContractJsonSerializer
-                        //DataContractJsonSerializer 不能忽略大小写
-                        var data = JsonHelper.JsonDeserialize<IEnumerable<Huanle>>(datajson);
+                        //Mongodb Respository's Entity有DataContract特性，所以无法被json.net序列化，只能使用DataContractJsonSerializer。DataContractJsonSerializer 不能忽略大小写
+                        //var data = JsonHelper.JsonDeserialize<IEnumerable<Huanle>>(datajson);
+                        var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Huanle>)) as IEnumerable<Huanle>;
                         foreach (var item in data) item.Init(task);
-                        repos.HuanleRepo.Add(data);
+                        huanleCollection.InsertBatch(data);
                     } else {
                         var data = JsonHelper.JsonDeserialize<Huanle>(datajson);
                         data.Init(task);
-                        repos.HuanleRepo.Add(data);
+                        huanleCollection.Insert(data);
                     }
                     break;
                 case eArticleType.Shudong:
                     if (task.CommandType == eCommandType.List) {
                         var data = JsonHelper.JsonDeserialize<IEnumerable<Shudong>>(datajson);
                         foreach (var item in data) item.Init(task);
-                        repos.ShudongRepo.Add(data);
+                        shudongCollection.InsertBatch(data);
                     } else {
                         var data = JsonHelper.JsonDeserialize<Shudong>(datajson);
                         data.Init(task);
-                        repos.ShudongRepo.Add(data);
+                        shudongCollection.Insert(data);
                     }
                     break;
                 case eArticleType.Dianbo:
                     if (task.CommandType == eCommandType.List) {
                         var data = JsonHelper.JsonDeserialize<IEnumerable<Dianbo>>(datajson);
                         foreach (var item in data) item.Init(task);
-                        repos.DianboRepo.Add(data);
+                        dianboCollection.InsertBatch(data);
                     } else {
                         var data = JsonHelper.JsonDeserialize<Dianbo>(datajson);
                         data.Init(task);
-                        repos.DianboRepo.Add(data);
+                        dianboCollection.Insert(data);
                     }
                     break;
                 default:

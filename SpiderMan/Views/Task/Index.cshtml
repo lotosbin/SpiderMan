@@ -52,11 +52,15 @@
                 li.text(newTask.site + ' - ' + newTask.command + ' - ' + newTask.url)
                 .attr('queueid', newTask.Id)
             };
-            taskHub.client.broadcastRemoveTask = function (removeTask) {
-                $("li[tid='" + removeTask.id + "']", tasksqueue).remove();
+            taskHub.client.broadcastDoneTask = function (donetask) {
+                if (donetask.status == 2) {
+                    $("li[tid='" + donetask.id + "']", tasksqueue).append(" --fail: " + donetask.error);
+                } else {
+                    $("li[tid='" + donetask.id + "']", tasksqueue).remove();
+                }
             };
             taskHub.client.broadcastExeTask = function (exeTask) {
-                $("li[tid='" + exeTask.id + "']", tasksqueue).append(" --executing");
+                $("li[tid='" + exeTask.id + "']", tasksqueue).append(" --executing by " + exeTask.handleragent);
             };
             $.connection.hub.start().done(function () {
                 taskHub.server.registerBoard();

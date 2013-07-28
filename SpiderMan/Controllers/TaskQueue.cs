@@ -1,10 +1,8 @@
-﻿using MongoRepository;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using sharp_net;
 using SpiderMan.App_Start;
 using SpiderMan.Models;
-using SpiderMan.Respository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +12,12 @@ using System.Timers;
 using System.Web;
 using Ninject;
 using System.Text;
-using MongoDB.Driver.Builders;
 using sharp_net.Repositories;
+using sharp_net.Mongo;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
+using System.Web.Mvc;
 
 namespace SpiderMan.Controllers {
     public sealed class TaskQueue {
@@ -23,7 +25,8 @@ namespace SpiderMan.Controllers {
         public static IList<Agent> agents;
         public static IEnumerable<TaskModel> taskModels;
         public static IEnumerable<Site> sites;
-        public static Respositorys repos;
+        public static MongoCollection<Site> siteCollection;
+        public static MongoCollection<TaskModel> taskModelCollection;
         public static TaskHub firsthub;
         public static readonly TaskQueue Instance;
 
@@ -32,12 +35,15 @@ namespace SpiderMan.Controllers {
         static TaskQueue() {
             tasks = new List<SpiderTask>();
             agents = new List<Agent>();
-            repos = new Respositorys();
-            
+            var siteRepo = DependencyResolver.Current.GetService(typeof(IMongoRepo<Site>)) as IMongoRepo<Site>;
+            siteCollection = siteRepo.Collection;
+            var taskModelRepo = DependencyResolver.Current.GetService(typeof(IMongoRepo<TaskModel>)) as IMongoRepo<TaskModel>;
+            taskModelCollection = taskModelRepo.Collection;
+
             //注意必须使用ToList避免懒惰加载，否则在每次调用taskModels对象时会再次查询，从而清空已被赋值过的Timer属性。
             //这里应该是mongo driver或mongo Respository的特殊模式。
-            taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
-            sites = repos.SiteRepo.Collection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            taskModels = taskModelCollection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            sites = siteCollection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
             Instance = new TaskQueue();
         }
 
@@ -58,7 +64,7 @@ namespace SpiderMan.Controllers {
         }
 
         public void ModelTimerBuild() {
-            foreach (var model in TaskQueue.taskModels) {
+            foreach (var model in taskModels) {
                 model.Timer = new Timer(1000 * model.Interval);
                 model.Timer.Elapsed += delegate { GenerateTask(model); };
                 model.Timer.Enabled = true;
@@ -66,12 +72,11 @@ namespace SpiderMan.Controllers {
         }
 
         public void ModelTimerReBuild() {
-            if (TaskQueue.firsthub != null) {
-                //复写taskModels并不会中止其Timer，必须手动中止
-                foreach (var model in TaskQueue.taskModels) model.Timer.Close();
-                taskModels = repos.TaskModelRepo.Collection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
-                ModelTimerBuild();
-            }
+            if (TaskQueue.firsthub == null) return;
+            //复写taskModels并不会中止其Timer，必须手动中止
+            foreach (var model in TaskQueue.taskModels) model.Timer.Close();
+            taskModels = taskModelCollection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            ModelTimerBuild();
         }
 
     }

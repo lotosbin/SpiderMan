@@ -10,6 +10,8 @@ namespace SpiderMan.Models {
         public Guid Id { get; set; }
         [JsonProperty("status")]
         public eTaskStatus Status { get; set; }
+        [JsonProperty("handleragent")]
+        public string HandlerAgent { get; set; }
         [JsonProperty("articletype")]
         public eArticleType ArticleType { get; set; }
         [JsonProperty("site")]

@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoRepository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using sharp_net.Mongo;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,19 +11,12 @@ using System.Web;
 
 namespace SpiderMan.Models {
 
-    [DataContract]
-    public class Article : Entity {
-        [DataMember]
+    public class Article : MEntity {
         public int Status { get; set; } //eArticleStatus
-        [DataMember]
         public string SourceSite { get; set; }
-        [DataMember]
         public string SourceLink { get; set; }
-        [DataMember]
         public DateTime BrithDate { get; set; }
-        [DataMember]
         public string Content { get; set; }
-        [DataMember]
         public DateTime GrabDate { get; set; }
 
         public string ProviderId { get; set; }

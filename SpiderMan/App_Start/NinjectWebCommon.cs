@@ -9,8 +9,7 @@ namespace SpiderMan.App_Start {
 
     using Ninject;
     using Ninject.Web.Common;
-    using SpiderMan.Respository;
-    using MongoRepository;
+    using sharp_net.Mongo;
     using SpiderMan.Models;
     using System.Web.Http;
 
@@ -47,11 +46,8 @@ namespace SpiderMan.App_Start {
             //Ninject.Web.WebApi don't support mvc4 now. fix issus form http://stackoverflow.com/a/10855037/346701
             GlobalConfiguration.Configuration.DependencyResolver = new SpiderMan.App_Start.NinjectDependencyResolver(kernel);
 
-            Kernel = kernel;
             return kernel;
         }
-
-        public static IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Load your modules or register your services here!
@@ -59,8 +55,14 @@ namespace SpiderMan.App_Start {
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel) {
             //Todo: 不理解为什么没有bind的情况下controller构造函数依然能得到对象实体
-            //kernel.Bind<Respositorys>().To<Respositorys>();
-            //kernel.Bind<HuanleRespository>().To<HuanleRespository>();
+            kernel.Bind<IMongoRepo<Article>>().To<MongoRepo<Article>>();
+            kernel.Bind<IMongoRepo<Huanle>>().To<MongoRepo<Huanle>>();
+            kernel.Bind<IMongoRepo<Dianbo>>().To<MongoRepo<Dianbo>>();
+            kernel.Bind<IMongoRepo<Shudong>>().To<MongoRepo<Shudong>>();
+            kernel.Bind<IMongoRepo<TaskModel>>().To<MongoRepo<TaskModel>>();
+            kernel.Bind<IMongoRepo<Site>>().To<MongoRepo<Site>>();
+            kernel.Bind<IMongoRepo<Avator>>().To<MongoRepo<Avator>>();
+            kernel.Bind<IMongoRepo<UserName>>().To<MongoRepo<UserName>>();
         }
     }
 }

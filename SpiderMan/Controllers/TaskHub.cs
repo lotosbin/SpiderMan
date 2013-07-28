@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using sharp_net;
 using sharp_net.Repositories;
 using SpiderMan.Models;
-using SpiderMan.Respository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,15 +43,19 @@ namespace SpiderMan.Controllers {
                     Online = true
                 };
                 TaskQueue.agents.Add(newagent);
-                GenerateAgentProcess(newagent);
+                AgentsTimerBuild(newagent);
             }
             Groups.Add(Context.ConnectionId, "agent");
             Clients.Group("broad").agentList(TaskQueue.agents);
         }
 
-        private void GenerateAgentProcess(Agent agent) {
+        private void AgentsTimerBuild(Agent agent) {
+            //复写agent.Timer并不会中止其Timer，必须手动中止
+            foreach (var model in agent.Timer) model.Close();
             agent.Timer = new List<Timer>();
             foreach (var site in TaskQueue.sites) {
+                System.Threading.Thread.Sleep(2000);
+                ProcessTesk(site, agent);
                 Timer timer = new Timer(1000 * site.GrabInterval);
                 timer.Elapsed += delegate { ProcessTesk(site, agent); };
                 timer.Enabled = true;
@@ -72,7 +75,7 @@ namespace SpiderMan.Controllers {
         public void DoneTask(string taskjson) {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
             TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
-            Clients.Group("broad").broadcastRemoveTask(task);
+            Clients.Group("broad").broadcastDoneTask(task);
             if (task.Status == eTaskStatus.Fail)
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
         }
@@ -101,7 +104,6 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) {
                 var task = TaskQueue.Instance.GenerateTask(model);
-                Clients.Group("broad").broadcastAddTask(task);
                 Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
             }
         }

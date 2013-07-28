@@ -55,6 +55,9 @@ CastTesk = (task)->
       gbdate = pageGrab.evaluate ->
         return spGrab()
       task.spend = (Date.now() - now)
+      if not gbdate
+        task.status = 2 #Fail
+        task.error = 'gbdate Is Null'
     pageGrab.close()
     websocket.evaluate (serverUrl, task, data)->
       _task = JSON.stringify task
@@ -68,4 +71,4 @@ CastTesk = (task)->
         $.post serverUrl + "/task/postdata",
           taskjson: _task
           datajson: _data
-    , serverUrl, task, gbdate
+    , serverUrl, task, gbdatep
