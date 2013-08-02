@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 
 namespace SpiderMan.Controllers {
+    [Authorize]
     public class SiteController : Controller {
         private readonly MongoCollection<Site> siteCollection;
         public SiteController(IMongoRepo<Site> site_repo) {
@@ -33,6 +34,7 @@ namespace SpiderMan.Controllers {
                 return View(model);
             }
             siteCollection.Insert(model);
+            TaskQueue.Instance.SiteTimerReBuild();
             return RedirectToAction("Index");
         }
 
@@ -48,6 +50,7 @@ namespace SpiderMan.Controllers {
                 return View(model);
             }
             siteCollection.Save(model);
+            TaskQueue.Instance.SiteTimerReBuild();
             return RedirectToAction("Index");
         }
 
@@ -59,6 +62,7 @@ namespace SpiderMan.Controllers {
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(string id) {
             siteCollection.Remove(Query<Site>.EQ(d => d.Id, id));
+            TaskQueue.Instance.SiteTimerReBuild();
             return RedirectToAction("Index");
         }
     }

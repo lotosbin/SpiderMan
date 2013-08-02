@@ -56,8 +56,8 @@ namespace SpiderMan.App_Start {
         private static void RegisterServices(IKernel kernel) {
             //Todo: 不理解为什么没有bind的情况下controller构造函数依然能得到对象实体
             kernel.Bind<IMongoRepo<Article>>().To<MongoRepo<Article>>();
-            kernel.Bind<IMongoRepo<Huanle>>().To<MongoRepo<Huanle>>();
-            kernel.Bind<IMongoRepo<Dianbo>>().To<MongoRepo<Dianbo>>();
+            kernel.Bind<IMongoRepo<GgpttCard>>().To<MongoRepo<GgpttCard>>();
+            kernel.Bind<IMongoRepo<AdianboVideo>>().To<MongoRepo<AdianboVideo>>();
             kernel.Bind<IMongoRepo<Shudong>>().To<MongoRepo<Shudong>>();
             kernel.Bind<IMongoRepo<TaskModel>>().To<MongoRepo<TaskModel>>();
             kernel.Bind<IMongoRepo<Site>>().To<MongoRepo<Site>>();

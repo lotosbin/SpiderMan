@@ -17,12 +17,13 @@ using sharp_net.Mongo;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
+using MongoDB.Driver.Linq;
 using System.Web.Mvc;
 
 namespace SpiderMan.Controllers {
     public sealed class TaskQueue {
-        public static IList<SpiderTask> tasks;
-        public static IList<Agent> agents;
+        public static List<SpiderTask> tasks;
+        public static List<Agent> agents;
         public static IEnumerable<TaskModel> taskModels;
         public static IEnumerable<Site> sites;
         public static MongoCollection<Site> siteCollection;
@@ -35,16 +36,16 @@ namespace SpiderMan.Controllers {
         static TaskQueue() {
             tasks = new List<SpiderTask>();
             agents = new List<Agent>();
-            var siteRepo = DependencyResolver.Current.GetService(typeof(IMongoRepo<Site>)) as IMongoRepo<Site>;
-            siteCollection = siteRepo.Collection;
-            var taskModelRepo = DependencyResolver.Current.GetService(typeof(IMongoRepo<TaskModel>)) as IMongoRepo<TaskModel>;
-            taskModelCollection = taskModelRepo.Collection;
+            siteCollection = (DependencyResolver.Current.GetService(typeof(IMongoRepo<Site>)) as IMongoRepo<Site>).Collection;
+            taskModelCollection = (DependencyResolver.Current.GetService(typeof(IMongoRepo<TaskModel>)) as IMongoRepo<TaskModel>).Collection;
 
             //注意必须使用ToList避免懒惰加载，否则在每次调用taskModels对象时会再次查询，从而清空已被赋值过的Timer属性。
             //这里应该是mongo driver或mongo Respository的特殊模式。
-            taskModels = taskModelCollection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            taskModels = taskModelCollection.AsQueryable<TaskModel>().Where(d => d.Act == (int)eAct.Normal && d.Interval > 0).ToList();
             sites = siteCollection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
             Instance = new TaskQueue();
+            Instance.ModelTimerBuild();
+            Instance.Maintenance();
         }
 
         TaskQueue() { }
@@ -52,19 +53,22 @@ namespace SpiderMan.Controllers {
         public SpiderTask GenerateTask(TaskModel model) {
             var newTask = new SpiderTask {
                 Id = Guid.NewGuid(),
+                BirthTime = DateTime.Now,
+                TaskModelId = model.Id,
                 Site = model.Site,
-                Command = model.Command,
-                CommandType = (eCommandType)model.CommandType,
+                CommandType = ((eCommandType)model.CommandType).ToString(),
                 Url = model.Url,
-                ArticleType = (eArticleType)model.ArticleType
+                ArticleType = ((eArticleType)model.ArticleType).ToString()
             };
             tasks.Add(newTask);
-            firsthub.Clients.Group("broad").broadcastAddTask(newTask);
+            if (firsthub != null)
+                firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
             return newTask;
         }
 
-        public void ModelTimerBuild() {
+        private void ModelTimerBuild() {
             foreach (var model in taskModels) {
+                GenerateTask(model);
                 model.Timer = new Timer(1000 * model.Interval);
                 model.Timer.Elapsed += delegate { GenerateTask(model); };
                 model.Timer.Enabled = true;
@@ -72,11 +76,47 @@ namespace SpiderMan.Controllers {
         }
 
         public void ModelTimerReBuild() {
-            if (TaskQueue.firsthub == null) return;
             //复写taskModels并不会中止其Timer，必须手动中止
-            foreach (var model in TaskQueue.taskModels) model.Timer.Close();
-            taskModels = taskModelCollection.Find(Query<TaskModel>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            foreach (var model in TaskQueue.taskModels)
+                if (model.Timer != null) model.Timer.Close();
+            taskModels = taskModelCollection.AsQueryable<TaskModel>().Where(d => d.Act == (int)eAct.Normal && d.Interval > 0).ToList();
             ModelTimerBuild();
+        }
+
+        public void SiteTimerReBuild() {
+            sites = siteCollection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
+            if (firsthub != null) {
+                foreach (var agent in agents) {
+                    foreach (var timer in agent.Timer) timer.Close();
+                    firsthub.AgentTimerBuild(agent);
+                }
+            }
+        }
+
+        private void Maintenance() {
+            Timer _1min = new Timer(1000 * 60);
+            _1min.Elapsed += delegate { ClearDoneTask(); };
+            _1min.Enabled = true;
+
+            Timer _5min = new Timer(1000 * 300);
+            _5min.Elapsed += delegate { ClearExecutingTask(); };
+            _5min.Enabled = true;
+        }
+
+        private void ClearDoneTask() {
+            TaskQueue.tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
+        }
+
+        private void ClearExecutingTask() {
+            var executerTask = TaskQueue.tasks.Where(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
+            if (executerTask.Count() > 0) {
+                var str = new StringBuilder();
+                foreach (var task in executerTask) {
+                    str.Append(task.Url);
+                }
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "ExecutingOver15min:" + str.ToString(), "Grab", LogType.Warn);
+                TaskQueue.tasks = TaskQueue.tasks.Except(executerTask).ToList();
+            }
         }
 
     }

@@ -5,10 +5,10 @@ using System.Web;
 
 namespace SpiderMan.Models {
     public enum eArticleType {
-        Huanle,
-        Shudong,
-        Dianbo,
-        Finance,
-        Geek
+        GgpttCard = 1,
+        AdianboVideo = 2,
+        Shudong = 3,
+        Caijin = 4,
+        Aiti = 5
     }
 }

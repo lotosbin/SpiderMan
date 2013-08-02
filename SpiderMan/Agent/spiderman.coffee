@@ -25,7 +25,7 @@ websocket.includeJs serverUrl + '/signalr/hubs', ->
       #console.log taskHub.connection.id
       taskHub.server.registerAgent agentName
     taskHub.client.castTesk = (task) ->
-      castTesk = 
+      castTesk =
         command: "CastTesk"
         task: task
       window.callPhantom castTesk
@@ -44,31 +44,34 @@ CastTesk = (task)->
     console.log '~EvaluateError: ' + msgStack.join("\n")
 
   now = Date.now()
-  pageGrab.open encodeURI(task.url), (status) -> 
+  pageGrab.open task.url, (status) -> #encodeURI(task.url)
     gbdate = {}
     if status isnt 'success'
       task.status = 2 #Fail
       task.error = 'Unable to access page'
     else
       pageGrab.injectJs 'jquery.1.10.2.min.js'
-      pageGrab.injectJs "grabscripts/#{task.site}_#{task.command}.js"
+      pageGrab.injectJs "grabscripts/#{task.site}_#{task.commandtype}.js"
       gbdate = pageGrab.evaluate ->
         return spGrab()
       task.spend = (Date.now() - now)
       if not gbdate
         task.status = 2 #Fail
-        task.error = 'gbdate Is Null'
+        task.error = 'gbdate is false'
     pageGrab.close()
     websocket.evaluate (serverUrl, task, data)->
-      _task = JSON.stringify task
       taskHub = $.connection.taskHub
-      taskHub.server.doneTask task
-      if task.status != 2 #Fail
+      _task = JSON.stringify task
+      taskHub.server.doneTask _task
+      if task.status != 2 #not Fail
         _data = JSON.stringify data
         #console.log "PostData: " + _data
-        #使用signalr有内容长度限制
-        $.support.cors = true
-        $.post serverUrl + "/task/postdata",
-          taskjson: _task
-          datajson: _data
-    , serverUrl, task, gbdatep
+        _posturl = serverUrl + "/task/post" + task.articletype + task.commandtype
+        if task.commandtype == "Ids" || task.commandtype == "ListFirst"
+          $.post _posturl,
+            datajson: _data
+            taskmodelid: task.taskmodelid
+        else
+          $.post _posturl,
+            datajson: _data
+    , serverUrl, task, gbdate

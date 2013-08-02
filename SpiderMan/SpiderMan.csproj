@@ -242,9 +242,10 @@
     <Compile Include="Controllers\TaskHub.cs" />
     <Compile Include="Controllers\TaskModelController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
-    <Compile Include="Entity\Article\Article.cs">
+    <Compile Include="Entity\Article.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Entity\AdianboVideo.cs" />
     <Compile Include="Enum\eArticleType.cs" />
     <Compile Include="Enum\eCommandType.cs" />
     <Compile Include="Global.asax.cs">
@@ -257,16 +258,13 @@
       <SubType>Designer</SubType>
     </Content>
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Entity\Article\Huanle.cs" />
-    <Compile Include="Entity\Avator.cs" />
-    <Compile Include="Entity\Comment.cs" />
+    <Compile Include="Entity\GgpttCard.cs" />
     <Compile Include="Entity\Site.cs" />
     <Compile Include="Entity\TaskModel.cs" />
     <Compile Include="Enum\eTaskStatus.cs" />
-    <Compile Include="Entity\UserName.cs" />
+    <Compile Include="Entity\Human.cs" />
     <Compile Include="Enum\eArticleStatus.cs" />
-    <Compile Include="Entity\Article\Shudong.cs" />
-    <Compile Include="Entity\Article\Dianbo.cs" />
+    <Compile Include="Entity\Shudong.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\SpiderTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,22 +9,26 @@ using sharp_net.Mongo;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
+using MongoDB.Driver.Linq;
+using sharp_net.Repositories;
 
 namespace SpiderMan.Controllers {
     [Authorize]
     public class TaskModelController : Controller {
         private readonly MongoCollection<TaskModel> taskModelCollection;
-        public TaskModelController(MongoRepo<TaskModel> taskmodel_repo) {
+        private readonly MongoCollection<Site> siteCollection;
+        public TaskModelController(MongoRepo<TaskModel> taskmodel_repo, MongoRepo<Site> site_repo) {
             this.taskModelCollection = taskmodel_repo.Collection;
+            this.siteCollection = site_repo.Collection;
         }
 
         public ActionResult Index() {
-            var models = taskModelCollection.FindAll();
+            var models = taskModelCollection.AsQueryable<TaskModel>().Where(d => d.Act == (int)eAct.Normal && d.Interval > 0);
             return View(models);
         }
 
         public ActionResult Create() {
-            ViewBag.SiteList = from site in taskModelCollection.FindAll()
+            ViewBag.SiteList = from site in siteCollection.FindAll()
                                select new SelectListItem() {
                                    Text = site.Name,
                                    Value = site.Name
@@ -46,7 +50,7 @@ namespace SpiderMan.Controllers {
 
         public ActionResult Edit(string id) {
             var model = taskModelCollection.FindOneByIdAs<TaskModel>(new ObjectId(id));
-            ViewBag.SiteList = from site in taskModelCollection.FindAll()
+            ViewBag.SiteList = from site in siteCollection.FindAll()
                                select new SelectListItem() {
                                    Text = site.Name,
                                    Value = site.Name

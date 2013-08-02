@@ -10,7 +10,7 @@
 <table id="taskModels">
     @foreach (var item in ViewBag.TaskModel) {
         <tr modelid="@item.Id">
-            <td><a target="_blank" class="site_cmd" href="@item.Url">@(item.Site)_@item.Command</a></td>
+            <td><a target="_blank" class="site_cmd" href="@item.Url">@(item.Site)_@item.CommandType</a></td>
             <td class="interval">@item.Interval</td>
             <td>
                 <button class="action">Stop</button>
@@ -47,21 +47,20 @@
                 })
             }
             var tasksqueue = $('#tasksqueue');
-            taskHub.client.broadcastAddTask = function (newTask) {
-                var li = $('<li />', { tid: newTask.id }).appendTo(tasksqueue)
-                li.text(newTask.site + ' - ' + newTask.command + ' - ' + newTask.url)
-                .attr('queueid', newTask.Id)
-            };
-            taskHub.client.broadcastDoneTask = function (donetask) {
-                if (donetask.status == 2) {
-                    $("li[tid='" + donetask.id + "']", tasksqueue).append(" --fail: " + donetask.error);
-                } else {
-                    $("li[tid='" + donetask.id + "']", tasksqueue).remove();
-                }
-            };
-            taskHub.client.broadcastExeTask = function (exeTask) {
-                $("li[tid='" + exeTask.id + "']", tasksqueue).append(" --executing by " + exeTask.handleragent);
-            };
+            taskHub.client.broadcastRanderTask = function (tasks) {
+                tasksqueue.empty();
+                $(tasks).each(function () {
+                    var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
+                    li.append('<a href="">' + this.site + ' - ' + this.commandtype + '</a>').attr('queueid', this.Id)
+                    if (this.status == 3) {
+                        li.append(" --done! spend: " + this.spend);
+                    } else if (this.status == 2) {
+                        li.append(" --fail: " + this.error);
+                    } else if (this.status == 1) {
+                        li.append(" --executing by " + this.handleragent);
+                    }
+                });
+            }
             $.connection.hub.start().done(function () {
                 taskHub.server.registerBoard();
                 $('button.manualOne', taskmodels).click(function () {

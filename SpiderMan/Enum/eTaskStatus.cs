@@ -7,6 +7,7 @@ namespace SpiderMan.Models {
     public enum eTaskStatus {
         Standby,
         Executing,
-        Fail
+        Fail,
+        Done
     }
 }

@@ -22,7 +22,5 @@
         <span class="ml10">{{view.Score}}</span>
         <span class="ml10">{{view.StatusName}}</span>
     </p>
-    <p>
-        {{view.Content}}
-    </p>
-</div>
+    <p ng-bind-html-unsafe="view.Content"></p>
+</p>

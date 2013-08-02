@@ -21,13 +21,13 @@ namespace SpiderMan.Controllers {
         public TaskHub() {
             if (TaskQueue.firsthub == null) {
                 TaskQueue.firsthub = this;
-                TaskQueue.Instance.ModelTimerBuild();
             }
         }
 
         public void RegisterBoard() {
             Groups.Add(Context.ConnectionId, "broad");
             Clients.Client(Context.ConnectionId).agentList(TaskQueue.agents);
+            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         public void RegisterAgent(string name) {
@@ -43,15 +43,13 @@ namespace SpiderMan.Controllers {
                     Online = true
                 };
                 TaskQueue.agents.Add(newagent);
-                AgentsTimerBuild(newagent);
+                AgentTimerBuild(newagent);
             }
             Groups.Add(Context.ConnectionId, "agent");
             Clients.Group("broad").agentList(TaskQueue.agents);
         }
 
-        private void AgentsTimerBuild(Agent agent) {
-            //复写agent.Timer并不会中止其Timer，必须手动中止
-            foreach (var model in agent.Timer) model.Close();
+        public void AgentTimerBuild(Agent agent) {
             agent.Timer = new List<Timer>();
             foreach (var site in TaskQueue.sites) {
                 System.Threading.Thread.Sleep(2000);
@@ -66,18 +64,32 @@ namespace SpiderMan.Controllers {
         private void ProcessTesk(Site site, Agent agent) {
             var task = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
             if (task != null) {
-                task.Status = eTaskStatus.Executing;
-                Clients.Group("broad").broadcastExeTask(task);
                 Clients.Client(agent.ConnectionId).castTesk(task);
+                task.Status = eTaskStatus.Executing;
+                task.HandlerAgent = agent.Name;
+                task.HandlerTime = DateTime.Now;
+                Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            } else {
+                var executingTask = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Executing && d.Site == site.Name).OrderBy(d => d.HandlerTime).FirstOrDefault();
+                if (executingTask != null) {
+                    if ((DateTime.Now - executingTask.HandlerTime).TotalMinutes > 2) {
+                        Clients.Client(agent.ConnectionId).castTesk(executingTask);
+                        executingTask.HandlerAgent = agent.Name;
+                        executingTask.HandlerTime = DateTime.Now;
+                        Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+                    }
+                }
             }
         }
 
         public void DoneTask(string taskjson) {
             SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
-            TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
-            Clients.Group("broad").broadcastDoneTask(task);
             if (task.Status == eTaskStatus.Fail)
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
+            //TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
+            task = TaskQueue.tasks.SingleOrDefault(d => d.Id == task.Id);
+            task.Status = eTaskStatus.Done;
+            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         public override Task OnDisconnected() {
@@ -104,7 +116,8 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) {
                 var task = TaskQueue.Instance.GenerateTask(model);
-                Clients.Client(TaskQueue.agents.Where(d => d.Online).Single().ConnectionId).castTesk(task);
+                var agent = TaskQueue.agents.Where(d => d.Online).Single();
+                Clients.Client(agent.ConnectionId).castTesk(task);
             }
         }
 
@@ -117,5 +130,7 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) model.Timer.Start();
         }
+
+
     }
 }

@@ -24,6 +24,8 @@ namespace SpiderMan {
             AuthConfig.RegisterAuth();
 
             ZicLog4Net.Instance.Config(new string[] { "Grab", "System" }, new ZicGmailConfig());
+            SpiderMan.Models.Site.Initialization();
+            SpiderMan.Models.TaskModel.Initialization();
         }
     }
 }

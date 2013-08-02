@@ -8,4 +8,5 @@
     <attr name="src">^[a-zA-Z]+://.+$</attr>
     <attr name="title">.+</attr>
   </tag>
+  <tag name="br"></tag>
 </config>

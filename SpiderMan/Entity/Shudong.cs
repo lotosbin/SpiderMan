@@ -1,14 +1,13 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using sharp_net.Mongo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Web;
 
 namespace SpiderMan.Models {
 
-    public class Comment {
-        public string Content { get; set; }
+    public class Shudong : Article {
+        public int Hot { get; set; } //流量最高的，Up和Donw数字相加。
+        public IList<string> Comments { get; set; }
     }
 }

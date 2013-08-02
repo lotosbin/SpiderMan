@@ -20,22 +20,22 @@ using System.Threading;
 namespace SpiderMan.ApiControllers {
     public class HuanleController : ApiController {
 
-        private readonly MongoCollection<Huanle> huanleCollection;
-        public HuanleController(MongoRepo<Huanle> huanle_repos) {
+        private readonly MongoCollection<GgpttCard> huanleCollection;
+        public HuanleController(MongoRepo<GgpttCard> huanle_repos) {
             this.huanleCollection = huanle_repos.Collection;
         }
 
         // GET api/huanle/51c07bbec32d92328066b256
-        public Huanle Get(string id) {
-            var result = huanleCollection.FindOneByIdAs<Huanle>(new ObjectId(id));
+        public GgpttCard Get(string id) {
+            var result = huanleCollection.FindOneByIdAs<GgpttCard>(new ObjectId(id));
             return result;
         }
 
         // GET api/huanle/verifying
         [ActionName("Get")]
-        public IEnumerable<Huanle> GetList(string boxer, int pager) {
+        public IEnumerable<GgpttCard> GetList(string boxer, int pager) {
             boxer = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(boxer);
-            var result = from d in huanleCollection.AsQueryable<Huanle>()
+            var result = from d in huanleCollection.AsQueryable<GgpttCard>()
                          where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
                          select d;
             if (pager == 0)
@@ -46,12 +46,12 @@ namespace SpiderMan.ApiControllers {
 
         // PUT api/huanle/51c07bbec32d92328066b256
         [HandleErrorForJsonAttribute]
-        public void Put(Huanle value) {
+        public void Put(GgpttCard value) {
             //if (value.Comments.Count == 1 && value.Comments.First().Id == null)
             //    value.Comments = null; //ToDo: Json Convert issus, i don't know why.
             var updateResult = huanleCollection.Update(
-                Query<Huanle>.EQ(p => p.Id, value.Id),
-                Update<Huanle>.Replace(value),
+                Query<GgpttCard>.EQ(p => p.Id, value.Id),
+                Update<GgpttCard>.Replace(value),
                 new MongoUpdateOptions {
                     WriteConcern = WriteConcern.Acknowledged //ToDo: i don't know what's means.
                 });
@@ -63,7 +63,7 @@ namespace SpiderMan.ApiControllers {
 
         // DELETE api/huanle/51c07bbec32d92328066b256
         public void Delete(string id) {
-            huanleCollection.Remove(Query<Huanle>.EQ(d => d.Id, id));
+            huanleCollection.Remove(Query<GgpttCard>.EQ(d => d.Id, id));
         }
 
     }

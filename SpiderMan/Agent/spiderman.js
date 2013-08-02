@@ -73,7 +73,7 @@ CastTesk = function(task) {
     return console.log('~EvaluateError: ' + msgStack.join("\n"));
   };
   now = Date.now();
-  return pageGrab.open(encodeURI(task.url), function(status) {
+  return pageGrab.open(task.url, function(status) {
     var gbdate;
     gbdate = {};
     if (status !== 'success') {
@@ -81,30 +81,36 @@ CastTesk = function(task) {
       task.error = 'Unable to access page';
     } else {
       pageGrab.injectJs('jquery.1.10.2.min.js');
-      pageGrab.injectJs("grabscripts/" + task.site + "_" + task.command + ".js");
+      pageGrab.injectJs("grabscripts/" + task.site + "_" + task.commandtype + ".js");
       gbdate = pageGrab.evaluate(function() {
         return spGrab();
       });
       task.spend = Date.now() - now;
       if (!gbdate) {
         task.status = 2;
-        task.error = 'gbdate Is Null';
+        task.error = 'gbdate is false';
       }
     }
     pageGrab.close();
     return websocket.evaluate(function(serverUrl, task, data) {
-      var taskHub, _data, _task;
-      _task = JSON.stringify(task);
+      var taskHub, _data, _posturl, _task;
       taskHub = $.connection.taskHub;
-      taskHub.server.doneTask(task);
+      _task = JSON.stringify(task);
+      taskHub.server.doneTask(_task);
       if (task.status !== 2) {
         _data = JSON.stringify(data);
-        $.support.cors = true;
-        return $.post(serverUrl + "/task/postdata", {
-          taskjson: _task,
-          datajson: _data
-        });
+        _posturl = serverUrl + "/task/post" + task.articletype + task.commandtype;
+        if (task.commandtype === "Ids" || task.commandtype === "ListFirst") {
+          return $.post(_posturl, {
+            datajson: _data,
+            taskmodelid: task.taskmodelid
+          });
+        } else {
+          return $.post(_posturl, {
+            datajson: _data
+          });
+        }
       }
-    }, serverUrl, task, gbdatep);
+    }, serverUrl, task, gbdate);
   });
 };
