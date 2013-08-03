@@ -87,7 +87,8 @@ namespace SpiderMan.Controllers {
             sites = siteCollection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
             if (firsthub != null) {
                 foreach (var agent in agents) {
-                    foreach (var timer in agent.Timer) timer.Close();
+                    if (agent.Timers != null)
+                        foreach (var timer in agent.Timers) timer.Close();
                     firsthub.AgentTimerBuild(agent);
                 }
             }
@@ -113,7 +114,7 @@ namespace SpiderMan.Controllers {
             if (executerTask.Count() > 0) {
                 var str = new StringBuilder();
                 foreach (var task in executerTask) str.AppendLine(task.Url);
-                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "ExecutingOver15min:" + str.ToString(), "Grab", LogType.Warn);
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "ExecutingOver15min: " + str.ToString(), "Grab", LogType.Warn);
                 TaskQueue.tasks = TaskQueue.tasks.Except(executerTask).ToList();
                 firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
             }

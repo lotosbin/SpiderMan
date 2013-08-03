@@ -14,6 +14,6 @@ namespace SpiderMan.Models {
         [JsonProperty("online")]
         public bool Online { get; set; }
         [JsonIgnore]
-        public IList<Timer> Timer { get; set; }
+        public IList<Timer> Timers { get; set; }
     }
 }

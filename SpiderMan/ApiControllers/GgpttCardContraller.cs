@@ -34,7 +34,7 @@ namespace SpiderMan.ApiControllers {
             boxer = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(boxer);
             var result = from d in huanleCollection.AsQueryable<GgpttCard>()
                          where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
-                         orderby d.GrabDate
+                         orderby d.Grade
                          select d;
             return result.Skip(30 * pager).Take(30);
         }

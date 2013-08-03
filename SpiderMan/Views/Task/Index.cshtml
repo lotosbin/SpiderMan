@@ -53,7 +53,7 @@
                     var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
                     li.append('<a target="_blank" href="' + this.url + '">' + this.site + ' - ' + this.commandtype + '</a>').attr('queueid', this.Id)
                     if (this.status == 3) {
-                        li.append(" --done! spend: " + this.spend);
+                        li.append(" --done! spend " + this.spend + " by " + this.handleragent);
                     } else if (this.status == 2) {
                         li.append(" --fail: " + this.error);
                     } else if (this.status == 1) {

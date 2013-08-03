@@ -50,8 +50,7 @@ namespace SpiderMan.Controllers {
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<GgpttCard>)) as IEnumerable<GgpttCard>;
             foreach (var item in data) {
-                //item.Content = FilterConfig.htmlFilter.Filter(item.Content);
-                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.ProviderId == item.ProviderId);
+                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.SourceSite == item.SourceSite && d.ProviderId == item.ProviderId);
                 if (exist == null) {
                     ggpttCardCollection.InsertBatch(data);
                 } else {
