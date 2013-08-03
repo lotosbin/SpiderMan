@@ -10,7 +10,7 @@
 <table id="taskModels">
     @foreach (var item in ViewBag.TaskModel) {
         <tr modelid="@item.Id">
-            <td><a target="_blank" class="site_cmd" href="@item.Url">@(item.Site)_@item.CommandType</a></td>
+            <td><a target="_blank" class="site_cmd" href="@item.Url">@item.Name</a></td>
             <td class="interval">@item.Interval</td>
             <td>
                 <button class="action">Stop</button>
@@ -51,7 +51,7 @@
                 tasksqueue.empty();
                 $(tasks).each(function () {
                     var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
-                    li.append('<a href="">' + this.site + ' - ' + this.commandtype + '</a>').attr('queueid', this.Id)
+                    li.append('<a target="_blank" href="' + this.url + '">' + this.site + ' - ' + this.commandtype + '</a>').attr('queueid', this.Id)
                     if (this.status == 3) {
                         li.append(" --done! spend: " + this.spend);
                     } else if (this.status == 2) {

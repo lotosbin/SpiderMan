@@ -227,7 +227,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiControllers\HuanleContraller.cs" />
+    <Compile Include="ApiControllers\GgpttCardContraller.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -1196,7 +1196,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>12339</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:35403/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

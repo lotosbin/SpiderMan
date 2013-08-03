@@ -54,15 +54,17 @@ CastTesk = (task)->
       pageGrab.injectJs "grabscripts/#{task.site}_#{task.commandtype}.js"
       gbdate = pageGrab.evaluate ->
         return spGrab()
-      task.spend = (Date.now() - now)
+      gbdate.GrabDate = now
+      task.spend = (Date.now() - now)/1000
       if not gbdate
         task.status = 2 #Fail
         task.error = 'gbdate is false'
+      else
+        task.status = 3 #Done
     pageGrab.close()
     websocket.evaluate (serverUrl, task, data)->
       taskHub = $.connection.taskHub
-      _task = JSON.stringify task
-      taskHub.server.doneTask _task
+      taskHub.server.doneTask task
       if task.status != 2 #not Fail
         _data = JSON.stringify data
         #console.log "PostData: " + _data

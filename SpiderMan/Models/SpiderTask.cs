@@ -29,6 +29,6 @@ namespace SpiderMan.Models {
         [JsonProperty("error")]
         public string Error { get; set; }
         [JsonProperty("spend")]
-        public int Spend { get; set; }
+        public float Spend { get; set; }
     }
 }

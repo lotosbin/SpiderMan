@@ -64,31 +64,28 @@ namespace SpiderMan.Controllers {
         private void ProcessTesk(Site site, Agent agent) {
             var task = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Standby && d.Site == site.Name).FirstOrDefault();
             if (task != null) {
-                Clients.Client(agent.ConnectionId).castTesk(task);
                 task.Status = eTaskStatus.Executing;
                 task.HandlerAgent = agent.Name;
                 task.HandlerTime = DateTime.Now;
+                Clients.Client(agent.ConnectionId).castTesk(task);
                 Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
             } else {
                 var executingTask = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Executing && d.Site == site.Name).OrderBy(d => d.HandlerTime).FirstOrDefault();
-                if (executingTask != null) {
-                    if ((DateTime.Now - executingTask.HandlerTime).TotalMinutes > 2) {
-                        Clients.Client(agent.ConnectionId).castTesk(executingTask);
-                        executingTask.HandlerAgent = agent.Name;
-                        executingTask.HandlerTime = DateTime.Now;
-                        Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
-                    }
+                if (executingTask != null && (DateTime.Now - executingTask.HandlerTime).TotalMinutes > 2) {
+                    executingTask.HandlerAgent = agent.Name;
+                    executingTask.HandlerTime = DateTime.Now;
+                    Clients.Client(agent.ConnectionId).castTesk(executingTask);
+                    Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
                 }
             }
         }
 
-        public void DoneTask(string taskjson) {
-            SpiderTask task = (SpiderTask)JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask));
+        public void DoneTask(SpiderTask task) {
             if (task.Status == eTaskStatus.Fail)
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error, "Grab", LogType.Warn);
-            //TaskQueue.tasks.Remove(TaskQueue.tasks.SingleOrDefault(x => x.Id == task.Id));
-            task = TaskQueue.tasks.SingleOrDefault(d => d.Id == task.Id);
-            task.Status = eTaskStatus.Done;
+            int index = TaskQueue.tasks.FindIndex(d => d.Id == task.Id);
+            TaskQueue.tasks[index] = task;
+            //完整替换List成员必须使用index赋值方法。不能直接赋值引用对象成员。
             Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
@@ -115,9 +112,7 @@ namespace SpiderMan.Controllers {
         public void ManualModel(string modelid) {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) {
-                var task = TaskQueue.Instance.GenerateTask(model);
-                var agent = TaskQueue.agents.Where(d => d.Online).Single();
-                Clients.Client(agent.ConnectionId).castTesk(task);
+                TaskQueue.Instance.GenerateTask(model);
             }
         }
 
@@ -130,7 +125,6 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) model.Timer.Start();
         }
-
 
     }
 }

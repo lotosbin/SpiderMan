@@ -104,18 +104,18 @@ namespace SpiderMan.Controllers {
         }
 
         private void ClearDoneTask() {
-            TaskQueue.tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
+            tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
+            firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         private void ClearExecutingTask() {
-            var executerTask = TaskQueue.tasks.Where(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
+            var executerTask = tasks.Where(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
             if (executerTask.Count() > 0) {
                 var str = new StringBuilder();
-                foreach (var task in executerTask) {
-                    str.Append(task.Url);
-                }
+                foreach (var task in executerTask) str.AppendLine(task.Url);
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "ExecutingOver15min:" + str.ToString(), "Grab", LogType.Warn);
                 TaskQueue.tasks = TaskQueue.tasks.Except(executerTask).ToList();
+                firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
             }
         }
 

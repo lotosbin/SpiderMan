@@ -12,16 +12,14 @@ using sharp_net.Repositories;
 using sharp_net.Mvc;
 using SpiderMan.Models;
 using sharp_net.Mongo;
-using MongoDB.Driver;
 using MongoDB.Bson;
-using MongoDB.Driver.Builders;
 using System.Threading;
 
 namespace SpiderMan.ApiControllers {
-    public class HuanleController : ApiController {
+    public class GgpttCardController : ApiController {
 
         private readonly MongoCollection<GgpttCard> huanleCollection;
-        public HuanleController(MongoRepo<GgpttCard> huanle_repos) {
+        public GgpttCardController(MongoRepo<GgpttCard> huanle_repos) {
             this.huanleCollection = huanle_repos.Collection;
         }
 
@@ -32,16 +30,13 @@ namespace SpiderMan.ApiControllers {
         }
 
         // GET api/huanle/verifying
-        [ActionName("Get")]
         public IEnumerable<GgpttCard> GetList(string boxer, int pager) {
             boxer = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(boxer);
             var result = from d in huanleCollection.AsQueryable<GgpttCard>()
                          where d.Status == (int)Enum.Parse(typeof(eArticleStatus), boxer)
+                         orderby d.GrabDate
                          select d;
-            if (pager == 0)
-                return result.Take(30);
-            else
-                return result.Skip(30 * pager).Take(30);
+            return result.Skip(30 * pager).Take(30);
         }
 
         // PUT api/huanle/51c07bbec32d92328066b256

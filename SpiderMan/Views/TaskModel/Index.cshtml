@@ -15,7 +15,7 @@
     @foreach (var item in Model) {
         <tr>
             <td><a target="_blank" href="@item.Url">@item.Name</a></td>
-            <td>@item.Site -@((eCommandType)item.CommandType)</td>
+            <td>@(item.Site)_@((eCommandType)item.CommandType)</td>
             <td>@((eArticleType)item.ArticleType)</td>
             <td>@item.Interval</td>
             <td>@((eAct)item.Act)</td>

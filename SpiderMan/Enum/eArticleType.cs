@@ -9,6 +9,6 @@ namespace SpiderMan.Models {
         AdianboVideo = 2,
         Shudong = 3,
         Caijin = 4,
-        Aiti = 5
+        IT = 5
     }
 }

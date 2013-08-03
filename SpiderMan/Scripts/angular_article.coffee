@@ -23,12 +23,13 @@ getArticleStatusInt = (name)->
 
 calculateLayout = ->
     $('#itemlist').height $(window).height() - 20
+
 ArticleListCtrl = ($scope, $http, $routeParams)->
     $scope.$on '$viewContentLoaded', ->
         calculateLayout()
         lazyLayout = _.debounce calculateLayout, 500
         $(window).resize lazyLayout
-    articleType = if $routeParams.article then $routeParams.article else 'huanle'
+    articleType = if $routeParams.article then $routeParams.article else 'ggpttcard'
     boxerOrId = if $routeParams.boxerOrId then $routeParams.boxerOrId else 'verifying'
     $scope.articleStatusInt = getArticleStatusInt boxerOrId
 
@@ -40,9 +41,10 @@ ArticleListCtrl = ($scope, $http, $routeParams)->
     pager = 0
     $http.get("/api/#{articleType}/#{boxerOrId}").success (data)->
         if _.isArray(data)
+            pager = 1
             data[0].viewing = true
-            $scope.articles = data
             $scope.view = data[0]
+            $scope.articles = data
             if data.length == 30
                 $scope.hasmore = true
         else
@@ -50,10 +52,9 @@ ArticleListCtrl = ($scope, $http, $routeParams)->
             $scope.viewmodel = 'single'
     $scope.Loadmore = ->
         $http.get("/api/#{articleType}/#{boxerOrId}/#{pager}").success (data)->
-            data[0].viewing = true
-            $scope.articles = data
-            $scope.view = data[0]
-            if data.length == 100
+            $scope.articles = _.union $scope.articles, data
+            pager++
+            if $scope.articles.length >= pager*30
                 $scope.hasmore = true
     $scope.ViewOne = (articleId)->
         _.each $scope.articles, (item)-> item.viewing = false

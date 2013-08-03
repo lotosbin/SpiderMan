@@ -51,7 +51,7 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
     lazyLayout = _.debounce(calculateLayout, 500);
     return $(window).resize(lazyLayout);
   });
-  articleType = $routeParams.article ? $routeParams.article : 'huanle';
+  articleType = $routeParams.article ? $routeParams.article : 'ggpttcard';
   boxerOrId = $routeParams.boxerOrId ? $routeParams.boxerOrId : 'verifying';
   $scope.articleStatusInt = getArticleStatusInt(boxerOrId);
   $('#menu>li').removeClass('selected').filter('.article-' + $scope.article).addClass('selected');
@@ -62,9 +62,10 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
   pager = 0;
   $http.get("/api/" + articleType + "/" + boxerOrId).success(function(data) {
     if (_.isArray(data)) {
+      pager = 1;
       data[0].viewing = true;
-      $scope.articles = data;
       $scope.view = data[0];
+      $scope.articles = data;
       if (data.length === 30) {
         return $scope.hasmore = true;
       }
@@ -75,10 +76,9 @@ ArticleListCtrl = function($scope, $http, $routeParams) {
   });
   $scope.Loadmore = function() {
     return $http.get("/api/" + articleType + "/" + boxerOrId + "/" + pager).success(function(data) {
-      data[0].viewing = true;
-      $scope.articles = data;
-      $scope.view = data[0];
-      if (data.length === 100) {
+      $scope.articles = _.union($scope.articles, data);
+      pager++;
+      if ($scope.articles.length >= pager * 30) {
         return $scope.hasmore = true;
       }
     });

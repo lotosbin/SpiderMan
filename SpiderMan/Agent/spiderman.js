@@ -85,18 +85,20 @@ CastTesk = function(task) {
       gbdate = pageGrab.evaluate(function() {
         return spGrab();
       });
-      task.spend = Date.now() - now;
+      gbdate.GrabDate = now;
+      task.spend = (Date.now() - now) / 1000;
       if (!gbdate) {
         task.status = 2;
         task.error = 'gbdate is false';
+      } else {
+        task.status = 3;
       }
     }
     pageGrab.close();
     return websocket.evaluate(function(serverUrl, task, data) {
-      var taskHub, _data, _posturl, _task;
+      var taskHub, _data, _posturl;
       taskHub = $.connection.taskHub;
-      _task = JSON.stringify(task);
-      taskHub.server.doneTask(_task);
+      taskHub.server.doneTask(task);
       if (task.status !== 2) {
         _data = JSON.stringify(data);
         _posturl = serverUrl + "/task/post" + task.articletype + task.commandtype;
