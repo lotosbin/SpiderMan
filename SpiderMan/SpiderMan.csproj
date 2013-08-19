@@ -252,8 +252,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Help\JsonHelper.cs" />
-    <Content Include="Agent\jquery.1.10.2.min.js" />
-    <Content Include="Agent\jquery.signalR-1.1.2.min.js" />
     <Content Include="htmlfilter.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -270,11 +268,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Agent\datehelp.js" />
-    <Content Include="Agent\grabscripts\qiushibaike_getList.js" />
-    <Content Include="Agent\native2asic.js" />
-    <Content Include="Agent\spiderman.js" />
-    <Content Include="Agent\underscore-min.js" />
     <Content Include="Partials\index.html" />
     <Content Include="Content\master.css" />
     <Content Include="front_net\.gitignore" />
@@ -1095,18 +1088,10 @@
     <Content Include="front_net\support\watch_coffee.ps1" />
     <Content Include="Content\_article.scss" />
     <Content Include="Content\sass_watch.ps1" />
-    <Content Include="Agent\coffee_watch.ps1" />
-    <Content Include="Agent\datehelp.coffee" />
-    <Content Include="Agent\grabscripts\qiushibaike_getList.coffee" />
-    <Content Include="Agent\native2asic.coffee" />
-    <Content Include="Agent\run.ps1" />
-    <Content Include="Agent\run.sh" />
-    <Content Include="Agent\spiderman.coffee" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Scripts\angular_article.js">
       <DependentUpon>angular_article.coffee</DependentUpon>
     </Content>
-    <Content Include="Agent\run_proxy.ps1" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
