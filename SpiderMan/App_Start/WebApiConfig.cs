@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -16,7 +17,7 @@ namespace SpiderMan {
             config.Routes.MapHttpRoute(
                 name: "ArticleList",
                 routeTemplate: "api/{controller}/{boxer}/{pager}",
-                defaults: new { controller = "huanle", boxer = "verifying", pager = 0 }
+                defaults: new { controller = "ggpttcard", boxer = "verifying", pager = 0 }
             );
 
             config.Routes.MapHttpRoute(
@@ -29,6 +30,9 @@ namespace SpiderMan {
             // 若要避免处理意外查询或恶意查询，请使用 QueryableAttribute 上的验证设置来验证传入查询。
             // 有关详细信息，请访问 http://go.microsoft.com/fwlink/?LinkId=279712。
             //config.EnableQuerySupport();
+
+            // Use camel case for JSON data.
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
     }
 }

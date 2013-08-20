@@ -1,5 +1,5 @@
 ﻿using System;
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
     public enum eCommandType {
         One,
         List,

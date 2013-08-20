@@ -3,6 +3,7 @@ using MongoDB.Driver.Builders;
 using Newtonsoft.Json;
 using sharp_net;
 using sharp_net.Repositories;
+using SpiderMan.Entity;
 using SpiderMan.Models;
 using System;
 using System.Collections.Generic;

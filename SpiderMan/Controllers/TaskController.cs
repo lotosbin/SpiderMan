@@ -19,6 +19,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using sharp_net.Repositories;
+using SpiderMan.Entity;
 
 namespace SpiderMan.Controllers {
 
@@ -46,14 +47,17 @@ namespace SpiderMan.Controllers {
         // 不要使用gbk编码提交，很容易产生字符串错误从而无法提交。
         [HttpPost]
         [ValidateInput(false)]
-        public void PostGgpttCardList(string datajson) {
+        public void PostGgpttCardList(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<GgpttCard>)) as IEnumerable<GgpttCard>;
             foreach (var item in data) {
-                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.SourceSite == item.SourceSite && d.ProviderId == item.ProviderId);
+                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.SourceSite == task.Site && d.ProviderId == item.ProviderId);
                 if (exist == null) {
-                    ggpttCardCollection.InsertBatch(data);
+                    item.Inject(task);
+                    ggpttCardCollection.Insert(item);
                 } else {
+                    exist.GrabDate = DateTime.Now;
                     exist.Grade = item.Grade;
                     ggpttCardCollection.Save(exist);
                 }
@@ -61,19 +65,19 @@ namespace SpiderMan.Controllers {
         }
 
         [HttpPost]
-        public void PostGgpttCardIds(string taskmodelid, string datajson) {
-            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == taskmodelid);
+        public void PostGgpttCardIds(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
                 if (!ggpttCardCollection.AsQueryable<GgpttCard>().Any(d => d.ProviderId == id & d.SourceSite == taskModel.Site)) {
-                    var newTask = new SpiderTask {
+                    TaskQueue.tasks.Add(new SpiderTask {
                         Id = Guid.NewGuid(),
                         Site = taskModel.Site,
                         CommandType = eCommandType.One.ToString(),
                         Url = String.Format(taskModel.Url, id),
                         ArticleType = eArticleType.GgpttCard.ToString()
-                    };
-                    TaskQueue.tasks.Add(newTask);
+                    });
                 }
             }
             TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
@@ -81,32 +85,35 @@ namespace SpiderMan.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public void PostGgpttCardOne(string datajson) {
+        public void PostGgpttCardOne(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(GgpttCard)) as GgpttCard;
-            var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == data.SourceSite);
+            var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == task.Site);
             if (exist == null) {
+                data.Inject(task);
                 ggpttCardCollection.Insert(data);
             } else {
+                exist.GrabDate = DateTime.Now;
                 exist.Grade = data.Grade;
                 ggpttCardCollection.Save(exist);
             }
         }
 
         [HttpPost]
-        public void PostShudongIds(string taskmodelid, string datajson) {
-            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == taskmodelid);
+        public void PostShudongIds(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
                 if (!ggpttCardCollection.AsQueryable<Shudong>().Any(d => d.ProviderId == id & d.SourceSite == taskModel.Site)) {
-                    var newTask = new SpiderTask {
+                    TaskQueue.tasks.Add(new SpiderTask {
                         Id = Guid.NewGuid(),
                         Site = taskModel.Site,
                         CommandType = eCommandType.One.ToString(),
                         Url = String.Format(taskModel.UrlTemp, id),
                         ArticleType = eArticleType.GgpttCard.ToString()
-                    };
-                    TaskQueue.tasks.Add(newTask);
+                    });
                 }
             }
             TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
@@ -114,13 +121,16 @@ namespace SpiderMan.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public void PostShudongOne(string datajson) {
+        public void PostShudongOne(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(Shudong)) as Shudong;
-            var exist = ggpttCardCollection.AsQueryable<Shudong>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == data.SourceSite);
+            var exist = ggpttCardCollection.AsQueryable<Shudong>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == task.Site);
             if (exist == null) {
+                data.Inject(task);
                 shudongCollection.Insert(data);
             } else {
+                exist.GrabDate = DateTime.Now;
                 exist.Grade = data.Grade;
                 foreach (var comment in data.Comments) {
                     if (!exist.Comments.Any<string>(d => d == comment))
@@ -132,31 +142,34 @@ namespace SpiderMan.Controllers {
 
         [HttpPost]
         [ValidateInput(false)]
-        public void PostAdianboVideoIds(string taskmodelid, string datajson) {
-            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == taskmodelid);
+        public void PostAdianboVideoIds(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
-                var newTask = new SpiderTask {
+                TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     Site = taskModel.Site,
                     CommandType = eCommandType.One.ToString(),
                     Url = String.Format(taskModel.UrlTemp, id),
                     ArticleType = eArticleType.AdianboVideo.ToString()
-                };
-                TaskQueue.tasks.Add(newTask);
+                });
             }
             TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public void PostAdianboVideoOne(string datajson) {
+        public void PostAdianboVideoOne(string taskjson, string datajson) {
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(VideoSource)) as VideoSource;
             var exist = ggpttCardCollection.AsQueryable<VideoSource>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == data.SourceSite);
             if (exist == null) {
+                var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+                data.Inject(task);
                 adianboVideoCollection.Insert(data);
             } else {
+                exist.GrabDate = DateTime.Now;
                 foreach (var source in data.Links) {
                     if (!exist.Links.Any<VideoLink>(d => d.FileName == source.FileName))
                         exist.Links.Add(source);
@@ -166,64 +179,60 @@ namespace SpiderMan.Controllers {
             var doubanTaskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Name == "DoubanOne");
             var imdbTaskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Name == "ImdbOne");
             if (data.IsTeleplay) {
-                var doubanTask = new SpiderTask {
+                TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     TaskModelId = doubanTaskModel.Id,
                     Site = "douban",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://movie.douban.com/subject_search?search_text={0}", data.Name),
                     ArticleType = eArticleType.AdianboVideo.ToString()
-                };
-                TaskQueue.tasks.Add(doubanTask);
-                var imdbTask = new SpiderTask {
+                });
+                TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     TaskModelId = imdbTaskModel.Id,
                     Site = "imdb",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://www.imdb.com/find?q={0}", data.Name),
                     ArticleType = eArticleType.AdianboVideo.ToString()
-                };
-                TaskQueue.tasks.Add(imdbTask);
+                });
             } else {
-                var doubanTask = new SpiderTask {
+                TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     TaskModelId = doubanTaskModel.Id,
                     Site = "douban",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://movie.douban.com/subject_search?search_text={0}", data.ImdbId),
                     ArticleType = eArticleType.AdianboVideo.ToString()
-                };
-                TaskQueue.tasks.Add(doubanTask);
-                var imdbTask = new SpiderTask {
+                });
+                TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     TaskModelId = imdbTaskModel.Id,
                     Site = "imdb",
                     CommandType = eCommandType.One.ToString(),
                     Url = String.Format("http://www.imdb.com/title/{0}", data.ImdbId),
                     ArticleType = eArticleType.AdianboVideo.ToString()
-                };
-                TaskQueue.tasks.Add(imdbTask);
+                });
             }
             TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
-        public void PostAdianboVideoListFirst(string taskmodelid, string datajson) {
-            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == taskmodelid);
-            var newTask = new SpiderTask {
+        public void PostAdianboVideoListFirst(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
+            TaskQueue.tasks.Add(new SpiderTask {
                 Id = Guid.NewGuid(),
                 Site = taskModel.Site,
                 CommandType = eCommandType.One.ToString(),
                 Url = String.Format(taskModel.UrlTemp, datajson),
                 ArticleType = eArticleType.AdianboVideo.ToString()
-            };
-            TaskQueue.tasks.Add(newTask);
+            });
             TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public void PostAdianboVideoAddition(string datajson) {
+        public void PostAdianboVideoAddition(string taskjson, string datajson) {
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(AdianboVideo)) as AdianboVideo;
             var query = Query<AdianboVideo>.EQ(d => d.ImdbId, data.ImdbId);

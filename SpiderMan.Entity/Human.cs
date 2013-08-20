@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
 
     public class UserName : MEntity {
         public string Name { get; set; }

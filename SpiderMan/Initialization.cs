@@ -1,36 +1,38 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using sharp_net.Mongo;
+using MongoDB.Driver.Linq;
+using sharp_net.Repositories;
+using SpiderMan.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using sharp_net.Mvc;
-using System.ComponentModel.DataAnnotations;
-using sharp_net.Mongo;
-using MongoDB.Driver.Linq;
-using sharp_net.Repositories;
 
-namespace SpiderMan.Models {
-    public class TaskModel : MEntity {
-        public int Act { get; set; }
-        public string Name { get; set; }
+namespace SpiderMan {
+    public static class Initialization {
+        public static void SiteInit() {
+            var repo = DependencyResolver.Current.GetService(typeof(IMongoRepo<Site>)) as MongoRepo<Site>;
+            if (!repo.Collection.AsQueryable<Site>().Any(d => d.Name == "douban")) {
+                var douban = new Site {
+                    Name = "douban",
+                    Act = (int)eAct.Normal,
+                    GrabInterval = 10,
+                    Link = "http://www.douban.com"
+                };
+                repo.Collection.Insert(douban);
+            }
+            if (!repo.Collection.AsQueryable<Site>().Any(d => d.Name == "imdb")) {
+                var imdb = new Site {
+                    Name = "imdb",
+                    Act = (int)eAct.Normal,
+                    GrabInterval = 10,
+                    Link = "http://www.imdb.com"
+                };
+                repo.Collection.Insert(imdb);
+            }
+        }
 
-        public int ArticleType { get; set; }
-
-        [Required]
-        public string Site { get; set; }
-        public string Url { get; set; }
-        public string UrlTemp { get; set; }
-        [Required]
-        public int CommandType { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "必须大于等于0")]
-        public int Interval { get; set; }
-
-        [BsonIgnore]
-        public System.Timers.Timer Timer { get; set; }
-
-        public static void Initialization() {
+        public static void TaskModelInit() {
             var repo = DependencyResolver.Current.GetService(typeof(IMongoRepo<TaskModel>)) as MongoRepo<TaskModel>;
             if (!repo.Collection.AsQueryable<TaskModel>().Any(d => d.Name == "DoubanOne")) {
                 var douban = new TaskModel {

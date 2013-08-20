@@ -7,7 +7,7 @@ using System.Web;
 
 namespace SpiderMan.Models {
     public class Agent {
-        [JsonProperty("connectionid")]
+        [JsonProperty("connectionId")]
         public string ConnectionId { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }

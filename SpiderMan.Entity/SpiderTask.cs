@@ -4,25 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
     public class SpiderTask {
+        //SignlR 暂时不知道怎样配置驼峰明明，CamelCasePropertyNamesContractResolver无效
         [JsonProperty("id")]
         public Guid Id { get; set; }
-        [JsonProperty("birthtime")]
+        [JsonProperty("birthTime")]
         public DateTime BirthTime { get; set; }
-        [JsonProperty("taskmodelid")]
+        [JsonProperty("taskModelId")]
         public string TaskModelId { get; set; }
         [JsonProperty("status")]
         public eTaskStatus Status { get; set; }
-        [JsonProperty("handleragent")]
+        [JsonProperty("handlerAgent")]
         public string HandlerAgent { get; set; }
-        [JsonProperty("handlertime")]
+        [JsonProperty("handlerTime")]
         public DateTime HandlerTime { get; set; }
-        [JsonProperty("articletype")]
+        [JsonProperty("articleType")]
         public string ArticleType { get; set; }
         [JsonProperty("site")]
         public string Site { get; set; }
-        [JsonProperty("commandtype")]
+        [JsonProperty("commandType")]
         public string CommandType { get; set; }
         [JsonProperty("url")]
         public string Url { get; set; }

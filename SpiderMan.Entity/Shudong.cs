@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
 
     public class Shudong : Article {
         public int Hot { get; set; } //流量最高的，Up和Donw数字相加。

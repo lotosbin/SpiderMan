@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpiderMan", "SpiderMan\Spid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sharp_net", "sharp_net\sharp_net.csproj", "{3251CF20-191C-4F54-B070-9C342227E358}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpiderMan.Entity", "SpiderMan.Entity\SpiderMan.Entity.csproj", "{39FB5131-DEEF-43BA-A691-C8C687C96721}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,12 @@ Global
 		{3251CF20-191C-4F54-B070-9C342227E358}.LocalIIS|Any CPU.Build.0 = LocalIIS|Any CPU
 		{3251CF20-191C-4F54-B070-9C342227E358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3251CF20-191C-4F54-B070-9C342227E358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.LocalIIS|Any CPU.ActiveCfg = Release|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.LocalIIS|Any CPU.Build.0 = Release|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FB5131-DEEF-43BA-A691-C8C687C96721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

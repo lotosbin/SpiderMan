@@ -10,7 +10,7 @@ namespace SpiderMan.App_Start {
     using Ninject;
     using Ninject.Web.Common;
     using sharp_net.Mongo;
-    using SpiderMan.Models;
+    using SpiderMan.Entity;
     using System.Web.Http;
 
     public static class NinjectWebCommon {
@@ -55,7 +55,6 @@ namespace SpiderMan.App_Start {
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel) {
             //Todo: 不理解为什么没有bind的情况下controller构造函数依然能得到对象实体
-            kernel.Bind<IMongoRepo<Article>>().To<MongoRepo<Article>>();
             kernel.Bind<IMongoRepo<GgpttCard>>().To<MongoRepo<GgpttCard>>();
             kernel.Bind<IMongoRepo<AdianboVideo>>().To<MongoRepo<AdianboVideo>>();
             kernel.Bind<IMongoRepo<Shudong>>().To<MongoRepo<Shudong>>();

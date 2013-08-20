@@ -8,6 +8,7 @@ using sharp_net.Mongo;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
+using SpiderMan.Entity;
 
 namespace SpiderMan.Controllers {
     [Authorize]

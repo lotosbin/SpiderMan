@@ -19,6 +19,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using System.Web.Mvc;
+using SpiderMan.Entity;
 
 namespace SpiderMan.Controllers {
     public sealed class TaskQueue {

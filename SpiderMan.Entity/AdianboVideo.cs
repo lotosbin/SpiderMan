@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
     public enum eVideoRegion {
         Chinese = 1,
         JapanKorea = 2,
@@ -89,10 +89,17 @@ namespace SpiderMan.Models {
         public bool IsTeleplay { get; set; }
         public string Name { get; set; }
         public string ImdbId { get; set; }
-        public string SourceSite { get; set; }
-        public string SourceLink { get; set; }
         public string ProviderId { get; set; }
         public IList<VideoLink> Links { get; set; }
+
+        public string SourceSite { get; set; }
+        public string SourceLink { get; set; }
+        public DateTime GrabDate { get; set; }
+        public void Inject(SpiderTask task) {
+            this.SourceSite = task.Site;
+            this.SourceLink = task.Url;
+            this.GrabDate = DateTime.Now;
+        }
     }
 
     public class VideoLink {

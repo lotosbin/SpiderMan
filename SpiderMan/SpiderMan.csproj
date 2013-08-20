@@ -82,24 +82,24 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.2\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.3\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Owin, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.1.2\lib\net45\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.1.3\lib\net45\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.1.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.Edm.5.5.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.OData.5.5.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.1.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
@@ -111,11 +111,13 @@
     <Reference Include="Microsoft.Web.WebPages.OAuth, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.30506.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Bson">
-      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    <Reference Include="MongoDB.Bson, Version=1.8.2.34, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    <Reference Include="MongoDB.Driver, Version=1.8.2.34, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,9 +143,9 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Spatial, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.Spatial.5.5.0\lib\net40\System.Spatial.dll</HintPath>
+      <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -228,7 +230,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\GgpttCardContraller.cs" />
-    <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectDependencyScope.cs" />
@@ -241,13 +242,6 @@
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TaskHub.cs" />
     <Compile Include="Controllers\TaskModelController.cs" />
-    <Compile Include="Controllers\ArticleController.cs" />
-    <Compile Include="Entity\Article.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Entity\AdianboVideo.cs" />
-    <Compile Include="Enum\eArticleType.cs" />
-    <Compile Include="Enum\eCommandType.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -255,16 +249,9 @@
     <Content Include="htmlfilter.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Compile Include="Initialization.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Entity\GgpttCard.cs" />
-    <Compile Include="Entity\Site.cs" />
-    <Compile Include="Entity\TaskModel.cs" />
-    <Compile Include="Enum\eTaskStatus.cs" />
-    <Compile Include="Entity\Human.cs" />
-    <Compile Include="Enum\eArticleStatus.cs" />
-    <Compile Include="Entity\Shudong.cs" />
     <Compile Include="Models\Agent.cs" />
-    <Compile Include="Models\SpiderTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -353,26 +340,6 @@
     <Content Include="front_net\module-zic\switchTab\switchTab.js" />
     <Content Include="front_net\module-zic\target.js" />
     <Content Include="front_net\module\ajaxfileupload.js" />
-    <Content Include="front_net\module\angular\angular-bootstrap-prettify.js" />
-    <Content Include="front_net\module\angular\angular-bootstrap-prettify.min.js" />
-    <Content Include="front_net\module\angular\angular-bootstrap.js" />
-    <Content Include="front_net\module\angular\angular-bootstrap.min.js" />
-    <Content Include="front_net\module\angular\angular-cookies.js" />
-    <Content Include="front_net\module\angular\angular-cookies.min.js" />
-    <Content Include="front_net\module\angular\angular-loader.js" />
-    <Content Include="front_net\module\angular\angular-loader.min.js" />
-    <Content Include="front_net\module\angular\angular-mobile.js" />
-    <Content Include="front_net\module\angular\angular-mobile.min.js" />
-    <Content Include="front_net\module\angular\angular-mocks.js" />
-    <Content Include="front_net\module\angular\angular-resource.js" />
-    <Content Include="front_net\module\angular\angular-resource.min.js" />
-    <Content Include="front_net\module\angular\angular-sanitize.js" />
-    <Content Include="front_net\module\angular\angular-sanitize.min.js" />
-    <Content Include="front_net\module\angular\angular-scenario.js" />
-    <Content Include="front_net\module\angular\angular.js" />
-    <Content Include="front_net\module\angular\angular.min.js" />
-    <Content Include="front_net\module\angular\i18n\angular-locale_en.js" />
-    <Content Include="front_net\module\angular\i18n\angular-locale_zh.js" />
     <Content Include="front_net\module\artDialog5\amd\artDialog5.js" />
     <Content Include="front_net\module\artDialog5\amd\artDialog5_drag.js" />
     <Content Include="front_net\module\artDialog5\amd\artDialog5_shake.js" />
@@ -1089,26 +1056,19 @@
     <Content Include="Content\_article.scss" />
     <Content Include="Content\sass_watch.ps1" />
     <Content Include="Images\favicon.ico" />
-    <Content Include="Scripts\angular_article.js">
-      <DependentUpon>angular_article.coffee</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
-    <Content Include="Scripts\jquery.signalR-1.1.2.js" />
-    <Content Include="Scripts\jquery.signalR-1.1.2.min.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.3.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.3.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
-    <None Include="Scripts\master.coffee" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\master.js">
-      <DependentUpon>master.coffee</DependentUpon>
-    </Content>
     <Content Include="Scripts\underscore-min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1149,8 +1109,6 @@
     <Content Include="Views\TaskModel\Edit.cshtml" />
     <Content Include="Views\TaskModel\Index.cshtml" />
     <Content Include="Views\Task\Index.cshtml" />
-    <Content Include="Views\Article\Index.cshtml" />
-    <Content Include="Scripts\angular_article.coffee" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1163,6 +1121,10 @@
     <ProjectReference Include="..\sharp_net\sharp_net.csproj">
       <Project>{3251cf20-191c-4f54-b070-9c342227e358}</Project>
       <Name>sharp_net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpiderMan.Entity\SpiderMan.Entity.csproj">
+      <Project>{39fb5131-deef-43ba-a691-c8c687c96721}</Project>
+      <Name>SpiderMan.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -1183,7 +1145,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>12339</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:35403/</IISUrl>
+          <IISUrl>http://localhost:34403/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

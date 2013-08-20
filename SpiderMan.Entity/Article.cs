@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace SpiderMan.Models {
+namespace SpiderMan.Entity {
 
     public abstract class Article : MEntity {
         public int Status { get; set; } //eArticleStatus
@@ -25,10 +25,10 @@ namespace SpiderMan.Models {
 
         public int Grade { get; set; }
 
-        public void Init(SpiderTask task) {
-            SourceSite = task.Site;
-            SourceLink = task.Url;
-            GrabDate = DateTime.Now;
+        public void Inject(SpiderTask task) {
+            this.SourceSite = task.Site;
+            this.SourceLink = task.Url;
+            this.GrabDate = DateTime.Now;
         }
     }
 }
