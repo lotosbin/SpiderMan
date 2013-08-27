@@ -8,7 +8,6 @@ namespace SpiderMan.Entity {
         GgpttCard = 1,
         AdianboVideo = 2,
         Shudong = 3,
-        Caijin = 4,
-        IT = 5
+        Tinhai = 4
     }
 }
