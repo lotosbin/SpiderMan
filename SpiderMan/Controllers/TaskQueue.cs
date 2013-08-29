@@ -57,6 +57,7 @@ namespace SpiderMan.Controllers {
                 BirthTime = DateTime.Now,
                 TaskModelId = model.Id,
                 Site = model.Site,
+                Source = model.SourceCode,
                 CommandType = ((eCommandType)model.CommandType).ToString(),
                 Url = model.Url,
                 ArticleType = ((eArticleType)model.ArticleType).ToString()

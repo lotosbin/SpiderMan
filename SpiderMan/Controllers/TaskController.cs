@@ -52,7 +52,7 @@ namespace SpiderMan.Controllers {
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<GgpttCard>)) as IEnumerable<GgpttCard>;
             foreach (var item in data) {
-                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.SourceSite == task.Site && d.ProviderId == item.ProviderId);
+                var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.SourceCode == task.Source && d.ProviderId == item.ProviderId);
                 if (exist == null) {
                     item.Inject(task);
                     ggpttCardCollection.Insert(item);
@@ -70,10 +70,11 @@ namespace SpiderMan.Controllers {
             var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
-                if (!ggpttCardCollection.AsQueryable<GgpttCard>().Any(d => d.ProviderId == id & d.SourceSite == taskModel.Site)) {
+                if (!ggpttCardCollection.AsQueryable<GgpttCard>().Any(d => d.ProviderId == id & d.SourceCode == taskModel.Source)) {
                     TaskQueue.tasks.Add(new SpiderTask {
                         Id = Guid.NewGuid(),
                         Site = taskModel.Site,
+                        Source = taskModel.SourceCode,
                         CommandType = eCommandType.One.ToString(),
                         Url = String.Format(taskModel.Url, id),
                         ArticleType = eArticleType.GgpttCard.ToString()
@@ -89,7 +90,7 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(GgpttCard)) as GgpttCard;
-            var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == task.Site);
+            var exist = ggpttCardCollection.AsQueryable<GgpttCard>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceCode == task.Source);
             if (exist == null) {
                 data.Inject(task);
                 ggpttCardCollection.Insert(data);
@@ -106,10 +107,11 @@ namespace SpiderMan.Controllers {
             var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
-                if (!ggpttCardCollection.AsQueryable<Shudong>().Any(d => d.ProviderId == id & d.SourceSite == taskModel.Site)) {
+                if (!ggpttCardCollection.AsQueryable<Shudong>().Any(d => d.ProviderId == id & d.SourceCode == taskModel.SourceCode)) {
                     TaskQueue.tasks.Add(new SpiderTask {
                         Id = Guid.NewGuid(),
                         Site = taskModel.Site,
+                        Source = taskModel.SourceCode,
                         CommandType = eCommandType.One.ToString(),
                         Url = String.Format(taskModel.UrlTemp, id),
                         ArticleType = eArticleType.GgpttCard.ToString()
@@ -125,7 +127,7 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(Shudong)) as Shudong;
-            var exist = ggpttCardCollection.AsQueryable<Shudong>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == task.Site);
+            var exist = ggpttCardCollection.AsQueryable<Shudong>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceCode == task.Source);
             if (exist == null) {
                 data.Inject(task);
                 shudongCollection.Insert(data);
@@ -150,6 +152,7 @@ namespace SpiderMan.Controllers {
                 TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     Site = taskModel.Site,
+                    Source = taskModel.SourceCode,
                     CommandType = eCommandType.One.ToString(),
                     Url = String.Format(taskModel.UrlTemp, id),
                     ArticleType = eArticleType.AdianboVideo.ToString()
@@ -163,7 +166,7 @@ namespace SpiderMan.Controllers {
         public void PostAdianboVideoOne(string taskjson, string datajson) {
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var data = JsonConvert.DeserializeObject(datajson, typeof(VideoSource)) as VideoSource;
-            var exist = ggpttCardCollection.AsQueryable<VideoSource>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceSite == data.SourceSite);
+            var exist = ggpttCardCollection.AsQueryable<VideoSource>().SingleOrDefault(d => d.ProviderId == data.ProviderId & d.SourceCode == data.SourceCode);
             if (exist == null) {
                 var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
                 data.Inject(task);
@@ -183,6 +186,7 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     TaskModelId = doubanTaskModel.Id,
                     Site = "douban",
+                    Source = "douban",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://movie.douban.com/subject_search?search_text={0}", data.Name),
                     ArticleType = eArticleType.AdianboVideo.ToString()
@@ -191,6 +195,7 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     TaskModelId = imdbTaskModel.Id,
                     Site = "imdb",
+                    Source = "imdb",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://www.imdb.com/find?q={0}", data.Name),
                     ArticleType = eArticleType.AdianboVideo.ToString()
@@ -200,6 +205,7 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     TaskModelId = doubanTaskModel.Id,
                     Site = "douban",
+                    Source = "douban",
                     CommandType = eCommandType.ListFirst.ToString(),
                     Url = String.Format("http://movie.douban.com/subject_search?search_text={0}", data.ImdbId),
                     ArticleType = eArticleType.AdianboVideo.ToString()
@@ -208,6 +214,7 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     TaskModelId = imdbTaskModel.Id,
                     Site = "imdb",
+                    Source = "imdb",
                     CommandType = eCommandType.One.ToString(),
                     Url = String.Format("http://www.imdb.com/title/{0}", data.ImdbId),
                     ArticleType = eArticleType.AdianboVideo.ToString()
@@ -223,6 +230,7 @@ namespace SpiderMan.Controllers {
             TaskQueue.tasks.Add(new SpiderTask {
                 Id = Guid.NewGuid(),
                 Site = taskModel.Site,
+                Source = taskModel.SourceCode,
                 CommandType = eCommandType.One.ToString(),
                 Url = String.Format(taskModel.UrlTemp, datajson),
                 ArticleType = eArticleType.AdianboVideo.ToString()

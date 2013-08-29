@@ -31,6 +31,10 @@
             @Html.DropDownListFor(m => m.Site, (IEnumerable<SelectListItem>)ViewBag.SiteList)
         </li>
         <li>
+            @Html.LabelFor(model => model.SourceCode)
+            @Html.EditorFor(model => model.SourceCode)
+        </li>
+        <li>
             @Html.LabelFor(model => model.Url)
             @Html.EditorFor(model => model.Url)
             @Html.ValidationMessageFor(model => model.Url)

@@ -92,11 +92,11 @@ namespace SpiderMan.Entity {
         public string ProviderId { get; set; }
         public IList<VideoLink> Links { get; set; }
 
-        public string SourceSite { get; set; }
+        public string SourceCode { get; set; }
         public string SourceLink { get; set; }
         public DateTime GrabDate { get; set; }
         public void Inject(SpiderTask task) {
-            this.SourceSite = task.Site;
+            this.SourceCode = task.Source;
             this.SourceLink = task.Url;
             this.GrabDate = DateTime.Now;
         }

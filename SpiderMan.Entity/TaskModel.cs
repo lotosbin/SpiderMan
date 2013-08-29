@@ -21,6 +21,7 @@ namespace SpiderMan.Entity {
         public string Site { get; set; }
         public string Url { get; set; }
         public string UrlTemp { get; set; }
+        public string SourceCode { get; set; }
         [Required]
         public int CommandType { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "必须大于等于0")]

@@ -14,7 +14,7 @@ namespace SpiderMan.Entity {
 
     public abstract class Article : MEntity {
         public int Status { get; set; } //eArticleStatus
-        public string SourceSite { get; set; }
+        public string SourceCode { get; set; }
         public string SourceLink { get; set; }
         public DateTime BrithDate { get; set; }
         public DateTime GrabDate { get; set; }
@@ -26,7 +26,7 @@ namespace SpiderMan.Entity {
         public int Grade { get; set; }
 
         public void Inject(SpiderTask task) {
-            this.SourceSite = task.Site;
+            this.SourceCode = task.Source;
             this.SourceLink = task.Url;
             this.GrabDate = DateTime.Now;
         }

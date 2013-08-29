@@ -21,8 +21,10 @@ namespace SpiderMan.Entity {
         public DateTime HandlerTime { get; set; }
         [JsonProperty("articleType")]
         public string ArticleType { get; set; }
-        [JsonProperty("site")]
+        [JsonIgnore]
         public string Site { get; set; }
+        [JsonProperty("source")]
+        public string Source { get; set; }
         [JsonProperty("commandType")]
         public string CommandType { get; set; }
         [JsonProperty("url")]
