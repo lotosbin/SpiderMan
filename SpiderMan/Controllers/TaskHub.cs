@@ -93,6 +93,12 @@ namespace SpiderMan.Controllers {
             Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
+        public void DeleteTask(string taskId) {
+            var task = TaskQueue.tasks.SingleOrDefault(d => d.Id == Guid.Parse(taskId));
+            TaskQueue.tasks.Remove(task);
+            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+        }
+
         //注意：终止agent进程并不能马上触发OnDisconnected。所以需要在ProcessTesk中检查超时Executing任务
         public override Task OnDisconnected() {
             var agent = TaskQueue.agents.SingleOrDefault(d => d.ConnectionId == Context.ConnectionId);

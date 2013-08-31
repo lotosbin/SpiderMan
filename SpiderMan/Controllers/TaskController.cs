@@ -70,13 +70,13 @@ namespace SpiderMan.Controllers {
             var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string id in data) {
-                if (!ggpttCardCollection.AsQueryable<GgpttCard>().Any(d => d.ProviderId == id & d.SourceCode == taskModel.Source)) {
+                if (!ggpttCardCollection.AsQueryable<GgpttCard>().Any(d => d.ProviderId == id & d.SourceCode == taskModel.SourceCode)) {
                     TaskQueue.tasks.Add(new SpiderTask {
                         Id = Guid.NewGuid(),
                         Site = taskModel.Site,
                         Source = taskModel.SourceCode,
                         CommandType = eCommandType.One.ToString(),
-                        Url = String.Format(taskModel.Url, id),
+                        Url = String.Format(taskModel.UrlTemp, id),
                         ArticleType = eArticleType.GgpttCard.ToString()
                     });
                 }

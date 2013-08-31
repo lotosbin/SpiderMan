@@ -8,5 +8,14 @@
     <attr name="src">^[a-zA-Z]+://.+$</attr>
     <attr name="title">.+</attr>
   </tag>
+  <tag name="p"></tag>
+  <tag name="blockquote"></tag>
+  <tag name="embed">
+    <attr name="src">^[a-zA-Z]+://.+$</attr>
+    <attr name="type">.+</attr>
+    <attr name="flashvars">.+</attr>
+    <attr name="width">\d+</attr>
+    <attr name="height">\d+</attr>
+  </tag>
   <tag name="br"></tag>
 </config>

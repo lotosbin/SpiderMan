@@ -3,9 +3,6 @@
     ViewBag.Title = "Index";
 }
 
-<h3>Agents:</h3>
-<ul id="agentsul"></ul>
-
 <h3>TaskModels:</h3>
 <table id="taskModels">
     @foreach (var item in ViewBag.TaskModel) {
@@ -28,6 +25,8 @@
     </tr>
 </table>
 
+<h3>Agents:</h3>
+<ul id="agentsul"></ul>
 <h3>TasksQueue:</h3>
 <ul id="tasksqueue"></ul>
 
@@ -51,7 +50,8 @@
                 tasksqueue.empty();
                 $(tasks).each(function () {
                     var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
-                    li.append('<a target="_blank" href="' + this.url + '">' + this.site + ' - ' + this.commandType + '</a>').attr('queueid', this.id)
+                    li.append('<a target="_blank" href="' + this.url + '">' + this.source + ' - ' + this.commandType + '</a>')
+                    li.append('<a href="javascript:;" class="del ml10">delete</a>')
                     if (this.status == 3) {
                         li.append(" --done! spend " + this.spend + " by " + this.handlerAgent);
                     } else if (this.status == 2) {
@@ -84,6 +84,10 @@
                 $('#startAllModel').on('click', function () {
                     $('button.action:contains("Start")', taskmodels).click()
                 });
+
+                tasksqueue.on('click', 'a.del', function () {
+                    taskHub.server.deleteTask($(this).parent('li').attr('tid'));
+                })
             });
         });
     </script>

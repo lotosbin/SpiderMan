@@ -1052,7 +1052,6 @@
     <Content Include="front_net\support\compiler.ps1" />
     <Content Include="front_net\support\compiler_cusfolder.ps1" />
     <Content Include="front_net\support\watch_coffee.ps1" />
-    <Content Include="Content\_article.scss" />
     <Content Include="Content\sass_watch.ps1" />
     <Content Include="Images\favicon.ico" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />

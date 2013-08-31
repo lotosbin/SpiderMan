@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using MongoDB.Bson;
+using Newtonsoft.Json;
 using sharp_net;
 using sharp_net.Mongo;
 using System;
@@ -26,6 +27,10 @@ namespace SpiderMan {
             ZicLog4Net.Instance.Config(new string[] { "Grab", "System" }, new ZicGmailConfig());
             Initialization.SiteInit();
             Initialization.TaskModelInit();
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore //否则会对List生成一个都是null的对象
+            };
         }
 
 

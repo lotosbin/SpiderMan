@@ -1,9 +1,6 @@
 ﻿$front_net_path: "/front_net/";
 
-$baseFontSize:  13px;
-$baseLineHeight:  19px;
 $bodyBackground:  #1f1f1f;
-$baseFontFamily: 'Segoe UI', 'Microsoft Yahei', Arial, Simsun, sans-serif;
 
 $textColor:  #FFEDDD;
 $linkColor:  #C10000;
@@ -15,17 +12,6 @@ $ifcolor: $gray;
 $sucolor: #332828;
 $wncolor: #D69131;
 $dgcolor: #002894;
-
-$btnPrimaryBackground:              lighten($linkColor, 8%);
-$btnPrimaryBackgroundHighlight:     darken($linkColor, 8%);
-$btnInfoBackground:                 lighten($ifcolor, 8%);
-$btnInfoBackgroundHighlight:        darken($ifcolor, 8%);
-$btnSuccessBackground:              lighten($sucolor, 8%);
-$btnSuccessBackgroundHighlight:     darken($sucolor, 8%);
-$btnWarningBackground:              lighten($wncolor, 8%);
-$btnWarningBackgroundHighlight:     darken($wncolor, 8%);
-$btnDangerBackground:               lighten($dgcolor, 8%);
-$btnDangerBackgroundHighlight:      darken($dgcolor, 8%);
 
 @import "../front_net/sass/var";
 @import "../front_net/bootstrap/lib/variables";
@@ -42,7 +28,7 @@ header {position: absolute;left: 0;top:0;width: 155px;z-index: 3;
 	a.site-title{font-size: 1.5em;display: block;margin:20px 0 20px 23px;}
 	ul{list-style-type: none;padding:0;}
 	li{cursor: pointer;padding-left:18px;border-left:6px solid transparent;
-		a{line-height: 29px;}
+		a{display: block;line-height: 29px;margin: 10px 0;}
 		a.extand{margin-left:6px;font-size:12px;display:none;line-height:26px;
 			&.selected{color:lighten($wncolor, 20%);}
 		}
@@ -65,4 +51,9 @@ table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid #555;}
 table th{font-style:italic;font-weight:normal;}
 footer {position:fixed;bottom:5px;left:5px;}
 
-@import "./article";
+#tasksqueue li{
+	a.del{display:none;}
+	&:hover{
+		a.del{display:inline;}
+	}
+}

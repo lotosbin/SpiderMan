@@ -64,6 +64,7 @@
     <Compile Include="Site.cs" />
     <Compile Include="SpiderTask.cs" />
     <Compile Include="TaskModel.cs" />
+    <Compile Include="Image.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

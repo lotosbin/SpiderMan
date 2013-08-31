@@ -62,7 +62,7 @@ namespace SpiderMan.Controllers {
                 Url = model.Url,
                 ArticleType = ((eArticleType)model.ArticleType).ToString()
             };
-            tasks.Add(newTask);
+            tasks.Add(newTask); //Todo: 索引超出了数组界限。
             if (firsthub != null)
                 firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
             return newTask;

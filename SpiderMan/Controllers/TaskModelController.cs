@@ -24,7 +24,7 @@ namespace SpiderMan.Controllers {
         }
 
         public ActionResult Index() {
-            var models = taskModelCollection.AsQueryable<TaskModel>().Where(d => d.Act == (int)eAct.Normal && d.Interval > 0);
+            var models = taskModelCollection.AsQueryable<TaskModel>().Where(d => d.Interval > 0);
             return View(models);
         }
 

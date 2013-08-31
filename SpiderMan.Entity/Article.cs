@@ -27,7 +27,6 @@ namespace SpiderMan.Entity {
 
         public void Inject(SpiderTask task) {
             this.SourceCode = task.Source;
-            this.SourceLink = task.Url;
             this.GrabDate = DateTime.Now;
         }
     }

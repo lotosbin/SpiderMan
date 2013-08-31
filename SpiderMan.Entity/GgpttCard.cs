@@ -11,7 +11,7 @@ namespace SpiderMan.Entity {
     //加了之后，只有标注的[DataMember]属性（或字段）才能序列化，即使是私有的。
     public class GgpttCard : Article {
         public string Title { get; set; }
-
+        public IEnumerable<Image> Images { get; set; }
 
     }
 }

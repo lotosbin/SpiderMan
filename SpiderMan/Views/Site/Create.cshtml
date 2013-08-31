@@ -18,6 +18,10 @@
             @Html.ValidationMessageFor(model => model.Name)
         </li>
         <li>
+            @Html.LabelFor(model => model.Act)
+            @Html.DropDownListFor(model => model.Act, ((eAct)0).ToSelectListItems())
+        </li>
+        <li>
             @Html.LabelFor(model => model.Link)
             @Html.EditorFor(model => model.Link)
             @Html.ValidationMessageFor(model => model.Link)
