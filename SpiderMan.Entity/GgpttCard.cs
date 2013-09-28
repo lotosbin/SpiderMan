@@ -12,6 +12,6 @@ namespace SpiderMan.Entity {
     public class GgpttCard : Article {
         public string Title { get; set; }
         public IEnumerable<Image> Images { get; set; }
-
+        public IEnumerable<string> LocalImages { get; set; }
     }
 }

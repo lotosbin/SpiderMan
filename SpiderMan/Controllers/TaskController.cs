@@ -20,6 +20,7 @@ using System.Web;
 using System.Web.Mvc;
 using sharp_net.Repositories;
 using SpiderMan.Entity;
+using System.Configuration;
 
 namespace SpiderMan.Controllers {
 
@@ -43,6 +44,17 @@ namespace SpiderMan.Controllers {
             return View();
         }
 
+        [NonAction]
+        private void DownloadImagesLocal(GgpttCard card) {
+            if (card.LocalImages.Count() == 0) return;
+            foreach (string imgstring in card.LocalImages) {
+                Uri uri = new Uri(imgstring);
+                string filename = imgstring.Replace(uri.Scheme + "://" + uri.Authority, ConfigurationManager.AppSettings["LocalImageStore"] + card.SourceCode);
+                filename = filename.Replace("/", "\\");
+                DownloadImage.Execute(imgstring, filename);
+            }
+        }
+
         // 关于在web api使用FormDataCollection http://goo.gl/PjJGf
         // 不要使用gbk编码提交，很容易产生字符串错误从而无法提交。
         [HttpPost]
@@ -56,6 +68,7 @@ namespace SpiderMan.Controllers {
                 if (exist == null) {
                     item.Inject(task);
                     ggpttCardCollection.Insert(item);
+                    DownloadImagesLocal(item);
                 } else {
                     exist.GrabDate = DateTime.Now;
                     exist.Grade = item.Grade;
@@ -94,6 +107,7 @@ namespace SpiderMan.Controllers {
             if (exist == null) {
                 data.Inject(task);
                 ggpttCardCollection.Insert(data);
+                DownloadImagesLocal(data);
             } else {
                 exist.GrabDate = DateTime.Now;
                 exist.Grade = data.Grade;
