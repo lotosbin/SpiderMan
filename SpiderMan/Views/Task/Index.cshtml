@@ -28,6 +28,7 @@
 <h3>Agents:</h3>
 <ul id="agentsul"></ul>
 <h3>TasksQueue:</h3>
+<a id="deleteAllQueue" href="javascript:;">DeleteAll</a>
 <ul id="tasksqueue"></ul>
 
 @section Scripts {
@@ -51,7 +52,6 @@
                 $(tasks).each(function () {
                     var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
                     li.append('<a target="_blank" href="' + this.url + '">' + this.source + ' - ' + this.commandType + '</a>')
-                    li.append('<a href="javascript:;" class="del ml10">delete</a>')
                     if (this.status == 3) {
                         li.append(" --done! spend " + this.spend + " by " + this.handlerAgent);
                     } else if (this.status == 2) {
@@ -59,6 +59,7 @@
                     } else if (this.status == 1) {
                         li.append(" --executing by " + this.handlerAgent);
                     }
+                    li.append('<a href="javascript:;" class="del ml10">delete</a>')
                 });
             }
             $.connection.hub.start().done(function () {
@@ -87,6 +88,10 @@
 
                 tasksqueue.on('click', 'a.del', function () {
                     taskHub.server.deleteTask($(this).parent('li').attr('tid'));
+                })
+
+                $("#deleteAllQueue").on('click', function myfunction() {
+                    taskHub.server.deleteAllTask();
                 })
             });
         });

@@ -38,7 +38,7 @@ namespace SpiderMan.Controllers {
             if (agent != null) {
                 agent.ConnectionId = Context.ConnectionId;
                 agent.Online = true;
-                if(agent.Timers != null)
+                if (agent.Timers != null)
                     foreach (var timer in agent.Timers) timer.Start();
                 Clients.Group("broad").agentList(TaskQueue.agents);
             } else {
@@ -97,6 +97,12 @@ namespace SpiderMan.Controllers {
             var task = TaskQueue.tasks.SingleOrDefault(d => d.Id == Guid.Parse(taskId));
             TaskQueue.tasks.Remove(task);
             Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+
+        }
+
+        public void DeleteAllTask() {
+            TaskQueue.tasks = new List<SpiderTask>();
+            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         //注意：终止agent进程并不能马上触发OnDisconnected。所以需要在ProcessTesk中检查超时Executing任务
@@ -116,7 +122,7 @@ namespace SpiderMan.Controllers {
             if (agent != null) {
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "OnReconnected be used!", "Grab", LogType.Debug);
                 agent.Online = true;
-                if(agent.Timers != null)
+                if (agent.Timers != null)
                     foreach (var timer in agent.Timers) timer.Start();
                 Clients.Group("broad").agentList(TaskQueue.agents);
             }
