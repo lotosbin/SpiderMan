@@ -25,9 +25,6 @@ namespace SpiderMan.Entity {
 
         public int Grade { get; set; }
 
-        public int defCategoryType { get; set; } //Bridge
-        public int defCategory { get; set; }
-
         public void Inject(SpiderTask task) {
             this.SourceCode = task.Source;
             this.GrabDate = DateTime.Now;

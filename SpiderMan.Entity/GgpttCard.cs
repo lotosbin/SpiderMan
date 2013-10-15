@@ -1,9 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using sharp_net.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using System.Configuration;
 
 namespace SpiderMan.Entity {
 
@@ -13,5 +15,17 @@ namespace SpiderMan.Entity {
         public string Title { get; set; }
         public IEnumerable<Image> Images { get; set; }
         public IEnumerable<string> LocalImages { get; set; }
+
+        public string defCategoryCode { get; set; } //Bridge
+
+        public void DownloadImagesLocal() {
+            if (LocalImages.Count() == 0) return;
+            foreach (string imgstring in LocalImages) {
+                Uri uri = new Uri(imgstring);
+                string filename = imgstring.Replace(uri.Scheme + "://" + uri.Authority, ConfigurationManager.AppSettings["LocalImageStore"] + SourceCode);
+                filename = filename.Replace("/", "\\");
+                DownloadImage.Execute(imgstring, filename);
+            }
+        }
     }
 }
