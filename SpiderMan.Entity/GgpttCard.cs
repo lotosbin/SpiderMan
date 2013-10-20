@@ -16,7 +16,7 @@ namespace SpiderMan.Entity {
         public IEnumerable<Image> Images { get; set; }
         public IEnumerable<string> LocalImages { get; set; }
 
-        public string defCategoryCode { get; set; } //Bridge
+        public IEnumerable<string> defTagCodes { get; set; } //Bridge
 
         public void DownloadImagesLocal() {
             if (LocalImages.Count() == 0) return;
