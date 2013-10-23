@@ -83,7 +83,7 @@ namespace SpiderMan.Controllers {
                     });
                 }
             }
-            TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
@@ -121,7 +121,7 @@ namespace SpiderMan.Controllers {
                     });
                 }
             }
-            TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
@@ -161,7 +161,7 @@ namespace SpiderMan.Controllers {
                     ArticleType = eArticleType.AdianboVideo.ToString()
                 });
             }
-            TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
@@ -223,7 +223,7 @@ namespace SpiderMan.Controllers {
                     ArticleType = eArticleType.AdianboVideo.ToString()
                 });
             }
-            TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]
@@ -238,7 +238,7 @@ namespace SpiderMan.Controllers {
                 Url = String.Format(taskModel.UrlTemp, datajson),
                 ArticleType = eArticleType.AdianboVideo.ToString()
             });
-            TaskQueue.firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
         }
 
         [HttpPost]

@@ -19,7 +19,7 @@ namespace SpiderMan.Entity {
         public IEnumerable<string> defTagCodes { get; set; } //Bridge
 
         public void DownloadImagesLocal() {
-            if (LocalImages.Count() == 0) return;
+            if (LocalImages == null) return;
             foreach (string imgstring in LocalImages) {
                 Uri uri = new Uri(imgstring);
                 string filename = imgstring.Replace(uri.Scheme + "://" + uri.Authority, ConfigurationManager.AppSettings["LocalImageStore"] + SourceCode);

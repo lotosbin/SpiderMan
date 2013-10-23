@@ -7,13 +7,6 @@ using System.Globalization;
 using System.Web.Security;
 
 namespace SpiderMan.Models {
-    public class UsersContext : DbContext {
-        public UsersContext()
-            : base("DefaultConnection") {
-        }
-
-        public DbSet<UserProfile> UserProfiles { get; set; }
-    }
 
     [Table("UserProfile")]
     public class UserProfile {

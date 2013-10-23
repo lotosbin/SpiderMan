@@ -51,7 +51,7 @@
                 tasksqueue.empty();
                 $(tasks).each(function () {
                     var li = $('<li />', { tid: this.id }).appendTo(tasksqueue)
-                    li.append('<a target="_blank" href="' + this.url + '">' + this.source + ' - ' + this.commandType + '</a>')
+                    li.append('<a class="title" target="_blank" href="' + this.url + '">' + this.source + ' - ' + this.commandType + '</a>')
                     if (this.status == 3) {
                         li.append(" --done! spend " + this.spend + " by " + this.handlerAgent);
                     } else if (this.status == 2) {

@@ -29,7 +29,7 @@ namespace SpiderMan.Controllers {
         public static IEnumerable<Site> sites;
         public static MongoCollection<Site> siteCollection;
         public static MongoCollection<TaskModel> taskModelCollection;
-        public static TaskHub firsthub;
+        public static TaskHub masterhub;
         public static readonly TaskQueue Instance;
 
         // http://www.yoda.arachsys.com/csharp/singleton.html 线程安全的模式
@@ -62,9 +62,10 @@ namespace SpiderMan.Controllers {
                 Url = model.Url,
                 ArticleType = ((eArticleType)model.ArticleType).ToString()
             };
-            tasks.Add(newTask); //Todo: 索引超出了数组界限。
-            if (firsthub != null)
-                firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            tasks.Add(newTask);
+            if (masterhub != null) {
+                masterhub.BroadcastRanderTask();
+            }
             return newTask;
         }
 
@@ -87,11 +88,11 @@ namespace SpiderMan.Controllers {
 
         public void SiteTimerReBuild() {
             sites = siteCollection.Find(Query<Site>.EQ(d => d.Act, (int)eAct.Normal)).ToList();
-            if (firsthub != null) {
+            if (masterhub != null) {
                 foreach (var agent in agents) {
                     if (agent.Timers != null)
                         foreach (var timer in agent.Timers) timer.Close();
-                    firsthub.AgentTimerBuild(agent);
+                    masterhub.AgentTimerBuild(agent);
                 }
             }
         }
@@ -108,7 +109,7 @@ namespace SpiderMan.Controllers {
 
         private void ClearDoneTask() {
             tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
-            firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            if (masterhub != null) masterhub.BroadcastRanderTask();
         }
 
         private void ClearExecutingTask() {
@@ -116,9 +117,11 @@ namespace SpiderMan.Controllers {
             if (executerTask.Count() > 0) {
                 var str = new StringBuilder();
                 foreach (var task in executerTask) str.AppendLine(task.Url);
-                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "ExecutingOver15min: " + str.ToString(), "Grab", LogType.Warn);
-                TaskQueue.tasks = TaskQueue.tasks.Except(executerTask).ToList();
-                firsthub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ExecutingOver15min: " + str.ToString(), "Grab", LogType.Warn);
+
+                //tasks = tasks.Except(executerTask).ToList(); //这种写法会产生意外的null成员。原因未知。
+                tasks.RemoveAll(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
+                if (masterhub != null) masterhub.BroadcastRanderTask();
             }
         }
 

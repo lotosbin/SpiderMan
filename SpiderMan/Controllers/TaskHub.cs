@@ -20,8 +20,8 @@ namespace SpiderMan.Controllers {
 
         //TaskHub在每次有客户端与服务端建立链接时都会新建一个实例。所以Timer的存在导致第一个TaskHub实例永远不被销毁，直至app中止。
         public TaskHub() {
-            if (TaskQueue.firsthub == null) {
-                TaskQueue.firsthub = this;
+            if (TaskQueue.masterhub == null) {
+                TaskQueue.masterhub = this;
             }
 
         }
@@ -29,7 +29,7 @@ namespace SpiderMan.Controllers {
         public void RegisterBoard() {
             Groups.Add(Context.ConnectionId, "broad");
             Clients.Client(Context.ConnectionId).agentList(TaskQueue.agents);
-            Clients.Client(Context.ConnectionId).broadcastRanderTask(TaskQueue.tasks);
+            BroadcastRanderTask();
         }
 
         public void RegisterAgent(string name) {
@@ -72,37 +72,36 @@ namespace SpiderMan.Controllers {
                 task.HandlerAgent = agent.Name;
                 task.HandlerTime = DateTime.Now;
                 Clients.Client(agent.ConnectionId).castTesk(task);
-                Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+                BroadcastRanderTask();
             } else {
                 var executingTask = TaskQueue.tasks.Where(d => d.Status == eTaskStatus.Executing && d.Site == site.Name).OrderBy(d => d.HandlerTime).FirstOrDefault();
                 if (executingTask != null && (DateTime.Now - executingTask.HandlerTime).TotalMinutes > 2) {
                     executingTask.HandlerAgent = agent.Name;
                     executingTask.HandlerTime = DateTime.Now;
                     Clients.Client(agent.ConnectionId).castTesk(executingTask);
-                    Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+                    BroadcastRanderTask();
                 }
             }
         }
 
         public void DoneTask(SpiderTask task) {
             if (task.Status == eTaskStatus.Fail)
-                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), task.Error + " Url:" + task.Url, "Grab", LogType.Warn);
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask Fail: " + task.Error + " Url:" + task.Url, "Grab", LogType.Warn);
             int index = TaskQueue.tasks.FindIndex(d => d.Id == task.Id);
             TaskQueue.tasks[index] = task;
             //完整替换List成员必须使用index赋值方法。不能直接赋值引用对象成员。
-            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            BroadcastRanderTask();
         }
 
         public void DeleteTask(string taskId) {
             var task = TaskQueue.tasks.SingleOrDefault(d => d.Id == Guid.Parse(taskId));
             TaskQueue.tasks.Remove(task);
-            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
-
+            BroadcastRanderTask();
         }
 
         public void DeleteAllTask() {
-            TaskQueue.tasks = new List<SpiderTask>();
-            Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            TaskQueue.tasks.RemoveAll(d => true);
+            BroadcastRanderTask();
         }
 
         //注意：终止agent进程并不能马上触发OnDisconnected。所以需要在ProcessTesk中检查超时Executing任务
@@ -133,6 +132,7 @@ namespace SpiderMan.Controllers {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) {
                 TaskQueue.Instance.GenerateTask(model);
+                BroadcastRanderTask();
             }
         }
 
@@ -144,6 +144,15 @@ namespace SpiderMan.Controllers {
         public void StartModel(string modelid) {
             var model = TaskQueue.taskModels.SingleOrDefault(d => d.Id == modelid);
             if (model != null) model.Timer.Start();
+        }
+
+        public void BroadcastRanderTask() {
+            try {
+                //在TaskModel生产task时会于这里的Json.net序列化同时进行，从而造成异常。
+                Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+            } catch (Exception ex) {
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "BroadcastRanderTask: " + ex.Message, "Grab", LogType.Warn);
+            }
         }
 
     }
