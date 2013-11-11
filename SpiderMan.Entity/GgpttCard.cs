@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using sharp_net.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 using System.Configuration;
+using sharp_net;
 
 namespace SpiderMan.Entity {
 
@@ -24,7 +24,8 @@ namespace SpiderMan.Entity {
                 Uri uri = new Uri(imgstring);
                 string filename = imgstring.Replace(uri.Scheme + "://" + uri.Authority, ConfigurationManager.AppSettings["LocalImageStore"] + SourceCode);
                 filename = filename.Replace("/", "\\");
-                DownloadImage.Execute(imgstring, filename);
+                //new WebRequestRobot().DownloadImage(imgstring, filename);
+                var ss = new WebRequestRobot();
             }
         }
     }

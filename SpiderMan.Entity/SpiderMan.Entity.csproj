@@ -71,7 +71,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\sharp_net\sharp_net.csproj">
+    <ProjectReference Include="..\..\sharp_net\sharp_net.csproj">
       <Project>{3251cf20-191c-4f54-b070-9c342227e358}</Project>
       <Name>sharp_net</Name>
     </ProjectReference>
