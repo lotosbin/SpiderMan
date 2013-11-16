@@ -20,10 +20,8 @@ namespace SpiderMan.Controllers {
 
         //TaskHub在每次有客户端与服务端建立链接时都会新建一个实例。所以Timer的存在导致第一个TaskHub实例永远不被销毁，直至app中止。
         public TaskHub() {
-            if (TaskQueue.masterhub == null) {
+            if (TaskQueue.masterhub == null)
                 TaskQueue.masterhub = this;
-            }
-
         }
 
         public void RegisterBoard() {
