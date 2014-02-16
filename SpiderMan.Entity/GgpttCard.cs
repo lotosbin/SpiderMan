@@ -1,4 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+<<<<<<< HEAD
+=======
+using sharp_net;
+>>>>>>> fb9402aeb823c1c4db0e102187b2efc42f578c98
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +24,12 @@ namespace SpiderMan.Entity {
 
         public void DownloadImagesLocal() {
             if (LocalImages == null) return;
+            WebRequestRobot webRequestRobot = new WebRequestRobot();
             foreach (string imgstring in LocalImages) {
                 Uri uri = new Uri(imgstring);
                 string filename = imgstring.Replace(uri.Scheme + "://" + uri.Authority, ConfigurationManager.AppSettings["LocalImageStore"] + SourceCode);
                 filename = filename.Replace("/", "\\");
-                //new WebRequestRobot().DownloadImage(imgstring, filename);
-                var ss = new WebRequestRobot();
+                webRequestRobot.DownloadImage(imgstring, filename);
             }
         }
     }
