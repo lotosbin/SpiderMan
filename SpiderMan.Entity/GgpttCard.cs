@@ -1,8 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-<<<<<<< HEAD
-=======
 using sharp_net;
->>>>>>> fb9402aeb823c1c4db0e102187b2efc42f578c98
 using System;
 using System.Collections.Generic;
 using System.Linq;
