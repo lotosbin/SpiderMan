@@ -7,3 +7,6 @@
 [submodule "SpiderMan.Agent"]
 	path = SpiderMan.Agent
 	url = git@github.com:zicjin/SpiderMan.Agent.git
+[submodule "SpiderMan.Entity"]
+	path = SpiderMan.Entity
+	url = git@github.com:zicjin/SpiderMan.Entity.git
