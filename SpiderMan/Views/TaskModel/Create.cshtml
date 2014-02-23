@@ -20,7 +20,7 @@
         </li>
         <li>
             @Html.LabelFor(model => model.Act)
-            @Html.DropDownListFor(model => model.Act, ((eAct)0).ToSelectListItems())
+            @Html.DropDownListFor(model => model.Act, eAct.Normal.ToSelectListItems())
         </li>
         <li>
             @Html.LabelFor(model => model.ArticleType)
@@ -35,9 +35,8 @@
             @Html.EditorFor(model => model.SourceCode)
         </li>
         <li>
-            @Html.LabelFor(model => model.Url)
-            @Html.EditorFor(model => model.Url)
-            @Html.ValidationMessageFor(model => model.Url)
+            @Html.LabelFor(model => model.UrlParams)
+            @Html.TextArea("UrlParams", (string)ViewBag.UrlParams, new { rows = 5, style = "width:320px;" })
         </li>
         <li>
             @Html.LabelFor(model => model.UrlTemp)
@@ -47,6 +46,14 @@
         <li>
             @Html.LabelFor(model => model.CommandType)
             @Html.DropDownListFor(model => model.CommandType, ((eCommandType)0).ToSelectListItems())
+        </li>
+        <li>
+            @Html.LabelFor(model => model.WithoutJquery)
+            @Html.CheckBoxFor(model => model.WithoutJquery)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.WithUnderscore)
+            @Html.CheckBoxFor(model => model.WithUnderscore)
         </li>
         <li>
             @Html.LabelFor(model => model.Interval)

@@ -29,14 +29,17 @@ namespace SpiderMan.Controllers {
         private readonly MongoCollection<GgpttCard> ggpttCardCollection;
         private readonly MongoCollection<AdianboVideo> adianboVideoCollection;
         private readonly MongoCollection<Shudong> shudongCollection;
+        private readonly MongoCollection<BaozouMatch> baozouMatchCollection;
         public TaskController(IMongoRepo<TaskModel> taskmodel_repo,
             IMongoRepo<GgpttCard> ggpttcard_repo,
             IMongoRepo<AdianboVideo> adianbovideo_repo,
-            IMongoRepo<Shudong> shudong_repo) {
+            IMongoRepo<Shudong> shudong_repo,
+            IMongoRepo<BaozouMatch> baozoumatch_repo) {
             this.taskModelCollection = taskmodel_repo.Collection;
             this.ggpttCardCollection = ggpttcard_repo.Collection;
             this.adianboVideoCollection = adianbovideo_repo.Collection;
             this.shudongCollection = shudong_repo.Collection;
+            this.baozouMatchCollection = baozoumatch_repo.Collection;
         }
 
         public ActionResult Index() {
@@ -44,6 +47,7 @@ namespace SpiderMan.Controllers {
             return View();
         }
 
+        #region Ggptt
         // 关于在web api使用FormDataCollection http://goo.gl/PjJGf
         // 不要使用gbk编码提交，很容易产生字符串错误从而无法提交。
         [HttpPost]
@@ -65,7 +69,7 @@ namespace SpiderMan.Controllers {
                 }
             }
         }
-
+        
         [HttpPost]
         public void PostGgpttCardIds(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
@@ -103,7 +107,78 @@ namespace SpiderMan.Controllers {
                 ggpttCardCollection.Save(exist);
             }
         }
+        #endregion
 
+        #region BaozouMatch
+        [HttpPost]
+        public void PostBaozouMatchList(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<BaozouMatch>)) as IEnumerable<BaozouMatch>;
+            foreach (var m in data) {
+                var exist = baozouMatchCollection.AsQueryable<BaozouMatch>().SingleOrDefault(d => d.ProviderId == m.ProviderId & d.SourceCode == task.Source);
+                if (exist == null) {
+                    m.Inject(task);
+                    baozouMatchCollection.Insert(m);
+                } else {
+                    exist.GrabDate = DateTime.Now;
+                    exist.Point = m.Point;
+                    exist.PointForGuest = m.PointForGuest;
+                    exist.Status = m.Status;
+                    baozouMatchCollection.Save(exist);
+                }
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchAddition(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<BaozouMatch>)) as IEnumerable<BaozouMatch>;
+
+            foreach (BaozouMatch m in data) {
+                if (m.Cap == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 35) {
+                    m.Time = m.Time.Date + new TimeSpan(19, 30, 0);
+                }
+                var queryMatch = baozouMatchCollection.FindOne(Query.And(
+                    Query<BaozouMatch>.EQ(e => e.Cap, m.Cap),
+                    Query<BaozouMatch>.EQ(e => e.Time, m.Time),
+                    Query<BaozouMatch>.Matches(e => e.TeamName, ".*" + m.Title + ".*"),
+                    Query<BaozouMatch>.Matches(e => e.TeamNameForGuest, ".*" + m.Title + ".*")
+                ));
+                if (queryMatch != null) {
+                    queryMatch.Title = m.Title;
+                    queryMatch.LiveVideos = m.LiveVideos;
+                    baozouMatchCollection.Save(queryMatch);
+                }
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchAdditionMobile(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<BaozouMatch>)) as IEnumerable<BaozouMatch>;
+
+            foreach (BaozouMatch m in data) {
+                if (m.Cap == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 35) {
+                    m.Time = m.Time.Date + new TimeSpan(19, 30, 0);
+                }
+                var queryMatch = baozouMatchCollection.FindOne(Query.And(
+                    Query<BaozouMatch>.EQ(e => e.Cap, m.Cap),
+                    Query<BaozouMatch>.EQ(e => e.Time, m.Time),
+                    Query<BaozouMatch>.Matches(e => e.TeamName, ".*" + m.Title + ".*"),
+                    Query<BaozouMatch>.Matches(e => e.TeamNameForGuest, ".*" + m.Title + ".*")
+                ));
+                if (queryMatch != null) {
+                    queryMatch.Title = m.Title;
+                    queryMatch.LiveVideosForMobile = m.LiveVideosForMobile;
+                    baozouMatchCollection.Save(queryMatch);
+                }
+            }
+        }
+        #endregion
+
+        #region Shudong
         [HttpPost]
         public void PostShudongIds(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
@@ -144,7 +219,9 @@ namespace SpiderMan.Controllers {
                 shudongCollection.Save(exist);
             }
         }
+        #endregion
 
+        #region Adianbo
         [HttpPost]
         [ValidateInput(false)]
         public void PostAdianboVideoIds(string taskjson, string datajson) {
@@ -249,6 +326,6 @@ namespace SpiderMan.Controllers {
             var query = Query<AdianboVideo>.EQ(d => d.ImdbId, data.ImdbId);
             adianboVideoCollection.Update(query, AdianboVideo.UpdateBuilder(data), UpdateFlags.Upsert);
         }
-
+        #endregion
     }
 }

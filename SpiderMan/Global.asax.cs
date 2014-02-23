@@ -17,9 +17,10 @@ namespace SpiderMan {
 
     public class MvcApplication : HttpApplication {
         protected void Application_Start() {
-            RouteTable.Routes.MapHubs(new HubConfiguration() { EnableCrossDomain = true });
+            //RouteTable.Routes.MapHubs(new HubConfiguration() { EnableCrossDomain = true });
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

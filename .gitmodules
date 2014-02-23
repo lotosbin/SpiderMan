@@ -10,3 +10,6 @@
 [submodule "SpiderMan.Entity"]
 	path = SpiderMan.Entity
 	url = git@github.com:zicjin/SpiderMan.Entity.git
+[submodule "Baozou.Entity"]
+	path = Baozou.Entity
+	url = git@github.com:zicjin/Baozou.Entity.git

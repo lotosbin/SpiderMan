@@ -39,7 +39,8 @@ namespace SpiderMan.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(TaskModel model) {
+        public ActionResult Create(TaskModel model, string urlParams) {
+            model.UrlParams = urlParams.Split('\n').ToList();
             if (!ModelState.IsValid) {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);
@@ -56,12 +57,15 @@ namespace SpiderMan.Controllers {
                                    Text = site.Name,
                                    Value = site.Name
                                };
+            if (model.UrlParams != null)
+                ViewBag.UrlParams = string.Join("\n", model.UrlParams);
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(TaskModel model) {
+        public ActionResult Edit(TaskModel model, string urlParams) {
+            model.UrlParams = urlParams.Split('\n').ToList();
             if (!ModelState.IsValid) {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);

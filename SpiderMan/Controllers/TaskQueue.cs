@@ -51,22 +51,11 @@ namespace SpiderMan.Controllers {
 
         TaskQueue() { }
 
-        public SpiderTask GenerateTask(TaskModel model) {
-            var newTask = new SpiderTask {
-                Id = Guid.NewGuid(),
-                BirthTime = DateTime.Now,
-                TaskModelId = model.Id,
-                Site = model.Site,
-                Source = model.SourceCode,
-                CommandType = ((eCommandType)model.CommandType).ToString(),
-                Url = model.Url,
-                ArticleType = ((eArticleType)model.ArticleType).ToString()
-            };
-            tasks.Add(newTask);
+        public void GenerateTask(TaskModel model) {
+            tasks.AddRange(model.GenerateSpiderTask());
             if (masterhub != null) {
                 masterhub.BroadcastRanderTask();
             }
-            return newTask;
         }
 
         private void ModelTimerBuild() {

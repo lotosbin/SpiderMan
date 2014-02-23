@@ -7,7 +7,7 @@ namespace SpiderMan {
         public static void RegisterBundles(BundleCollection bundles) {
             bundles.Add(new ScriptBundle("~/bundles/base").Include(
                         "~/Scripts/underscore-min.js",
-                        "~/Scripts/jquery-2.0.3.js"));
+                        "~/Scripts/jquery-2.1.0.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.unobtrusive*",

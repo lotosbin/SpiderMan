@@ -14,12 +14,21 @@
 <table>
     @foreach (var item in Model) {
         <tr>
-            <td><a target="_blank" href="@item.Url">@item.Name</a></td>
+            <td>@item.Name</td>
             <td>@(item.SourceCode)_@((eCommandType)item.CommandType)</td>
             <td>@((eArticleType)item.ArticleType)</td>
             <td>@item.Site</td>
             <td>@item.Interval</td>
             <td>@((eAct)item.Act)</td>
+            <td>
+                @if (item.UrlParams != null) {
+                    foreach (var url in item.UrlParams) {
+                        <a target="_blank" href="@url">url</a>
+                    }
+                }
+            </td>
+            <td>@item.WithoutJquery</td>
+            <td>@item.WithUnderscore</td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })

@@ -62,6 +62,7 @@ namespace SpiderMan.App_Start {
             kernel.Bind<IMongoRepo<Site>>().To<MongoRepo<Site>>();
             kernel.Bind<IMongoRepo<Avator>>().To<MongoRepo<Avator>>();
             kernel.Bind<IMongoRepo<UserName>>().To<MongoRepo<UserName>>();
+            kernel.Bind<IMongoRepo<BaozouMatch>>().To<MongoRepo<BaozouMatch>>();
         }
     }
 }
