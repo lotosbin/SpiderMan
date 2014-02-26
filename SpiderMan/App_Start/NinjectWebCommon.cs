@@ -12,6 +12,8 @@ namespace SpiderMan.App_Start {
     using sharp_net.Mongo;
     using SpiderMan.Entity;
     using System.Web.Http;
+    using System.Configuration;
+    using Baozou.Entity;
 
     public static class NinjectWebCommon {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -54,7 +56,7 @@ namespace SpiderMan.App_Start {
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel) {
-            //Todo: 不理解为什么没有bind的情况下controller构造函数依然能得到对象实体
+            //Todo: 为什么没有bind的情况下controller构造函数依然能得到对象实体?
             kernel.Bind<IMongoRepo<GgpttCard>>().To<MongoRepo<GgpttCard>>();
             kernel.Bind<IMongoRepo<AdianboVideo>>().To<MongoRepo<AdianboVideo>>();
             kernel.Bind<IMongoRepo<Shudong>>().To<MongoRepo<Shudong>>();
@@ -62,7 +64,11 @@ namespace SpiderMan.App_Start {
             kernel.Bind<IMongoRepo<Site>>().To<MongoRepo<Site>>();
             kernel.Bind<IMongoRepo<Avator>>().To<MongoRepo<Avator>>();
             kernel.Bind<IMongoRepo<UserName>>().To<MongoRepo<UserName>>();
-            kernel.Bind<IMongoRepo<BaozouMatch>>().To<MongoRepo<BaozouMatch>>();
+
+            string BaozouConStr = ConfigurationManager.ConnectionStrings["BaozouMongoServer"].ConnectionString;
+            kernel.Bind<IMongoRepo<Team>>().To<MongoRepo<Team>>().WithConstructorArgument("conStr", BaozouConStr);
+            kernel.Bind<IMongoRepo<LiveVideo>>().To<MongoRepo<LiveVideo>>().WithConstructorArgument("conStr", BaozouConStr);
+            kernel.Bind<IMongoRepo<Match>>().To<MongoRepo<Match>>().WithConstructorArgument("conStr", BaozouConStr);
         }
     }
 }

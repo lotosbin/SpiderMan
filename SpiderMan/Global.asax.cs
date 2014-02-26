@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using Newtonsoft.Json;
 using sharp_net;
 using sharp_net.Mongo;
+using SpiderMan.Help;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,10 +31,14 @@ namespace SpiderMan {
             Initialization.TaskModelInit();
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
-                NullValueHandling = NullValueHandling.Ignore //否则会对List生成一个都是null的对象
+                NullValueHandling = NullValueHandling.Ignore, //mongo c#的json序列化直接使用默认JsonConvert
             };
+
+            var settings = new JsonSerializerSettings();
+            settings.ContractResolver = new SignalRContractResolver();
+            GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => JsonSerializer.Create(settings));
         }
 
-
     }
+
 }

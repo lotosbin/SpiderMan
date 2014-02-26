@@ -7,7 +7,7 @@
 <table id="taskModels">
     @foreach (var item in ViewBag.TaskModel) {
         <tr modelid="@item.Id">
-            <td><a target="_blank" class="site_cmd" href="@item.Url">@item.Name</a></td>
+            <td><a target="_blank" class="site_cmd" href="@item.UrlParams[0]">@item.Name</a></td>
             <td class="interval">@item.Interval</td>
             <td>
                 <button class="action">Stop</button>
@@ -32,7 +32,7 @@
 <ul id="tasksqueue"></ul>
 
 @section Scripts {
-    <script src="~/Scripts/jquery.signalR-2.0.2.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.0.2.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
         $(function () {

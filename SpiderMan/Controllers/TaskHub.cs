@@ -85,10 +85,12 @@ namespace SpiderMan.Controllers {
         public void DoneTask(SpiderTask task) {
             if (task.Status == eTaskStatus.Fail)
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask Fail: " + task.Error + " Url:" + task.Url, "Grab", LogType.Warn);
-            int index = TaskQueue.tasks.FindIndex(d => d.Id == task.Id);
-            TaskQueue.tasks[index] = task;
             //完整替换List成员必须使用index赋值方法。不能直接赋值引用对象成员。
-            BroadcastRanderTask();
+            int index = TaskQueue.tasks.FindIndex(d => d.Id == task.Id);
+            if (index >= 0) {
+                TaskQueue.tasks[index] = task;
+                BroadcastRanderTask();
+            }
         }
 
         public void DeleteTask(string taskId) {

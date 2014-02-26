@@ -53,9 +53,8 @@ namespace SpiderMan.Controllers {
 
         public void GenerateTask(TaskModel model) {
             tasks.AddRange(model.GenerateSpiderTask());
-            if (masterhub != null) {
+            if (masterhub != null)
                 masterhub.BroadcastRanderTask();
-            }
         }
 
         private void ModelTimerBuild() {
@@ -98,7 +97,8 @@ namespace SpiderMan.Controllers {
 
         private void ClearDoneTask() {
             tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
-            if (masterhub != null) masterhub.BroadcastRanderTask();
+            if (masterhub != null) 
+                masterhub.BroadcastRanderTask();
         }
 
         private void ClearExecutingTask() {
@@ -108,9 +108,10 @@ namespace SpiderMan.Controllers {
                 foreach (var task in executerTask) str.AppendLine(task.Url);
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ExecutingOver15min: " + str.ToString(), "Grab", LogType.Warn);
 
-                //tasks = tasks.Except(executerTask).ToList(); //这种写法会产生意外的null成员。原因未知。
+                //tasks = tasks.Except(executerTask).ToList(); //这种写法会产生意外的null成员，原因未知。
                 tasks.RemoveAll(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
-                if (masterhub != null) masterhub.BroadcastRanderTask();
+                if (masterhub != null) 
+                    masterhub.BroadcastRanderTask();
             }
         }
 
