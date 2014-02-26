@@ -131,7 +131,7 @@ namespace SpiderMan.Controllers {
                     var team = baozouTeamCollection.FindOne(Query<Team>.EQ(e => e.NameChinese, m.TeamNameChinese));
                     if (team != null)
                         m.TeamName = team.Name;
-                    var teamGorGuest = baozouTeamCollection.FindOne(Query<Team>.EQ(e => e.NameChinese, m.TeamNameChineseeForGuest));
+                    var teamGorGuest = baozouTeamCollection.FindOne(Query<Team>.EQ(e => e.NameChinese, m.TeamNameChineseForGuest));
                     if (teamGorGuest != null)
                         m.TeamNameForGuest = teamGorGuest.Name;
 
@@ -165,7 +165,7 @@ namespace SpiderMan.Controllers {
                     var matchs = baozouMatchCollection.Find(queryPre);
                     if (matchs == null) continue;
                     foreach (var item in matchs.ToList()) {
-                        if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseeForGuest)) {
+                        if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseForGuest)) {
                             match = item;
                             break;
                         }
@@ -207,7 +207,7 @@ namespace SpiderMan.Controllers {
                     var matchs = baozouMatchCollection.Find(queryPre);
                     if (matchs == null) continue;
                     foreach (var item in matchs.ToList()) {
-                        if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseeForGuest)) {
+                        if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseForGuest)) {
                             match = item;
                             break;
                         }
