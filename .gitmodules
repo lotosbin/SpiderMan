@@ -1,15 +1,14 @@
-[submodule "SpiderMan/front_net"]
-	path = SpiderMan/front_net
-	url = git@github.com:zicjin/front_net.git
 [submodule "sharp_net"]
 	path = sharp_net
 	url = git@github.com:zicjin/sharp_net.git
-[submodule "SpiderMan.Agent"]
-	path = SpiderMan.Agent
-	url = git@github.com:zicjin/SpiderMan.Agent.git
 [submodule "SpiderMan.Entity"]
+
 	path = SpiderMan.Entity
+
 	url = git@github.com:zicjin/SpiderMan.Entity.git
+
 [submodule "Baozou.Entity"]
+
 	path = Baozou.Entity
+
 	url = git@github.com:zicjin/Baozou.Entity.git

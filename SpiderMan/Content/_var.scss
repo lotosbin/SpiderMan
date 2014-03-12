@@ -1,0 +1,117 @@
+@charset "utf-8";
+
+$front_net_path: '../src/front_net/' !default;
+$fontAwesomePath: $front_net_path + 'bootstrap/fortawesome/font';
+
+// MIXIN -------------------------
+@mixin clearfix { *zoom: 1;
+  &:before, &:after {display: table; content: ""; line-height: 0;}
+  &:after {clear: both;}
+}
+@mixin none_sty{list-style: none;padding:0;margin:0;background:none;float:none;width:auto;height:auto;position:static;display:inline;line-height:auto;}
+@mixin in_bk {display:inline-block;zoom:1;*display:inline;position:relative;}
+@mixin ellipsis{overflow: hidden; white-space: nowrap; width: 360px; text-overflow:ellipsis;}
+@mixin onelineh($size) {line-height:$size;height:$size;}
+@mixin maxWidth($width) {max-width:$width;_width:$width; overflow:visible;}
+@mixin maxHeight($height) {max-height:$height;_height:$height; overflow:visible;}
+@mixin hide-text {font: 0/0 a;color: transparent;text-shadow: none;background-color: transparent;border: 0;}
+@mixin gradient-v($startColor: #555, $startColorPos: 0, $endColor: #333, $endColorPos: 100%) {
+background-color: mix($startColor, $endColor, 62.5%);
+background-image: -moz-linear-gradient(top, $startColor $startColorPos, $endColor $endColorPos); // FF 3.6+
+background-image: -webkit-gradient(linear, 0 $startColorPos, 0 $endColorPos, from($startColor), to($endColor)); // Safari 4+, Chrome 2+
+background-image: -webkit-linear-gradient(top, $startColor $startColorPos, $endColor $endColorPos); // Safari 5.1+, Chrome 10+
+background-image: -o-linear-gradient(top, $startColor $startColorPos, $endColor $endColorPos); // Opera 11.10
+background-image: linear-gradient(to bottom, $startColor $startColorPos, $endColor $endColorPos); // Standard, IE10
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($startColor)}', endColorstr='#{ie-hex-str($endColor)}', GradientType=0); // IE9 and down
+}
+@mixin gradient-h($startColor: #555, $startColorPos: 0, $endColor: #333, $endColorPos: 100%) {
+background-color: $endColor;
+background-image: -moz-linear-gradient(left, $startColor, $endColor); // FF 3.6+
+background-image: -webkit-gradient(linear, $startColorPos 0, $endColorPos 0, from($startColor), to($endColor)); // Safari 4+, Chrome 2+
+background-image: -webkit-linear-gradient(left, $startColor, $endColor); // Safari 5.1+, Chrome 10+
+background-image: -o-linear-gradient(left, $startColor, $endColor); // Opera 11.10
+background-image: linear-gradient(to right, $startColor, $endColor); // Standard, IE10
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($startColor)}', endColorstr='#{ie-hex-str($endColor)}', GradientType=1); // IE9 and down
+}
+@mixin dib(){
+    font-size: 12px;
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    @include in_bk;
+}
+@mixin background-image-retina($file, $type, $width, $height) {
+  background-image: url($file + '.' + $type);
+  @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+    & {
+      background-image: url($file + '_@2x.' + $type);
+      background-size: $width $height;
+    }
+  }
+}
+
+$baseLineHeight: 20px;
+
+$baseFontSize: 100%;
+$baseFontSizePx: 16px;
+//改变HTML默认fontSize：$baseFontSizePx:14px;$baseFontSize:87.5%(14/16);html{font-size:$baseFontSize}
+@mixin rem($property, $values...) {
+  $pxValues: '';
+  $remValues: '';
+  $baseFontSize: $baseFontSizePx / ($baseFontSizePx * 0 + 1); //去除单位字符‘px’
+
+  @each $value in $values {
+    $pxValues: #{$pxValues + ' ' + $value * $baseFontSize}px;
+    $remValues: #{$remValues + ' ' + $value}rem;
+  }
+
+  #{$property}: $pxValues;
+  #{$property}: $remValues;
+}
+
+// .wrapper {
+//     @include rem(font-size, 1.2);
+//     @include rem(margin, 1, .5, 2, 3);
+// }
+
+$viewweight: 600px;
+// Bootstrap Var -------------------------
+$iconSpritePath:          $front_net_path + "bootstrap/img/glyphicons-halflings.png";
+$iconWhiteSpritePath:     $front_net_path + "bootstrap/img/glyphicons-halflings-white.png";
+$iconRedSpritePath:       $front_net_path + "bootstrap/img/glyphicons-halflings-red.png";
+
+$textColor:        #111 !default;
+$linkColor:        #4787ed !default;
+$linkColorHover:   darken($linkColor, 15%) !default;
+
+$bodyBackground: #FFF !default;
+$sansFontFamily:        "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$serifFontFamily:       "黑体", Georgia, "Times New Roman", Times, serif !default;
+$baseFontFamily:        $sansFontFamily !default;
+
+// Grays
+$black:                 #000 !default;
+$grayDarker:            #222 !default;
+$grayDark:              #333 !default;
+$gray:                  #555 !default;
+$grayLight:             #999 !default;
+$grayLighter:           #eee !default;
+$white:                 #fff !default;
+// Accent colors
+$blue:                  #049cdb !default;
+$blueDark:              #0064cd !default;
+$green:                 #46a546 !default;
+$red:                   #9d261d !default;
+$yellow:                #ffc40d !default;
+$orange:                #f89406 !default;
+$pink:                  #c3325f !default;
+$purple:                #7a43b6 !default;
+// Z-index master list
+$zindexDropdown:          1000;
+$zindexPopover:           1010;
+$zindexTooltip:           1020;
+$zindexFixedNavbar:       1030;
+$zindexModalBackdrop:     1040;
+$zindexModal:             1050;

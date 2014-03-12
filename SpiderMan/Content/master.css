@@ -1,1 +1,1054 @@
-@charset "UTF-8";.sl-selectmask{position:absolute;left:0;top:0;z-index:10;overflow:hidden;width:33em}.sl-selectmask iframe{position:absolute;top:0;left:0;z-index:-1;border:none;filter:mask();width:3000px;height:3000px}input[type=submit]::-moz-focus-inner,input[type=button]::-moz-focus-inner{border:0px}input[type=submit]:focus,input[type=button]:focus{outline:none}.sl-fixed{position:fixed}.sl-fixed-top{bottom:auto;top:0;_bottom:auto;_top:expression(eval(document.documentElement.scrollTop))}.sl-fixed-bottom{bottom:0;top:auto;_bottom:auto;_top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)))}.sl-fixed-left{left:0;_position:absolute;right:auto;_left:expression(eval(document.documentElement.scrollLeft))}.sl-fixed-right{right:0;left:auto;_right:auto;_left:expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0))}html,html body{_background-image:url("about:blank");_background-attachment:fixed}.sl-fixed-top,.sl-fixed-right,.sl-fixed-bottom,.sl-fixed-left{_position:absolute}.sl-wrap,.sl-wrap td,.sl-wrap th{word-wrap:break-word;word-break:break-all}.sl-wrap-table{table-layout:fixed}.sl-floatcenter{display:block;text-align:center;font-size:0}.sl-floatcenter-item{display:inline-block;*display:inline;*zoom:1;vertical-align:top;font-size:13px}@media screen and (-webkit-min-device-pixel-ratio: 0){.sl-floatcenter{-webkit-text-size-adjust:none}}.fn-hide{visibility:hidden}.fn-hide-im{visibility:hidden !important}.fn-left,.fn-right,.fn-left-im,.fn-right-im{display:inline}.fn-left{float:left}.fn-left-im{float:left !important}.fn-right{float:right}.fn-right-im{float:right !important}.fn-none{display:none}.fn-none-im{display:none !important}.fn-height0{height:0 !important;visibility:hidden;margin:0 !important;padding:0 !important}.fn-nonesty{list-style:none;padding:0;margin:0;background:none;float:none;width:auto;height:auto;position:static;display:inline;line-height:auto}.fn-show{display:block}.fn-show-im{display:block !important}.fn-rel{position:relative}.fn-cs{cursor:pointer}.fn-fw{font-weight:700 !important}.fn-tal{text-align:left !important}.fn-tar{text-align:right !important}.fn-tac{text-align:center !important}.fn-nowrap{white-space:nowrap}.fn-vam{vertical-align:middle}.fn-vat{vertical-align:top}.fn-f12{font-size:12px}.fn-f14{font-size:14px}.fn-f14va input[type='radio'],.fn-f14va input[type='checkbox']{vertical-align:-1px\9}.fn-f13va input[type='radio'],.fn-f13va input[type='checkbox']{vertical-align:0}.fn-f12va input[type='radio'],.fn-f12va input[type='checkbox']{vertical-align:-3px}.fn-zmax{z-index:999}.fn-clear{*zoom:1}.fn-clear:before,.fn-clear:after{display:table;content:"";line-height:0}.fn-clear:after{clear:both}.fn-ellipsis{overflow:hidden;white-space:nowrap;width:360px;text-overflow:ellipsis}.fn-inbk,a.fn-ellipsis,span.fn-ellipsis{display:inline-block;zoom:1;*display:inline;position:relative}.fn-dibwrap{font-size:0;*word-spacing:-1px}@media screen and (-webkit-min-device-pixel-ratio: 0){.fn-dibwrap{letter-spacing:-5px}}.gray{color:#cbcbcb}.green{color:#46a546}.red{color:#9d261d}.m0{margin:0 !important}.m20{margin:20px}.ml5{margin-left:5px}.ml10{margin-left:10px}.ml20{margin-left:20px}.ml40{margin-left:40px}.mr5{margin-right:5px}.mr10{margin-right:10px}.mr15{margin-right:15px}.mr20{margin-right:20px}.mt5{margin-top:5px}.mt10{margin-top:10px}.mt15{margin-top:15px}.mt20{margin-top:20px}.mt40{margin-top:40px}.mb0{margin-bottom:0}.mb0i{margin-bottom:0 !important}.mb5{margin-bottom:5px}.mb10{margin-bottom:10px}.mb15{margin-bottom:15px}.mb20{margin-bottom:20px}.p10{padding:10px}.p20{padding:20px}.pl10{padding-left:10px}.pl20{padding-left:20px}.pl40{padding-left:40px}.pr100{padding-right:100px}.pr10{padding-right:10px}.pr20{padding-right:20px}.pr20{padding-right:20px}.pb10{padding-bottom:10px}.pb20{padding-bottom:20px}.pb5{padding-bottom:5px}.pt5{padding-top:5px}.pt10{padding-top:10px}.pt20{padding-top:20px}.pt30{padding-top:30px}article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary{display:block}audio,canvas,video{display:inline-block;zoom:1;*display:inline;position:relative}audio:not([controls]){display:none;height:0;width:0}[hidden]{display:none}mark{background:#ff0;color:#ffeddd}figure{margin:1em 40px 1em 40px}html{font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}html,button,input,select,textarea{font-family:"微软雅黑","Helvetica Neue",Helvetica,Arial,sans-serif}button,input,select,textarea{font-size:100%}body{margin:0;color:#ffeddd;background-color:#1f1f1f;line-height:20px;font-size:100%}a{color:#c10000;text-decoration:none}a:focus{outline:thin dotted}a:active,a:hover{outline:0}a:hover{color:#ff0f0f}h1{font-size:2em;margin:0.67em 0}h2{font-size:1.5em;margin:0.83em 0}h3{font-size:1.17em;margin:1em 0}h4{font-size:1em;margin:1.33em 0}h5{font-size:0.83em;margin:1.67em 0}h6{font-size:0.75em;margin:2.33em 0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}blockquote{margin:1em 40px}dfn{font-style:italic}p,pre{margin:1em 0}code,kbd,pre,samp{font-family:monospace, serif;font-size:1em}pre{white-space:pre;white-space:pre-wrap;word-wrap:break-word}q{quotes:none}q:before,q:after{content:'';content:none}small{font-size:75%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}dl,menu,ol,ul{margin:1em 0}dd{margin:0 0 0 40px}menu,ol,ul{padding:0 0 0 40px}img{border:0;-ms-interpolation-mode:bicubic}svg:not(:root){overflow:hidden}form{margin:0}fieldset{border:2px groove #f0f0f0;margin:0 2px;padding:0.35em 0.625em 0.75em}legend{border:0;margin:0;padding:0;white-space:normal;*margin-left:-7px}button,input,select,textarea{margin:0;vertical-align:middle}textarea{overflow:auto;vertical-align:top}button{padding:0px 6px;_padding:0}button,input{line-height:normal}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer;*overflow:visible}button[disabled],input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0;*height:13px;*width:13px}input[type="search"]{-webkit-appearance:textfield;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}table{border-collapse:collapse;border-spacing:0}.container{position:relative;width:960px;margin:0 auto;padding:0}.container .column,.container .columns{float:left;display:inline;margin-left:10px;margin-right:10px}.row{margin-bottom:20px}.column.alpha,.columns.alpha{margin-left:0}.column.omega,.columns.omega{margin-right:0}.container .one.column,.container .one.columns{width:40px}.container .two.columns{width:100px}.container .three.columns{width:160px}.container .four.columns{width:220px}.container .five.columns{width:280px}.container .six.columns{width:340px}.container .seven.columns{width:400px}.container .eight.columns{width:460px}.container .nine.columns{width:520px}.container .ten.columns{width:580px}.container .eleven.columns{width:640px}.container .twelve.columns{width:700px}.container .thirteen.columns{width:760px}.container .fourteen.columns{width:820px}.container .fifteen.columns{width:880px}.container .sixteen.columns{width:940px}.container .one-third.column{width:300px}.container .two-thirds.column{width:620px}.container .offset-by-one{padding-left:60px}.container .offset-by-two{padding-left:120px}.container .offset-by-three{padding-left:180px}.container .offset-by-four{padding-left:240px}.container .offset-by-five{padding-left:300px}.container .offset-by-six{padding-left:360px}.container .offset-by-seven{padding-left:420px}.container .offset-by-eight{padding-left:480px}.container .offset-by-nine{padding-left:540px}.container .offset-by-ten{padding-left:600px}.container .offset-by-eleven{padding-left:660px}.container .offset-by-twelve{padding-left:720px}.container .offset-by-thirteen{padding-left:780px}.container .offset-by-fourteen{padding-left:840px}.container .offset-by-fifteen{padding-left:900px}@media only screen and (min-width: 768px) and (max-width: 959px){.container{width:768px}.container .column,.container .columns{margin-left:10px;margin-right:10px}.column.alpha,.columns.alpha{margin-left:0;margin-right:10px}.column.omega,.columns.omega{margin-right:0;margin-left:10px}.alpha.omega{margin-left:0;margin-right:0}.container .one.column,.container .one.columns{width:28px}.container .two.columns{width:76px}.container .three.columns{width:124px}.container .four.columns{width:172px}.container .five.columns{width:220px}.container .six.columns{width:268px}.container .seven.columns{width:316px}.container .eight.columns{width:364px}.container .nine.columns{width:412px}.container .ten.columns{width:460px}.container .eleven.columns{width:508px}.container .twelve.columns{width:556px}.container .thirteen.columns{width:604px}.container .fourteen.columns{width:652px}.container .fifteen.columns{width:700px}.container .sixteen.columns{width:748px}.container .one-third.column{width:236px}.container .two-thirds.column{width:492px}.container .offset-by-one{padding-left:48px}.container .offset-by-two{padding-left:96px}.container .offset-by-three{padding-left:144px}.container .offset-by-four{padding-left:192px}.container .offset-by-five{padding-left:240px}.container .offset-by-six{padding-left:288px}.container .offset-by-seven{padding-left:336px}.container .offset-by-eight{padding-left:384px}.container .offset-by-nine{padding-left:432px}.container .offset-by-ten{padding-left:480px}.container .offset-by-eleven{padding-left:528px}.container .offset-by-twelve{padding-left:576px}.container .offset-by-thirteen{padding-left:624px}.container .offset-by-fourteen{padding-left:672px}.container .offset-by-fifteen{padding-left:720px}}@media only screen and (max-width: 767px){.container{width:300px}.container .columns,.container .column{margin:0}.container .one.column,.container .one.columns,.container .two.columns,.container .three.columns,.container .four.columns,.container .five.columns,.container .six.columns,.container .seven.columns,.container .eight.columns,.container .nine.columns,.container .ten.columns,.container .eleven.columns,.container .twelve.columns,.container .thirteen.columns,.container .fourteen.columns,.container .fifteen.columns,.container .sixteen.columns,.container .one-third.column,.container .two-thirds.column{width:300px}.container .offset-by-one,.container .offset-by-two,.container .offset-by-three,.container .offset-by-four,.container .offset-by-five,.container .offset-by-six,.container .offset-by-seven,.container .offset-by-eight,.container .offset-by-nine,.container .offset-by-ten,.container .offset-by-eleven,.container .offset-by-twelve,.container .offset-by-thirteen,.container .offset-by-fourteen,.container .offset-by-fifteen{padding-left:0}}@media only screen and (min-width: 480px) and (max-width: 767px){.container{width:420px}.container .columns,.container .column{margin:0}.container .one.column,.container .one.columns,.container .two.columns,.container .three.columns,.container .four.columns,.container .five.columns,.container .six.columns,.container .seven.columns,.container .eight.columns,.container .nine.columns,.container .ten.columns,.container .eleven.columns,.container .twelve.columns,.container .thirteen.columns,.container .fourteen.columns,.container .fifteen.columns,.container .sixteen.columns,.container .one-third.column,.container .two-thirds.column{width:420px}}.container:after{content:"\0020";display:block;height:0;clear:both;visibility:hidden}.clearfix:before,.clearfix:after,.row:before,.row:after{content:'\0020';display:block;overflow:hidden;visibility:hidden;width:0;height:0}.row:after,.clearfix:after{clear:both}.row,.clearfix{zoom:1}.clear{clear:both;display:block;overflow:hidden;visibility:hidden;width:0;height:0}.field-validation-error{color:#9d261d;font-weight:bold}.field-validation-valid{display:none}input.input-validation-error{border:1px solid #9d261d}input[type="checkbox"].input-validation-error{border:0 none}.validation-summary-errors{color:#9d261d;font-weight:bold;font-size:1.1em}.validation-summary-valid{display:none}body{padding:20px 20px 20px 200px}header{position:absolute;left:0;top:0;width:155px;z-index:3}header a.site-title{font-size:1.5em;display:block;margin:20px 0 20px 23px}header ul{list-style-type:none;padding:0}header li{cursor:pointer;padding-left:18px;border-left:6px solid transparent}header li a{display:block;line-height:29px;margin:10px 0}header li a.extand{margin-left:6px;font-size:12px;display:none;line-height:26px}header li a.extand.selected{color:#e7be86}header li.selected{border-left:6px solid #d69131;cursor:default}header li.selected a{color:#d69131}header li:hover a.extand{display:inline !important}form ol{list-style-type:none;padding:0}form label{display:block}h2{border-bottom:1px solid #555;margin:0 0 0.83em;padding-bottom:5px}h3{margin:1.5em 0 0.5em}table td,table th{padding:5px 10px 5px 0;border-bottom:1px solid #555}table th{font-style:italic;font-weight:normal}footer{position:fixed;bottom:5px;left:5px}#tasksqueue li a.title{display:inline-block;zoom:1;*display:inline;position:relative;width:200px}#tasksqueue li a.del{display:none}#tasksqueue li:hover a.del{display:inline}
+﻿.fn-hide {
+  visibility: hidden; }
+
+.fn-hide-im {
+  visibility: hidden !important; }
+
+.fn-left, .fn-right, .fn-left-im, .fn-right-im {
+  display: inline; }
+
+/* 璁剧疆鍐呰仈, 鍑忓皯娴姩甯︽潵鐨刡ug */
+.fn-left {
+  float: left; }
+
+.fn-left-im {
+  float: left !important; }
+
+.fn-right {
+  float: right; }
+
+.fn-right-im {
+  float: right !important; }
+
+.fn-none {
+  display: none; }
+
+.fn-none-im {
+  display: none !important; }
+
+.fn-height0 {
+  height: 0 !important;
+  visibility: hidden;
+  margin: 0 !important;
+  padding: 0 !important; }
+
+.fn-nonesty {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  float: none;
+  width: auto;
+  height: auto;
+  position: static;
+  display: inline;
+  line-height: auto; }
+
+.fn-show {
+  display: block; }
+
+.fn-show-im {
+  display: block !important; }
+
+.fn-rel {
+  position: relative; }
+
+.fn-cs {
+  cursor: pointer; }
+
+.fn-du {
+  cursor: pointer; }
+  .fn-du:hover {
+    text-decoration: underline; }
+
+.fn-fw {
+  font-weight: 700 !important; }
+
+.fn-tal {
+  text-align: left !important; }
+
+.fn-tar {
+  text-align: right !important; }
+
+.fn-tac {
+  text-align: center !important; }
+
+.fn-nowrap {
+  white-space: nowrap; }
+
+.fn-vam {
+  vertical-align: middle; }
+
+.fn-vat {
+  vertical-align: top; }
+
+.fn-f12 {
+  font-size: 12px; }
+
+.fn-f14 {
+  font-size: 14px; }
+
+.fn-f14va input[type='radio'], .fn-f14va input[type='checkbox'] {
+  vertical-align: -1px\9; }
+
+/*font-size:14鏃讹紝鍗曞閫夋瀵归綈鑹ソ*/
+.fn-f13va input[type='radio'], .fn-f13va input[type='checkbox'] {
+  vertical-align: 0; }
+
+.fn-f12va input[type='radio'], .fn-f12va input[type='checkbox'] {
+  vertical-align: -3px; }
+
+.fn-zmax {
+  z-index: 999; }
+
+.fn-clear {
+  *zoom: 1; }
+  .fn-clear:before, .fn-clear:after {
+    display: table;
+    content: "";
+    line-height: 0; }
+  .fn-clear:after {
+    clear: both; }
+
+.fn-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 360px;
+  text-overflow: ellipsis; }
+
+.fn-inbk, a.fn-ellipsis, span.fn-ellipsis {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  position: relative; }
+
+.fn-dibwrap {
+  font-size: 0;
+  /* 鎵€鏈夋祻瑙堝櫒 */
+  *word-spacing: -1px;
+  /* IE6銆? */ }
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /* firefox 涓?letter-spacing 浼氬鑷磋劚绂绘櫘閫氭祦鐨勫厓绱犳按骞充綅绉?*/
+  .fn-dibwrap {
+    letter-spacing: -5px;
+    /* Safari 绛変笉鏀寔瀛椾綋澶у皬涓?0 鐨勬祻瑙堝櫒, N 鏍规嵁鐖剁骇瀛椾綋璋冭妭*/ } }
+
+.gray {
+  color: #cbcbcb; }
+
+.green {
+  color: #46a546; }
+
+.red {
+  color: #9d261d; }
+
+.m0 {
+  margin: 0 !important; }
+
+.m20 {
+  margin: 20px; }
+
+.ml5 {
+  margin-left: 5px; }
+
+.ml10 {
+  margin-left: 10px; }
+
+.ml20 {
+  margin-left: 20px; }
+
+.ml40 {
+  margin-left: 40px; }
+
+.mr5 {
+  margin-right: 5px; }
+
+.mr10 {
+  margin-right: 10px; }
+
+.mr15 {
+  margin-right: 15px; }
+
+.mr20 {
+  margin-right: 20px; }
+
+.mt5 {
+  margin-top: 5px; }
+
+.mt10 {
+  margin-top: 10px; }
+
+.mt15 {
+  margin-top: 15px; }
+
+.mt20 {
+  margin-top: 20px; }
+
+.mt40 {
+  margin-top: 40px; }
+
+.mb0 {
+  margin-bottom: 0; }
+
+.mb0i {
+  margin-bottom: 0 !important; }
+
+.mb5 {
+  margin-bottom: 5px; }
+
+.mb10 {
+  margin-bottom: 10px; }
+
+.mb15 {
+  margin-bottom: 15px; }
+
+.mb20 {
+  margin-bottom: 20px; }
+
+.p10 {
+  padding: 10px; }
+
+.p20 {
+  padding: 20px; }
+
+.pl10 {
+  padding-left: 10px; }
+
+.pl20 {
+  padding-left: 20px; }
+
+.pl40 {
+  padding-left: 40px; }
+
+.pr100 {
+  padding-right: 100px; }
+
+.pr10 {
+  padding-right: 10px; }
+
+.pr20 {
+  padding-right: 20px; }
+
+.pr20 {
+  padding-right: 20px; }
+
+.pb10 {
+  padding-bottom: 10px; }
+
+.pb20 {
+  padding-bottom: 20px; }
+
+.pb5 {
+  padding-bottom: 5px; }
+
+.pt5 {
+  padding-top: 5px; }
+
+.pt10 {
+  padding-top: 10px; }
+
+.pt20 {
+  padding-top: 20px; }
+
+.pt30 {
+  padding-top: 30px; }
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+/**
+ * Corrects `block` display not defined in IE6/7/8/9 & FF3.
+ */
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
+  display: block; }
+
+/*
+ * Corrects `inline-block` display not defined in IE6/7/8/9 & FF3.
+ */
+audio, canvas, video {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  position: relative; }
+
+/*
+ * Prevents modern browsers from displaying `audio` without controls.
+ * Same with IE9.
+ * Remove excess height in iOS5 devices.
+ */
+audio:not([controls]) {
+  display: none;
+  height: 0;
+  width: 0; }
+
+/*
+ * Addresses styling for `hidden` attribute not present in IE7/8/9, FF3, S4.
+ * Known issue: no IE6 support.
+ */
+[hidden] {
+  display: none; }
+
+/*
+ * Addresses styling not present in IE6/7/8/9.
+ * html5
+ */
+mark {
+  background: #ff0;
+  color: #FFEDDD; }
+
+/*
+ * Addresses margin not present in IE6/7/8.
+ * Normalize to chrome 's user agent stylesheet
+ */
+figure {
+  margin: 1em 40px 1em 40px; }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+/*
+ * 1. Use KISSY CSS default font-size 12px
+ * 2. Prevents iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+html {
+  font-size: 100%;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */ }
+
+/*
+ * Addresses `font-family` inconsistency between `textarea` and other form
+ * elements.
+ * 1. html chrome Simsun, others new times
+ * textarea/button/input/select does not inherit.
+ * ie8- does not allow 'inherit' value.
+ * textarea chrome/fx monospace ie courier new
+ * button/input/select chrome/ie arial firefox Simsun
+ */
+html, button, input, select, textarea {
+  font-family: "寰蒋闆呴粦", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* 1 */ }
+
+button, input, select, textarea {
+  font-size: 100%; }
+
+/*
+ * Addresses margins handled incorrectly in IE6/7.
+ * 1. ie7 10px , others 8px
+ * 2. chrome rgba(0,0,0,0), others transparent
+ * 3. firefox 21px(1.3) others normal(1.13)
+ */
+body {
+  margin: 0;
+  /* 1 */
+  color: #FFEDDD;
+  background-color: #1f1f1f;
+  /* 2 */
+  line-height: 20px;
+  /* 3 */
+  font-size: 100%; }
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+/*
+ * Addresses `outline` inconsistency between Chrome and other browsers.
+ */
+a {
+  color: #C10000;
+  text-decoration: none;
+  /*
+     * Improves readability when focused and also mouse hovered in all browsers.
+     * people.opera.com/patrickl/experiments/keyboard/test
+     */ }
+  a:focus {
+    outline: thin dotted; }
+  a:active, a:hover {
+    outline: 0; }
+  a:hover {
+    color: #ff0f0f; }
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+/*
+ * Addresses font sizes and margins set differently in IE6/7.
+ * Addresses font sizes within `section` and `article` in FF4+, Chrome, S5.
+ */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0; }
+
+h3 {
+  font-size: 1.17em;
+  margin: 1em 0; }
+
+h4 {
+  font-size: 1em;
+  margin: 1.33em 0; }
+
+h5 {
+  font-size: 0.83em;
+  margin: 1.67em 0; }
+
+h6 {
+  font-size: 0.75em;
+  margin: 2.33em 0; }
+
+/*
+ * Addresses styling not present in IE7/8/9, S5, Chrome.
+ */
+abbr[title] {
+  border-bottom: 1px dotted; }
+
+/*
+ * Addresses style set to `bolder` in FF3+, ie89, S4/5.
+ *
+ * http://hell.meiert.org/core/css/firefox-3.6.13.css
+ *
+ * chrome default is bold now 19
+ */
+b, strong {
+  font-weight: bold; }
+
+/*
+ * ie8- top =0
+ */
+blockquote {
+  margin: 1em 40px; }
+
+/*
+ * Addresses styling not present in S5
+ */
+dfn {
+  font-style: italic; }
+
+/*
+ * Addresses margins set differently in IE6/7.
+ */
+p, pre {
+  margin: 1em 0; }
+
+/*
+ * 1. Corrects font family set oddly in IE6, S4/5, Chrome.
+ * en.wikipedia.org/wiki/User:Davidgothberg/Test59
+ *    ie: courier new others monospace
+ * 2. other browsers other than firefox is not 16px
+ */
+code, kbd, pre, samp {
+  font-family: monospace, serif;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */ }
+
+/*
+ * Improves readability of pre-formatted text in all browsers.
+ */
+pre {
+  white-space: pre;
+  white-space: pre-wrap;
+  /*ie*/
+  word-wrap: break-word; }
+
+/*
+ * Addresses CSS quotes not supported in IE6/7.
+ */
+q {
+  quotes: none; }
+
+/*
+ * Addresses `quotes` property not supported in S4.
+ */
+q:before, q:after {
+  content: '';
+  content: none; }
+
+/*
+ * ie8- is wrong with relative
+ */
+small {
+  font-size: 75%; }
+
+/*
+ * Prevents `sub` and `sup` affecting `line-height` in all browsers (except firefox).
+ * gist.github.com/413930
+ */
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sup {
+  top: -0.5em; }
+
+sub {
+  bottom: -0.25em; }
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+/*
+ * Addresses margins set differently in IE6/7.
+ */
+dl, menu, ol, ul {
+  margin: 1em 0; }
+
+dd {
+  margin: 0 0 0 40px; }
+
+/*
+ * Addresses paddings set differently in IE6/7.
+ */
+menu, ol, ul {
+  padding: 0 0 0 40px; }
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+/*
+ * 1. Removes border when inside `a` element in IE6/7/8/9, FF3.
+ * 2. Improves image quality when scaled in IE7.
+ *    code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing/
+ */
+img {
+  border: 0;
+  /* 1 */
+  -ms-interpolation-mode: bicubic;
+  /* 2 */ }
+
+/*
+ * Corrects overflow displayed oddly in IE9.
+ */
+svg:not(:root) {
+  overflow: hidden; }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+/*
+ * Corrects margin displayed oddly in IE9-.
+ * margin: auto ??
+ */
+form {
+  margin: 0; }
+
+/*
+ * Define consistent border, margin, and padding.
+ * Same with chrome 's user agent stylesheet
+ */
+fieldset {
+  border: 2px groove #f0f0f0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em; }
+
+/*
+ * 1. Corrects color not being inherited in IE6/7/8/9.
+ * 2. Corrects text not wrapping in FF3.
+ * 3. Corrects alignment displayed oddly in IE6/7.
+ */
+legend {
+  border: 0;
+  /* 1 */
+  margin: 0;
+  padding: 0;
+  white-space: normal;
+  /* 2 */
+  *margin-left: -7px;
+  /* 3 */ }
+
+button, input, select, textarea {
+  margin: 0;
+  vertical-align: middle; }
+
+/*
+ * 1. Removes default vertical scrollbar in IE6/7/8/9.
+ * 2. Improves readability and alignment in all browsers.
+ */
+textarea {
+  overflow: auto;
+  /* 1 */
+  vertical-align: top;
+  /* 2 */ }
+
+/*
+ * IE6+ need padding-left/right
+ */
+button {
+  padding: 0px 6px;
+  /* ie6 fix*/
+  _padding: 0; }
+
+/*
+ * Addresses FF3/4 setting `line-height` on `input` using `!important` in the
+ * UA stylesheet.
+ */
+button, input {
+  line-height: normal; }
+
+/*
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Corrects inability to style clickable `input` types in iOS.
+ * 3. Improves usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Removes inner spacing in IE7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE6.
+ */
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+  cursor: pointer;
+  /* 3 */
+  *overflow: visible;
+  /* 4 */ }
+
+/*
+ * Re-set default cursor for disabled elements.
+ */
+button[disabled], input[disabled] {
+  cursor: default; }
+
+/*
+ * Removes inner padding and border in FF3+.
+ */
+button::-moz-focus-inner, input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+/*
+ * 1. Addresses box sizing set to content-box in IE8/9.
+ * 2. Removes excess padding in IE8/9.
+ * 3. Removes excess padding in IE7.
+ *    Known issue: excess padding remains in IE6.
+ */
+input[type="checkbox"], input[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+  *height: 13px;
+  /* 3 */
+  *width: 13px;
+  /* 3 */ }
+
+/*
+ * 1. Addresses `appearance` set to `searchfield` in S5, Chrome.
+ * 2. Addresses `box-sizing` set to `border-box` in S5, Chrome.
+ *    firefox is content-box (now)
+ */
+input[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  box-sizing: content-box;
+  /* 2 */ }
+
+/*
+ * Removes inner padding and search cancel button in S5, Chrome.
+ */
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+/*
+ * Remove most spacing between table cells.
+ */
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/*
+* Skeleton V1.2
+* Copyright 2011, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 6/20/2012
+*/
+/* Table of Contents
+==================================================
+    #Base 960 Grid
+    #Tablet (Portrait)
+    #Mobile (Portrait)
+    #Mobile (Landscape)
+    #Clearing */
+/* #Base 960 Grid
+================================================== */
+.container {
+  position: relative;
+  width: 960px;
+  margin: 0 auto;
+  padding: 0; }
+
+.container .column, .container .columns {
+  float: left;
+  display: inline;
+  margin-left: 10px;
+  margin-right: 10px; }
+
+.row {
+  margin-bottom: 20px; }
+
+/* Nested Column Classes */
+.column.alpha, .columns.alpha {
+  margin-left: 0; }
+
+.column.omega, .columns.omega {
+  margin-right: 0; }
+
+/* Base Grid */
+.container .one.column, .container .one.columns {
+  width: 40px; }
+
+.container .two.columns {
+  width: 100px; }
+
+.container .three.columns {
+  width: 160px; }
+
+.container .four.columns {
+  width: 220px; }
+
+.container .five.columns {
+  width: 280px; }
+
+.container .six.columns {
+  width: 340px; }
+
+.container .seven.columns {
+  width: 400px; }
+
+.container .eight.columns {
+  width: 460px; }
+
+.container .nine.columns {
+  width: 520px; }
+
+.container .ten.columns {
+  width: 580px; }
+
+.container .eleven.columns {
+  width: 640px; }
+
+.container .twelve.columns {
+  width: 700px; }
+
+.container .thirteen.columns {
+  width: 760px; }
+
+.container .fourteen.columns {
+  width: 820px; }
+
+.container .fifteen.columns {
+  width: 880px; }
+
+.container .sixteen.columns {
+  width: 940px; }
+
+.container .one-third.column {
+  width: 300px; }
+
+.container .two-thirds.column {
+  width: 620px; }
+
+/* Offsets */
+.container .offset-by-one {
+  padding-left: 60px; }
+
+.container .offset-by-two {
+  padding-left: 120px; }
+
+.container .offset-by-three {
+  padding-left: 180px; }
+
+.container .offset-by-four {
+  padding-left: 240px; }
+
+.container .offset-by-five {
+  padding-left: 300px; }
+
+.container .offset-by-six {
+  padding-left: 360px; }
+
+.container .offset-by-seven {
+  padding-left: 420px; }
+
+.container .offset-by-eight {
+  padding-left: 480px; }
+
+.container .offset-by-nine {
+  padding-left: 540px; }
+
+.container .offset-by-ten {
+  padding-left: 600px; }
+
+.container .offset-by-eleven {
+  padding-left: 660px; }
+
+.container .offset-by-twelve {
+  padding-left: 720px; }
+
+.container .offset-by-thirteen {
+  padding-left: 780px; }
+
+.container .offset-by-fourteen {
+  padding-left: 840px; }
+
+.container .offset-by-fifteen {
+  padding-left: 900px; }
+
+/* #Tablet (Portrait)
+================================================== */
+/* Note: Design for a width of 768px */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  /* Offsets */
+  .container {
+    width: 768px; }
+  .container .column, .container .columns {
+    margin-left: 10px;
+    margin-right: 10px; }
+  .column.alpha, .columns.alpha {
+    margin-left: 0;
+    margin-right: 10px; }
+  .column.omega, .columns.omega {
+    margin-right: 0;
+    margin-left: 10px; }
+  .alpha.omega {
+    margin-left: 0;
+    margin-right: 0; }
+  .container .one.column, .container .one.columns {
+    width: 28px; }
+  .container .two.columns {
+    width: 76px; }
+  .container .three.columns {
+    width: 124px; }
+  .container .four.columns {
+    width: 172px; }
+  .container .five.columns {
+    width: 220px; }
+  .container .six.columns {
+    width: 268px; }
+  .container .seven.columns {
+    width: 316px; }
+  .container .eight.columns {
+    width: 364px; }
+  .container .nine.columns {
+    width: 412px; }
+  .container .ten.columns {
+    width: 460px; }
+  .container .eleven.columns {
+    width: 508px; }
+  .container .twelve.columns {
+    width: 556px; }
+  .container .thirteen.columns {
+    width: 604px; }
+  .container .fourteen.columns {
+    width: 652px; }
+  .container .fifteen.columns {
+    width: 700px; }
+  .container .sixteen.columns {
+    width: 748px; }
+  .container .one-third.column {
+    width: 236px; }
+  .container .two-thirds.column {
+    width: 492px; }
+  .container .offset-by-one {
+    padding-left: 48px; }
+  .container .offset-by-two {
+    padding-left: 96px; }
+  .container .offset-by-three {
+    padding-left: 144px; }
+  .container .offset-by-four {
+    padding-left: 192px; }
+  .container .offset-by-five {
+    padding-left: 240px; }
+  .container .offset-by-six {
+    padding-left: 288px; }
+  .container .offset-by-seven {
+    padding-left: 336px; }
+  .container .offset-by-eight {
+    padding-left: 384px; }
+  .container .offset-by-nine {
+    padding-left: 432px; }
+  .container .offset-by-ten {
+    padding-left: 480px; }
+  .container .offset-by-eleven {
+    padding-left: 528px; }
+  .container .offset-by-twelve {
+    padding-left: 576px; }
+  .container .offset-by-thirteen {
+    padding-left: 624px; }
+  .container .offset-by-fourteen {
+    padding-left: 672px; }
+  .container .offset-by-fifteen {
+    padding-left: 720px; } }
+
+/*  #Mobile (Portrait)
+================================================== */
+/* Note: Design for a width of 320px */
+@media only screen and (max-width: 767px) {
+  /* Offsets */
+  .container {
+    width: 300px; }
+  .container .columns, .container .column {
+    margin: 0; }
+  .container .one.column, .container .one.columns, .container .two.columns, .container .three.columns, .container .four.columns, .container .five.columns, .container .six.columns, .container .seven.columns, .container .eight.columns, .container .nine.columns, .container .ten.columns, .container .eleven.columns, .container .twelve.columns, .container .thirteen.columns, .container .fourteen.columns, .container .fifteen.columns, .container .sixteen.columns, .container .one-third.column, .container .two-thirds.column {
+    width: 300px; }
+  .container .offset-by-one, .container .offset-by-two, .container .offset-by-three, .container .offset-by-four, .container .offset-by-five, .container .offset-by-six, .container .offset-by-seven, .container .offset-by-eight, .container .offset-by-nine, .container .offset-by-ten, .container .offset-by-eleven, .container .offset-by-twelve, .container .offset-by-thirteen, .container .offset-by-fourteen, .container .offset-by-fifteen {
+    padding-left: 0; } }
+
+/* #Mobile (Landscape)
+================================================== */
+/* Note: Design for a width of 480px */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+  .container {
+    width: 420px; }
+  .container .columns, .container .column {
+    margin: 0; }
+  .container .one.column, .container .one.columns, .container .two.columns, .container .three.columns, .container .four.columns, .container .five.columns, .container .six.columns, .container .seven.columns, .container .eight.columns, .container .nine.columns, .container .ten.columns, .container .eleven.columns, .container .twelve.columns, .container .thirteen.columns, .container .fourteen.columns, .container .fifteen.columns, .container .sixteen.columns, .container .one-third.column, .container .two-thirds.column {
+    width: 420px; } }
+
+/* #Clearing
+================================================== */
+/* Self Clearing Goodness */
+.container:after {
+  content: "\0020";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+/* Use clearfix class on parent to clear nested columns,
+    or wrap each row of columns in a <div class="row"> */
+.clearfix:before, .clearfix:after, .row:before, .row:after {
+  content: '\0020';
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0; }
+
+.row:after, .clearfix:after {
+  clear: both; }
+
+.row, .clearfix {
+  zoom: 1; }
+
+/* You can also use a <br class="clear" /> to clear columns */
+.clear {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0; }
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+  color: #9d261d;
+  font-weight: bold; }
+
+.field-validation-valid {
+  display: none; }
+
+input.input-validation-error {
+  border: 1px solid #9d261d; }
+
+input[type="checkbox"].input-validation-error {
+  border: 0 none; }
+
+.validation-summary-errors {
+  color: #9d261d;
+  font-weight: bold;
+  font-size: 1.1em; }
+
+.validation-summary-valid {
+  display: none; }
+
+body {
+  padding: 20px 20px 20px 200px; }
+
+header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 155px;
+  z-index: 3; }
+  header a.site-title {
+    font-size: 1.5em;
+    display: block;
+    margin: 20px 0 20px 23px; }
+  header ul {
+    list-style-type: none;
+    padding: 0; }
+  header li {
+    cursor: pointer;
+    padding-left: 18px;
+    border-left: 6px solid transparent; }
+    header li a {
+      display: block;
+      line-height: 29px;
+      margin: 10px 0; }
+    header li a.extand {
+      margin-left: 6px;
+      font-size: 12px;
+      display: none;
+      line-height: 26px; }
+      header li a.extand.selected {
+        color: #e7bd86; }
+    header li.selected {
+      border-left: 6px solid #D69131;
+      cursor: default; }
+      header li.selected a {
+        color: #D69131; }
+    header li:hover a.extand {
+      display: inline !important; }
+
+form ol {
+  list-style-type: none;
+  padding: 0; }
+form label {
+  display: block; }
+
+h2 {
+  border-bottom: 1px solid #555;
+  margin: 0 0 0.83em;
+  padding-bottom: 5px; }
+
+h3 {
+  margin: 1.5em 0 0.5em; }
+
+table td, table th {
+  padding: 5px 10px 5px 0;
+  border-bottom: 1px solid #555; }
+
+table th {
+  font-style: italic;
+  font-weight: normal; }
+
+footer {
+  position: fixed;
+  bottom: 5px;
+  left: 5px; }
+
+#tasksqueue li a.title {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  position: relative;
+  width: 200px; }
+#tasksqueue li a.del {
+  display: none; }
+#tasksqueue li:hover a.del {
+  display: inline; }

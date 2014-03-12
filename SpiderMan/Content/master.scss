@@ -13,15 +13,13 @@ $sucolor: #332828;
 $wncolor: #D69131;
 $dgcolor: #002894;
 
-@import "../front_net/sass/var";
-@import "../front_net/bootstrap/lib/variables";
-@import "../front_net/bootstrap/lib/mixins";
+@import "./var";
 
-@import "../front_net/sass/com";
-@import "../front_net/sass/reset";
-@import "../front_net/sass/skeleton";
+@import "./com";
+@import "./reset";
+@import "./skeleton";
 
-@import "../front_net/module/ms/ms";
+@import "./ms";
 
 body{padding:20px 20px 20px 200px;}
 header {position: absolute;left: 0;top:0;width: 155px;z-index: 3;
