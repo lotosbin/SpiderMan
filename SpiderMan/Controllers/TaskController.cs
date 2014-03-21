@@ -140,6 +140,8 @@ namespace SpiderMan.Controllers {
                     exist.Point = m.Point;
                     exist.PointForGuest = m.PointForGuest;
                     exist.Status = m.Status;
+                    exist.Quarter = m.Quarter;
+                    exist.QuarterTime = m.QuarterTime;
                     baozouMatchCollection.Save(exist);
                 }
             }
@@ -174,9 +176,11 @@ namespace SpiderMan.Controllers {
 
                 if (match == null) continue;
                 match.Title = m.Title;
+                match.LiveText = m.LiveText;
                 IEnumerable<string> liveString = m.LiveVideos.Select(d => d.Name);
                 match.LiveVideos = from d in baozouLiveCollection.AsQueryable<LiveVideo>()
-                                   where liveString.Contains(d.Name) || d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
+                                   where d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
+                                   orderby d.Rank descending
                                    select new Link {
                                        Name = d.Name + (d.WithClient ? "φ" : ""),
                                        Url = d.Link
@@ -216,9 +220,11 @@ namespace SpiderMan.Controllers {
 
                 if (match == null) continue;
                 match.Title = m.Title;
-                IEnumerable<string> liveString = m.LiveVideos.Select(d => d.Name);
+                match.LiveTextForMobile = m.LiveTextForMobile;
+                IEnumerable<string> liveString = m.LiveVideosForMobile.Select(d => d.Name);
                 match.LiveVideosForMobile = from d in baozouLiveCollection.AsQueryable<LiveVideo>()
-                                            where liveString.Contains(d.Name) || d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
+                                            where d.AliasForMobile.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
+                                            orderby d.Rank descending
                                             select new Link {
                                                 Name = d.Name,
                                                 Url = d.LinkForMobile

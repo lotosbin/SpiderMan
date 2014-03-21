@@ -59,6 +59,10 @@
             @Html.CheckBoxFor(model => model.WithUnderscore)
         </li>
         <li>
+            @Html.LabelFor(model => model.WithDate)
+            @Html.CheckBoxFor(model => model.WithDate)
+        </li>
+        <li>
             @Html.LabelFor(model => model.Interval)
             @Html.EditorFor(model => model.Interval)
             @Html.ValidationMessageFor(model => model.Interval)

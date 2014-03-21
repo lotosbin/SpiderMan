@@ -155,5 +155,9 @@ namespace SpiderMan.Controllers {
             }
         }
 
+        public void UpdateScript(string file, string content) {
+            Clients.Group("agent").UpdateScript(file, content);
+        }
+
     }
 }
