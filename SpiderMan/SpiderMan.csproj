@@ -258,7 +258,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\GrabScriptsController.cs" />
+    <Compile Include="Controllers\AssistController.cs" />
     <Compile Include="Controllers\TaskQueue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
@@ -344,7 +344,8 @@
     <Content Include="Views\TaskModel\Edit.cshtml" />
     <Content Include="Views\TaskModel\Index.cshtml" />
     <Content Include="Views\Task\Index.cshtml" />
-    <Content Include="Views\GrabScripts\Index.cshtml" />
+    <Content Include="Views\Assist\Grabscript.cshtml" />
+    <Content Include="Views\Assist\Creattask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

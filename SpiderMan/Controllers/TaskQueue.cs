@@ -93,6 +93,10 @@ namespace SpiderMan.Controllers {
             Timer _5min = new Timer(1000 * 300);
             _5min.Elapsed += delegate { ClearExecutingTask(); };
             _5min.Enabled = true;
+
+            Timer _30min = new Timer(1000 * 1800);
+            _30min.Elapsed += delegate { ClearTooMuchTask(); };
+            _30min.Enabled = true;
         }
 
         private void ClearDoneTask() {
@@ -112,6 +116,16 @@ namespace SpiderMan.Controllers {
                 tasks.RemoveAll(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
                 if (masterhub != null) 
                     masterhub.BroadcastRanderTask();
+            }
+        }
+
+        private void ClearTooMuchTask() {
+            var standbyTask = tasks.Where(x => x.Status == eTaskStatus.Standby);
+            if (standbyTask.Count() > 300) {
+                tasks.RemoveAll(x => x.Status == eTaskStatus.Standby);
+                if (masterhub != null)
+                    masterhub.BroadcastRanderTask();
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ClearTooMuchTask Count: " + standbyTask.Count(), "Grab", LogType.Warn);
             }
         }
 
