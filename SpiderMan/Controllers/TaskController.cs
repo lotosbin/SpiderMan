@@ -153,8 +153,8 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (Match m in data) {
-                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 35)
-                    m.Time = m.Time.Date + new TimeSpan(19, 30, 0);
+                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 30)
+                    m.Time = m.Time.Date + new TimeSpan(19, 35, 0);
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
                     Query<Match>.EQ(e => e.Time, m.Time)
@@ -185,7 +185,7 @@ namespace SpiderMan.Controllers {
                                        Name = d.Name + (d.WithClient ? "φ" : ""),
                                        Url = d.Link
                                    };
-                match.FixKanbisaiLiveVideos();
+                match.FixKBSLiveVideos();
                 baozouMatchCollection.Save(match);
             }
         }
@@ -196,8 +196,8 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (Match m in data) {
-                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 35) {
-                    m.Time = m.Time.Date + new TimeSpan(19, 30, 0);
+                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 30) {
+                    m.Time = m.Time.Date + new TimeSpan(19, 35, 0);
                 }
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
@@ -229,7 +229,7 @@ namespace SpiderMan.Controllers {
                                                 Name = d.Name,
                                                 Url = d.LinkForMobile
                                             };
-                match.FixKanbisaiLiveVideos();
+                match.FixKBSLiveVideosMobile();
                 baozouMatchCollection.Save(match);
             }
         }
