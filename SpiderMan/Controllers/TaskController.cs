@@ -176,16 +176,19 @@ namespace SpiderMan.Controllers {
 
                 if (match == null) continue;
                 match.Title = m.Title;
-                match.LiveText = m.LiveText;
+                if (!string.IsNullOrEmpty(m.LiveText)) {
+                    WebRequestRobot webRequestRobot = new WebRequestRobot();
+                    match.LiveText = webRequestRobot.Get302Location(m.LiveText);
+                }
+
                 IEnumerable<string> liveString = m.LiveVideos.Select(d => d.Name);
                 match.LiveVideos = from d in baozouLiveCollection.AsQueryable<LiveVideo>()
                                    where d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
                                    orderby d.Rank descending
                                    select new Link {
                                        Name = d.Name + (d.WithClient ? "φ" : ""),
-                                       Url = d.Link
+                                       Url = (d.Name == "腾讯看比赛" ? match.KanbisaiLink : d.Link)
                                    };
-                match.FixKBSLiveVideos();
                 baozouMatchCollection.Save(match);
             }
         }
@@ -227,9 +230,8 @@ namespace SpiderMan.Controllers {
                                             orderby d.Rank descending
                                             select new Link {
                                                 Name = d.Name,
-                                                Url = d.LinkForMobile
+                                                Url = (d.Name == "腾讯看比赛" ? match.KanbisaiLink : d.LinkForMobile)
                                             };
-                match.FixKBSLiveVideosMobile();
                 baozouMatchCollection.Save(match);
             }
         }

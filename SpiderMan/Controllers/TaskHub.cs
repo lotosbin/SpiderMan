@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
@@ -84,7 +85,9 @@ namespace SpiderMan.Controllers {
 
         public void DoneTask(SpiderTask task) {
             if (task.Status == eTaskStatus.Fail)
-                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask Fail: " + task.Error + " Url:" + task.Url, "Grab", LogType.Warn);
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), 
+                    new StringBuilder().AppendFormat("SpiderTask Fail: {0} - {1} - {2}", task.HandlerAgent, task.Error, task.Url).ToString(), 
+                    "Grab", LogType.Warn);
             //完整替换List成员必须使用index赋值方法。不能直接赋值引用对象成员。
             int index = TaskQueue.tasks.FindIndex(d => d.Id == task.Id);
             if (index >= 0) {
