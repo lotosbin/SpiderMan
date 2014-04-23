@@ -142,8 +142,31 @@ namespace SpiderMan.Controllers {
                     exist.Status = m.Status;
                     exist.Quarter = m.Quarter;
                     exist.QuarterTime = m.QuarterTime;
+                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(3, 0, 0))) { //exist.BestVideos == null
+                        TaskQueue.tasks.Add(new SpiderTask {
+                            Id = Guid.NewGuid(),
+                            Source = "kanbisai",
+                            Site = "kanbisai",
+                            CommandType = eCommandType.One.ToString(),
+                            Url = exist.KanbisaiLink,
+                            ArticleType = eArticleType.BaozouMatch.ToString()
+                        });
+                    }
                     baozouMatchCollection.Save(exist);
                 }
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchOne(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            datajson = FilterConfig.htmlFilter.Filter(datajson, true);
+            var m = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
+            var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiLink == m.KanbisaiLink);
+            if (exist != null) {
+                exist.BestVideos = m.BestVideos;
+                baozouMatchCollection.Save(exist);
             }
         }
 
@@ -153,19 +176,19 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (Match m in data) {
-                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 30)
-                    m.Time = m.Time.Date + new TimeSpan(19, 35, 0);
+                var day = m.Time.Day;
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
-                    Query<Match>.EQ(e => e.Time, m.Time)
+                    Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(2, 0, 0))),
+                    Query<Match>.LT(e => e.Time, m.Time.AddHours(2))
                 );
                 var match = baozouMatchCollection.FindOne(Query.And(
-                    queryPre, 
+                    queryPre,
                     Query<Match>.EQ(e => e.Title, m.Title)
                 ));
                 if (match == null) {
                     var matchs = baozouMatchCollection.Find(queryPre);
-                    if (matchs == null) continue;
+                    if (matchs.Count() == 0) continue;
                     foreach (var item in matchs.ToList()) {
                         if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseForGuest)) {
                             match = item;
@@ -199,12 +222,10 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (Match m in data) {
-                if (m.CapString == "CBA" && m.Time.Hour == 19 && m.Time.Minute == 30) {
-                    m.Time = m.Time.Date + new TimeSpan(19, 35, 0);
-                }
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
-                    Query<Match>.EQ(e => e.Time, m.Time)
+                    Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(2, 0, 0))),
+                    Query<Match>.LT(e => e.Time, m.Time.AddHours(2))
                 );
                 var match = baozouMatchCollection.FindOne(Query.And(
                     queryPre,
@@ -212,7 +233,7 @@ namespace SpiderMan.Controllers {
                 ));
                 if (match == null) {
                     var matchs = baozouMatchCollection.Find(queryPre);
-                    if (matchs == null) continue;
+                    if (matchs.Count() == 0) continue;
                     foreach (var item in matchs.ToList()) {
                         if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseForGuest)) {
                             match = item;

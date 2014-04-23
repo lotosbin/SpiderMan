@@ -17,6 +17,8 @@
     <attr name="flashvars">.+</attr>
     <attr name="width">\d+</attr>
     <attr name="height">\d+</attr>
+    <attr name="quality">.+</attr>
+    <attr name="allowfullscreen">.+</attr>
   </tag>
   <tag name="br"></tag>
 </config>
