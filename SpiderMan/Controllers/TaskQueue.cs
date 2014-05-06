@@ -93,6 +93,10 @@ namespace SpiderMan.Controllers {
             Timer _5min = new Timer(1000 * 300);
             _5min.Elapsed += delegate { ClearExecutingTask(); };
             _5min.Enabled = true;
+            
+            Timer _10min = new Timer(1000 * 600);
+            _10min.Elapsed += delegate { ClearUndefine(); };
+            _10min.Enabled = true;
 
             Timer _30min = new Timer(1000 * 1800);
             _30min.Elapsed += delegate { ClearTooMuchTask(); };
@@ -101,7 +105,7 @@ namespace SpiderMan.Controllers {
 
         private void ClearDoneTask() {
             tasks.RemoveAll(x => x.Status == eTaskStatus.Done && (DateTime.Now - x.HandlerTime).TotalMinutes > 5);
-            if (masterhub != null) 
+            if (masterhub != null)
                 masterhub.BroadcastRanderTask();
         }
 
@@ -114,7 +118,7 @@ namespace SpiderMan.Controllers {
 
                 //tasks = tasks.Except(executerTask).ToList(); //这种写法会产生意外的null成员，原因未知。
                 tasks.RemoveAll(x => x.Status == eTaskStatus.Executing && (DateTime.Now - x.BirthTime).TotalMinutes > 15);
-                if (masterhub != null) 
+                if (masterhub != null)
                     masterhub.BroadcastRanderTask();
             }
         }
@@ -126,6 +130,16 @@ namespace SpiderMan.Controllers {
                 if (masterhub != null)
                     masterhub.BroadcastRanderTask();
                 ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ClearTooMuchTask Count: " + standbyTask.Count(), "Grab", LogType.Warn);
+            }
+        }
+
+        private void ClearUndefine() {
+            var undefineTask = tasks.Where(x => x == null || x.Url == null);
+            if (undefineTask.Count() > 0) {
+                tasks.RemoveAll(x => x == null || x.Url == null);
+                if (masterhub != null)
+                    masterhub.BroadcastRanderTask();
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ClearUndefine Count: " + undefineTask.Count(), "Grab", LogType.Error);
             }
         }
 

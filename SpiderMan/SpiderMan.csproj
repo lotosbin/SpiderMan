@@ -288,6 +288,7 @@
     <Content Include="Content\_reset.scss" />
     <Content Include="Content\_skeleton.scss" />
     <Content Include="Content\_var.scss" />
+    <None Include="Properties\PublishProfiles\1000eb.pubxml" />
     <None Include="Properties\PublishProfiles\Aliyun.pubxml" />
     <None Include="Properties\PublishProfiles\AWS.pubxml" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
@@ -313,6 +314,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Content\master.scss" />
     <Content Include="Images\accent.png" />

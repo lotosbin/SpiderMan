@@ -142,7 +142,7 @@ namespace SpiderMan.Controllers {
                     exist.Status = m.Status;
                     exist.Quarter = m.Quarter;
                     exist.QuarterTime = m.QuarterTime;
-                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(3, 0, 0))) { //exist.BestVideos == null
+                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(30, 0, 0))) { //exist.BestVideos == null
                         TaskQueue.tasks.Add(new SpiderTask {
                             Id = Guid.NewGuid(),
                             Source = "kanbisai",
