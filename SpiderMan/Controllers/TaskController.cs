@@ -218,7 +218,7 @@ namespace SpiderMan.Controllers {
 
         [ValidateInput(false)]
         [HttpPost]
-        public void PostBaozouMatchAdditionMobile(string taskjson, string datajson) {
+        public void PostBaozouMatchAddition_mobi(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (Match m in data) {
