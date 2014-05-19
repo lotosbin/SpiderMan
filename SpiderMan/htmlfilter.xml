@@ -20,5 +20,13 @@
     <attr name="quality">.+</attr>
     <attr name="allowfullscreen">.+</attr>
   </tag>
+  <tag name="video">
+    <attr name="src">^[a-zA-Z]+://.+$</attr>
+    <attr name="width">.+</attr>
+    <attr name="height">.+</attr>
+    <attr name="autoplay">.+</attr>
+    <attr name="preload">.+</attr>
+    <attr name="x-webkit-airplay">.+</attr>
+  </tag>
   <tag name="br"></tag>
 </config>

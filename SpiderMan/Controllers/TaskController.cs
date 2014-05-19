@@ -123,7 +123,7 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (var m in data) {
-                var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiJson == m.KanbisaiJson & d.SourceCode == task.Source);
+                var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiLink == m.KanbisaiLink & d.SourceCode == task.Source);
                 if (exist == null) {
                     m.SourceCode = task.Source;
                     m.InitializeCap();
@@ -148,9 +148,17 @@ namespace SpiderMan.Controllers {
                             Source = "kanbisai",
                             Site = "kanbisai",
                             CommandType = eCommandType.One.ToString(),
-                            Url = exist.KanbisaiJson,
+                            Url = exist.KanbisaiLink,
+                            ArticleType = eArticleType.BaozouMatch.ToString()
+                        });
+                        TaskQueue.tasks.Add(new SpiderTask {
+                            Id = Guid.NewGuid(),
+                            Source = "kanbisai",
+                            Site = "kanbisai",
+                            CommandType = eCommandType.One.ToString(),
+                            Url = exist.KanbisaiLink,
                             ArticleType = eArticleType.BaozouMatch.ToString(),
-                            WithoutJquery = true
+                            IsMobile = true
                         });
                     }
                     baozouMatchCollection.Save(exist);
@@ -164,9 +172,22 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             datajson = FilterConfig.htmlFilter.Filter(datajson, true);
             var m = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
-            var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiJson == m.KanbisaiJson);
-            if (exist != null && !string.IsNullOrEmpty(m.KanbisaiVid)) {
-                exist.KanbisaiVid = m.KanbisaiVid;
+            var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiLink == m.KanbisaiLink);
+            if (exist != null && !string.IsNullOrEmpty(m.BestVideo)) {
+                exist.BestVideo = m.BestVideo;
+                baozouMatchCollection.Save(exist);
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchOne_mobi(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            datajson = FilterConfig.htmlFilter.Filter(datajson, true);
+            var m = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
+            var exist = baozouMatchCollection.AsQueryable<Match>().SingleOrDefault(d => d.KanbisaiLink == m.KanbisaiLink);
+            if (exist != null && !string.IsNullOrEmpty(m.BestVideoMobi)) {
+                exist.BestVideoMobi = m.BestVideoMobi;
                 baozouMatchCollection.Save(exist);
             }
         }
