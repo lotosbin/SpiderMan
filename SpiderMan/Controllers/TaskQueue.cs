@@ -58,9 +58,10 @@ namespace SpiderMan.Controllers {
         }
 
         private void ModelTimerBuild() {
+            Random rnd = new Random(); // 同时生成task有线程问题，会产生undefine task
             foreach (var model in taskModels) {
                 GenerateTask(model);
-                model.Timer = new Timer(1000 * model.Interval);
+                model.Timer = new Timer(1000 * model.Interval + rnd.Next(100));
                 model.Timer.Elapsed += delegate { GenerateTask(model); };
                 model.Timer.Enabled = true;
             }
@@ -86,6 +87,10 @@ namespace SpiderMan.Controllers {
         }
 
         private void Maintenance() {
+            Timer _20sec = new Timer(1000 * 20);
+            _20sec.Elapsed += delegate { ClearUndefine(); };
+            _20sec.Enabled = true;
+
             Timer _1min = new Timer(1000 * 60);
             _1min.Elapsed += delegate { ClearDoneTask(); };
             _1min.Enabled = true;
@@ -93,10 +98,6 @@ namespace SpiderMan.Controllers {
             Timer _5min = new Timer(1000 * 300);
             _5min.Elapsed += delegate { ClearExecutingTask(); };
             _5min.Enabled = true;
-            
-            Timer _10min = new Timer(1000 * 600);
-            _10min.Elapsed += delegate { ClearUndefine(); };
-            _10min.Enabled = true;
 
             Timer _30min = new Timer(1000 * 1800);
             _30min.Elapsed += delegate { ClearTooMuchTask(); };
@@ -136,10 +137,10 @@ namespace SpiderMan.Controllers {
         private void ClearUndefine() {
             var undefineTask = tasks.Where(x => x == null || x.Url == null);
             if (undefineTask.Count() > 0) {
+                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ClearUndefine Count: " + undefineTask.Count(), "Grab", LogType.Error);
                 tasks.RemoveAll(x => x == null || x.Url == null);
                 if (masterhub != null)
                     masterhub.BroadcastRanderTask();
-                ZicLog4Net.ProcessLog(MethodBase.GetCurrentMethod(), "SpiderTask ClearUndefine Count: " + undefineTask.Count(), "Grab", LogType.Error);
             }
         }
 

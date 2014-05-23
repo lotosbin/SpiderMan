@@ -202,7 +202,7 @@ namespace SpiderMan.Controllers {
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
                     Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(2, 0, 0))),
-                    Query<Match>.LT(e => e.Time, m.Time.AddHours(2))
+                    Query<Match>.LT(e => e.Time, m.Time.AddDays(4))
                 );
                 var match = baozouMatchCollection.FindOne(Query.And(
                     queryPre,
@@ -247,7 +247,7 @@ namespace SpiderMan.Controllers {
                 IMongoQuery queryPre = Query.And(
                     Query<Match>.EQ(e => e.CapString, m.CapString),
                     Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(2, 0, 0))),
-                    Query<Match>.LT(e => e.Time, m.Time.AddHours(2))
+                    Query<Match>.LT(e => e.Time, m.Time.AddDays(4))
                 );
                 var match = baozouMatchCollection.FindOne(Query.And(
                     queryPre,
