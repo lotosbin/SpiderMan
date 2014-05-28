@@ -9,10 +9,15 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     @Html.AntiForgeryToken()
-    <input class="text-box single-line" id="SourceCode" name="SourceCode" type="text" value="">
+    <input class="text-box single-line" id="SourceCode" name="sourceCode" type="text" value="">
     @Html.DropDownList("CommandType", ((eCommandType)0).ToSelectListItems())
     <p>
         <textarea cols="20" id="Content" name="Content" rows="20" style="width:500px;"></textarea>
+    </p>
+    <p>
+        <label>IsMobile?</label>
+        <input id="isMobi" type="checkbox" value="true" name="isMobi" />
+        <input type="hidden" value="false" name="isMobi" />
     </p>
     <p>
         <input type="submit" />

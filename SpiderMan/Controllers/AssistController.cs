@@ -26,8 +26,8 @@ namespace SpiderMan.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Grabscript(string sourceCode, int commandType, string content) {
-            TaskQueue.masterhub.UpdateScript(sourceCode + "_" + ((eCommandType)commandType).ToString().ToLower() + ".js", content);
+        public ActionResult Grabscript(string sourceCode, int commandType, bool isMobi, string content) {
+            TaskQueue.masterhub.UpdateScript(sourceCode + "_" + ((eCommandType)commandType).ToString().ToLower() + (isMobi ? "_mobi" : "") + ".js", content);
             return View();
         }
 
