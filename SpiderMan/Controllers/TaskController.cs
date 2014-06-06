@@ -197,14 +197,44 @@ namespace SpiderMan.Controllers {
 				Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(3, 0, 0))),
 				Query<Match>.LT(e => e.Time, m.Time.AddHours(3))
 			);
-			Match match;
+			Match match = null;
 			if (m.CapString == "网球") {
 				match = baozouMatchCollection.FindOne(Query.And(
 					queryTime,
 					Query<Match>.EQ(e => e.Type, (int)eMatchType.Tennis),
 					Query.Where(new BsonJavaScript("'" + m.Title + "'.indexOf(this.CapString) > -1"))
 				));
-			} else {
+            } else if (m.CapString == "乒乓球") {
+                match = baozouMatchCollection.FindOne(Query.And(
+                    queryTime,
+                    Query<Match>.EQ(e => e.Type, (int)eMatchType.Pingpong),
+                    Query<Match>.EQ(e => e.Title, m.Title)
+                ));
+            } else if (m.CapString == "篮球友谊赛") {
+                var matchs = baozouMatchCollection.Find(Query.And(
+                    queryTime,
+                    Query<Match>.EQ(e => e.Type, (int)eMatchType.Basketball)
+                ));
+                if (matchs.Count() == 0) return null;
+                foreach (var item in matchs.ToList()) {
+                    if (m.Title.Contains(item.TeamNameChinese) || m.Title.Contains(item.TeamNameChineseForGuest)) {
+                        match = item;
+                        break;
+                    }
+                }
+            } else if (m.CapString == "足球友谊赛") {
+                var matchs = baozouMatchCollection.Find(Query.And(
+                    queryTime,
+                    Query<Match>.EQ(e => e.Type, (int)eMatchType.Soccer)
+                ));
+                if (matchs.Count() == 0) return null;
+                foreach (var item in matchs.ToList()) {
+                    if (m.Title.Contains(item.TeamNameChinese) || m.Title.Contains(item.TeamNameChineseForGuest)) {
+                        match = item;
+                        break;
+                    }
+                }
+            } else {
 				IMongoQuery queryCap = Query.And(
 					queryTime,
 					Query<Match>.EQ(e => e.CapString, m.CapString)
@@ -217,7 +247,7 @@ namespace SpiderMan.Controllers {
 					var matchs = baozouMatchCollection.Find(queryCap);
 					if (matchs.Count() == 0) return null;
 					foreach (var item in matchs.ToList()) {
-						if (m.Title.Contains(item.TeamNameChinese) && m.Title.Contains(item.TeamNameChineseForGuest)) {
+						if (m.Title.Contains(item.TeamNameChinese) || m.Title.Contains(item.TeamNameChineseForGuest)) {
 							match = item;
 							break;
 						}
@@ -234,7 +264,15 @@ namespace SpiderMan.Controllers {
 			var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
 			foreach (Match m in data) {
 				Match match = QueryMatch(m);
-				if (match == null) continue;
+                if (match == null && m.CapString == "乒乓球") {
+                    match = new Match {
+                        CapString = m.CapString,
+                        SourceCode = task.Source,
+                        Type = (int)eMatchType.Pingpong,
+                        Time = m.Time
+                    };
+                }
+                if (match == null) continue;
 				match.Title = m.Title;
 				if (!string.IsNullOrEmpty(m.LiveText)) {
 					WebRequestRobot webRequestRobot = new WebRequestRobot();
