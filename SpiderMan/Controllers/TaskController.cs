@@ -239,35 +239,18 @@ namespace SpiderMan.Controllers {
                 if (match == null) continue;
                 match.Title = m.Title;
                 match.LiveTextForMobile = m.LiveTextForMobile;
-                
+
                 IEnumerable<string> liveString = m.LiveVideosForMobile.Select(d => d.Name);
-                var lvs = baozouLiveCollection.FindAll();
-
-                IList<Link> LiveVideosForMobile = new List<Link>();
-                foreach (var lv in lvs) {
-                    if (lv.AliasForMobile != null && lv.AliasForMobile.ContainsAny(liveString)) {
-                        if (lv.Name == "腾讯看比赛")
-                            lv.LinkForMobile = match.KanbisaiLink;
-                        LiveVideosForMobile.Add(new Link {
-                            Name = lv.Name,
-                            Url = lv.LinkForMobile
-                        });
-                    }
-                }
-                match.LiveVideosForMobile = LiveVideosForMobile;
-
-                IList<Link> LiveVideosForAndroid = new List<Link>();
-                foreach (var lv in lvs) {
-                    if (lv.AliasForMobile != null && lv.AliasForMobile.ContainsAny(liveString)) {
-                        if (lv.Name == "腾讯看比赛")
-                            lv.LinkForMobile = match.KanbisaiLink;
-                        LiveVideosForAndroid.Add(new Link {
-                            Name = lv.Name,
-                            Url = string.IsNullOrEmpty(lv.LinkForAndroid) ? lv.LinkForMobile : lv.LinkForAndroid
-                        });
-                    }
-                }
-                match.LiveVideosForAndroid = LiveVideosForAndroid;
+                var lvs = baozouLiveCollection.FindAll().OrderByDescending(d => d.Rank);
+                foreach (var lv in lvs) lv.InjectKanbisai(match.KanbisaiLink);
+                match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                    Name = x.Name,
+                    Url = x.LinkForMobile
+                });
+                match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                    Name = x.Name,
+                    Url = string.IsNullOrEmpty(x.LinkForAndroid) ? x.LinkForMobile : x.LinkForAndroid
+                });
 
                 baozouMatchCollection.Save(match);
             }
