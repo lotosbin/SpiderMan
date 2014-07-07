@@ -216,15 +216,16 @@ namespace SpiderMan.Controllers {
                     WebRequestRobot webRequestRobot = new WebRequestRobot();
                     match.LiveText = webRequestRobot.Get302Location(m.LiveText);
                 }
-
-                IEnumerable<string> liveString = m.LiveVideos.Select(d => d.Name);
-                match.LiveVideos = from d in baozouLiveCollection.AsQueryable<LiveVideo>()
-                                   where d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
-                                   orderby d.Rank descending
-                                   select new Link {
-                                       Name = d.Name + (d.WithClient ? "φ" : ""),
-                                       Url = (d.Name == "腾讯看比赛" ? match.KanbisaiLink : d.Link)
-                                   };
+                if (!m.LockSpider) {
+                    IEnumerable<string> liveString = m.LiveVideos.Select(d => d.Name);
+                    match.LiveVideos = from d in baozouLiveCollection.AsQueryable<LiveVideo>()
+                                       where d.Alias.ContainsAny(liveString) //http://goo.gl/WyLqec 1.5+版本支持
+                                       orderby d.Rank descending
+                                       select new Link {
+                                           Name = d.Name + (d.WithClient ? "φ" : ""),
+                                           Url = (d.Name == "腾讯看比赛" ? match.KanbisaiLink : d.Link)
+                                       };
+                }
                 baozouMatchCollection.Save(match);
             }
         }
@@ -240,17 +241,19 @@ namespace SpiderMan.Controllers {
                 match.Title = m.Title;
                 match.LiveTextForMobile = m.LiveTextForMobile;
 
-                IEnumerable<string> liveString = m.LiveVideosForMobile.Select(d => d.Name);
-                var lvs = baozouLiveCollection.FindAll().OrderByDescending(d => d.Rank);
-                foreach (var lv in lvs) lv.InjectKanbisai(match.KanbisaiLink);
-                match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
-                    Name = x.Name,
-                    Url = x.LinkForMobile
-                });
-                match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
-                    Name = x.Name,
-                    Url = string.IsNullOrEmpty(x.LinkForAndroid) ? x.LinkForMobile : x.LinkForAndroid
-                });
+                if (!m.LockSpider) {
+                    IEnumerable<string> liveString = m.LiveVideosForMobile.Select(d => d.Name);
+                    var lvs = baozouLiveCollection.FindAll().OrderByDescending(d => d.Rank);
+                    foreach (var lv in lvs) lv.InjectKanbisai(match.KanbisaiLink);
+                    match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                        Name = x.Name,
+                        Url = x.LinkForMobile
+                    });
+                    match.LiveVideosForAndroid = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                        Name = x.Name,
+                        Url = string.IsNullOrEmpty(x.LinkForAndroid) ? x.LinkForMobile : x.LinkForAndroid
+                    });
+                }
 
                 baozouMatchCollection.Save(match);
             }
