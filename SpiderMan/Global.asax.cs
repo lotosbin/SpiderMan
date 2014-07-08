@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNet.SignalR;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Options;
+using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using sharp_net;
 using sharp_net.Mongo;
 using SpiderMan.Help;
@@ -20,8 +24,6 @@ namespace SpiderMan {
         protected void Application_Start() {
             //RouteTable.Routes.MapHubs(new HubConfiguration() { EnableCrossDomain = true });
 
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
@@ -32,7 +34,10 @@ namespace SpiderMan {
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore, //mongo c#的json序列化直接使用默认JsonConvert
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+
+            BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeSerializationOptions.LocalInstance));
 
             var settings = new JsonSerializerSettings();
             settings.ContractResolver = new SignalRContractResolver();
