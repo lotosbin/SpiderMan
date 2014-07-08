@@ -243,13 +243,16 @@ namespace SpiderMan.Controllers {
 
                 if (!m.LockSpider) {
                     IEnumerable<string> liveString = m.LiveVideosForMobile.Select(d => d.Name);
-                    var lvs = baozouLiveCollection.FindAll().OrderByDescending(d => d.Rank);
-                    foreach (var lv in lvs) lv.InjectKanbisai(match.KanbisaiLink);
-                    match.LiveVideosForMobile = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                    var lvsMobi = from d in baozouLiveCollection.AsQueryable()
+                                  where d.LinkForMobile != null && d.AliasForMobile != null
+                                  orderby d.Rank descending
+                                  select d;
+                    foreach (var lv in lvsMobi) lv.InjectKanbisai(match.KanbisaiLink);
+                    match.LiveVideosForMobile = lvsMobi.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
                         Name = x.Name,
                         Url = x.LinkForMobile
                     });
-                    match.LiveVideosForAndroid = lvs.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
+                    match.LiveVideosForAndroid = lvsMobi.Where(d => d.AliasForMobile.ContainsAny(liveString)).Select(x => new Link {
                         Name = x.Name,
                         Url = string.IsNullOrEmpty(x.LinkForAndroid) ? x.LinkForMobile : x.LinkForAndroid
                     });
