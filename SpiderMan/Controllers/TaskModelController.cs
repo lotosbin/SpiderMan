@@ -44,7 +44,8 @@ namespace SpiderMan.Controllers {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);
             }
-            model.UrlParams = urlParams.Split('\n').ToList();
+            model.UrlParams = urlParams.Split('\n').Select(d => d.Trim()).ToList();
+            model.UrlParams.ForEach(d => d.Trim());
             taskModelCollection.Insert(model);
             TaskQueue.Instance.ModelTimerReBuild();
             return RedirectToAction("Index");
@@ -69,7 +70,7 @@ namespace SpiderMan.Controllers {
                 ModelState.AddModelError("", "表单验证失败。");
                 return View(model);
             }
-            model.UrlParams = urlParams.Split('\n').ToList();
+            model.UrlParams = urlParams.Split('\n').Select(d => d.Trim()).ToList();
             taskModelCollection.Save(model);
             TaskQueue.Instance.ModelTimerReBuild();
             return RedirectToAction("Index");

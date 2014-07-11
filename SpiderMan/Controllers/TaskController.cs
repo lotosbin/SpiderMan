@@ -80,7 +80,7 @@ namespace SpiderMan.Controllers {
                     exist.Status = m.Status;
                     exist.Quarter = m.Quarter;
                     exist.QuarterTime = m.QuarterTime;
-                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(30, 0, 0))) { //exist.BestVideos == null
+                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(24, 0, 0))) {
                         TaskQueue.tasks.Add(new SpiderTask {
                             Id = Guid.NewGuid(),
                             Source = "kanbisai",
@@ -258,6 +258,99 @@ namespace SpiderMan.Controllers {
                     });
                 }
 
+                baozouMatchCollection.Save(match);
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchIds(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var taskModel = taskModelCollection.AsQueryable<TaskModel>().Single(d => d.Id == task.TaskModelId);
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
+            foreach (Match m in data) {
+                Match match = QueryMatch(m);
+                if (match == null) continue;
+                TaskQueue.tasks.Add(new SpiderTask {
+                    Id = Guid.NewGuid(),
+                    Site = taskModel.Site,
+                    Source = taskModel.SourceCode,
+                    CommandType = eCommandType.AdditionSecond.ToString(),
+                    Url = m.BestVideo,
+                    ArticleType = eArticleType.BaozouMatch.ToString(),
+                    Error = match.Id
+                });
+            }
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchAdditionSecond(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
+            foreach (string url in data) {
+                TaskQueue.tasks.Add(new SpiderTask {
+                    Id = Guid.NewGuid(),
+                    Site = "zhiboba",
+                    Source = "zhiboba",
+                    CommandType = eCommandType.AdditionThird.ToString(),
+                    Url = url,
+                    ArticleType = eArticleType.BaozouMatch.ToString(),
+                    Error = task.Error
+                });
+                TaskQueue.tasks.Add(new SpiderTask {
+                    Id = Guid.NewGuid(),
+                    Site = "zhiboba",
+                    Source = "zhiboba",
+                    CommandType = eCommandType.AdditionThird.ToString(),
+                    Url = url,
+                    ArticleType = eArticleType.BaozouMatch.ToString(),
+                    Error = task.Error,
+                    IsMobile = true
+                });
+            }
+            TaskQueue.masterhub.Clients.Group("broad").broadcastRanderTask(TaskQueue.tasks);
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchAdditionThird(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
+            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
+            if (match != null) {
+                if (match.Recording == null)
+                    match.Recording = new List<Link>();
+                if (match.Recording.Any(d => d.Name == data.CapString)) {
+                    match.Recording.First(d => d.Name == data.CapString).Url = data.BestVideo;
+                } else {
+                    match.Recording.Add(new Link {
+                        Name = data.CapString,
+                        Url = data.BestVideo
+                    });
+                }
+                baozouMatchCollection.Save(match);
+            }
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public void PostBaozouMatchAdditionThird_mobi(string taskjson, string datajson) {
+            var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
+            var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
+            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
+            if (match != null) {
+                if (match.RecordingMobi == null)
+                    match.RecordingMobi = new List<Link>();
+                if (match.RecordingMobi.Any(d => d.Name == data.CapString)) {
+                    match.RecordingMobi.First(d => d.Name == data.CapString).Url = data.BestVideoMobi;
+                } else {
+                    match.RecordingMobi.Add(new Link {
+                        Name = data.CapString,
+                        Url = data.BestVideoMobi
+                    });
+                }
                 baozouMatchCollection.Save(match);
             }
         }
