@@ -64,6 +64,10 @@
             @Html.CheckBoxFor(model => model.IsMobile)
         </li>
         <li>
+            @Html.LabelFor(model => model.Delay)
+            @Html.EditorFor(model => model.Delay)
+        </li>
+        <li>
             @Html.LabelFor(model => model.Interval)
             @Html.EditorFor(model => model.Interval)
             @Html.ValidationMessageFor(model => model.Interval)

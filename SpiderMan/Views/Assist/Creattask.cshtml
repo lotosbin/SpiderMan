@@ -44,6 +44,14 @@
             @Html.LabelFor(model => model.WithDate)
             @Html.CheckBoxFor(model => model.WithDate)
         </li>
+        <li>
+            @Html.LabelFor(model => model.IsMobile)
+            @Html.CheckBoxFor(model => model.IsMobile)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Delay)
+            @Html.EditorFor(model => model.Delay)
+        </li>
     </ol>
     <p>
         <input type="submit" />

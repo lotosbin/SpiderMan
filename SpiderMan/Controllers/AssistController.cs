@@ -47,7 +47,7 @@ namespace SpiderMan.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Creattask(TaskModel model, string urlParams) {
-            model.UrlParams = urlParams.Split('\n').ToList();
+            model.UrlParams = urlParams.Split('\n').Select(d => d.Trim()).ToList();
             TaskQueue.tasks.AddRange(model.GenerateSpiderTask());
             if (TaskQueue.masterhub != null)
                 TaskQueue.masterhub.BroadcastRanderTask();

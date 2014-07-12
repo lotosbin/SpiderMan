@@ -275,7 +275,7 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     Site = taskModel.Site,
                     Source = taskModel.SourceCode,
-                    CommandType = eCommandType.AdditionSecond.ToString(),
+                    CommandType = eCommandType.Addition2.ToString(),
                     Url = m.BestVideo,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
                     Error = match.Id
@@ -286,7 +286,7 @@ namespace SpiderMan.Controllers {
 
         [ValidateInput(false)]
         [HttpPost]
-        public void PostBaozouMatchAdditionSecond(string taskjson, string datajson) {
+        public void PostBaozouMatchAddition2(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
             foreach (string url in data) {
@@ -294,19 +294,21 @@ namespace SpiderMan.Controllers {
                     Id = Guid.NewGuid(),
                     Site = "zhiboba",
                     Source = "zhiboba",
-                    CommandType = eCommandType.AdditionThird.ToString(),
+                    CommandType = eCommandType.Addition3.ToString(),
                     Url = url,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
-                    Error = task.Error
+                    Error = task.Error,
+                    Delay = 2
                 });
                 TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     Site = "zhiboba",
                     Source = "zhiboba",
-                    CommandType = eCommandType.AdditionThird.ToString(),
+                    CommandType = eCommandType.Addition3.ToString(),
                     Url = url,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
                     Error = task.Error,
+                    Delay = 2,
                     IsMobile = true
                 });
             }
@@ -315,11 +317,11 @@ namespace SpiderMan.Controllers {
 
         [ValidateInput(false)]
         [HttpPost]
-        public void PostBaozouMatchAdditionThird(string taskjson, string datajson) {
+        public void PostBaozouMatchAddition3(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
             var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
-            if (match != null) {
+            if (match != null && !string.IsNullOrEmpty(data.BestVideo)) {
                 if (match.Recording == null)
                     match.Recording = new List<Link>();
                 if (match.Recording.Any(d => d.Name == data.CapString)) {
@@ -336,11 +338,11 @@ namespace SpiderMan.Controllers {
 
         [ValidateInput(false)]
         [HttpPost]
-        public void PostBaozouMatchAdditionThird_mobi(string taskjson, string datajson) {
+        public void PostBaozouMatchAddition3_mobi(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
             var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
-            if (match != null) {
+            if (match != null && !string.IsNullOrEmpty(data.BestVideoMobi)) {
                 if (match.RecordingMobi == null)
                     match.RecordingMobi = new List<Link>();
                 if (match.RecordingMobi.Any(d => d.Name == data.CapString)) {
