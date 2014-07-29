@@ -49,12 +49,15 @@ namespace SpiderMan.App_Start {
                 //Ninject.Web.WebApi don't support mvc4 now. fix issus form http://stackoverflow.com/a/10855037/346701
                 GlobalConfiguration.Configuration.DependencyResolver = new SpiderMan.App_Start.NinjectDependencyResolver(kernel);
 
+                Kernel = kernel;
                 return kernel;
             } catch {
                 kernel.Dispose();
                 throw;
             }
         }
+
+        public static IKernel Kernel { get; private set; }
 
         /// <summary>
         /// Load your modules or register your services here!

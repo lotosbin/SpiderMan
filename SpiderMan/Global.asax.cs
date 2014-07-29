@@ -17,6 +17,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using SpiderMan.App_Start;
 
 namespace SpiderMan {
 
@@ -42,6 +43,9 @@ namespace SpiderMan {
             var settings = new JsonSerializerSettings();
             settings.ContractResolver = new SignalRContractResolver();
             GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => JsonSerializer.Create(settings));
+
+            new Transaction().Begin();
+
         }
 
     }

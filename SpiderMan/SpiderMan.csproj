@@ -255,7 +255,12 @@
     <Compile Include="App_Start\NinjectDependencyScope.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Transaction.cs" />
     <Compile Include="Controllers\AssistController.cs" />
+    <Compile Include="Controllers\BaozouMatchController.cs" />
+    <Compile Include="Controllers\GgpttCardController.cs" />
+    <Compile Include="Controllers\AdianboVideoController.cs" />
+    <Compile Include="Controllers\ShudongController.cs" />
     <Compile Include="Controllers\TaskQueue.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
