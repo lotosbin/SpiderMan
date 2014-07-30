@@ -49,8 +49,20 @@
             @Html.CheckBoxFor(model => model.IsMobile)
         </li>
         <li>
+            @Html.LabelFor(model => model.PostSourceName)
+            @Html.EditorFor(model => model.PostSourceName)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.CustomHeaders)
+            @Html.TextAreaFor(model => model.CustomHeaders)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Cookie)
+            @Html.TextAreaFor(model => model.Cookie)
+        </li>
+        <li>
             @Html.LabelFor(model => model.Delay)
-            @Html.EditorFor(model => model.Delay)
+            @Html.TextBoxFor(model => model.Delay, new { Value = "0" })
         </li>
     </ol>
     <p>

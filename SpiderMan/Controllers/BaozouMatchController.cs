@@ -143,32 +143,33 @@ namespace SpiderMan.Controllers {
                         baozouMatchCollection.Insert(m);
                     }
                 } else {
+                    exist.KanbisaiLink = m.KanbisaiLink;
                     exist.Point = m.Point;
                     exist.PointForGuest = m.PointForGuest;
                     if (m.Status > 0) exist.Status = m.Status;
                     exist.Quarter = m.Quarter;
                     exist.QuarterTime = m.QuarterTime;
-                    if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(24, 0, 0))) {
-                        TaskQueue.tasks.Add(new SpiderTask {
-                            Id = Guid.NewGuid(),
-                            Source = "kanbisai",
-                            Site = "kanbisai",
-                            CommandType = eCommandType.One.ToString(),
-                            Url = exist.KanbisaiLink,
-                            ArticleType = eArticleType.BaozouMatch.ToString(),
-                            PostSourceName = true
-                        });
-                        TaskQueue.tasks.Add(new SpiderTask {
-                            Id = Guid.NewGuid(),
-                            Source = "kanbisai",
-                            Site = "kanbisai",
-                            CommandType = eCommandType.One.ToString(),
-                            Url = exist.KanbisaiLink,
-                            ArticleType = eArticleType.BaozouMatch.ToString(),
-                            IsMobile = true,
-                            PostSourceName = true
-                        });
-                    }
+                    //if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(72, 0, 0))) {
+                    //    TaskQueue.tasks.Add(new SpiderTask {
+                    //        Id = Guid.NewGuid(),
+                    //        Source = "kanbisai",
+                    //        Site = "kanbisai",
+                    //        CommandType = eCommandType.One.ToString(),
+                    //        Url = exist.KanbisaiLink,
+                    //        ArticleType = eArticleType.BaozouMatch.ToString(),
+                    //        PostSourceName = true
+                    //    });
+                    //    TaskQueue.tasks.Add(new SpiderTask {
+                    //        Id = Guid.NewGuid(),
+                    //        Source = "kanbisai",
+                    //        Site = "kanbisai",
+                    //        CommandType = eCommandType.One.ToString(),
+                    //        Url = exist.KanbisaiLink,
+                    //        ArticleType = eArticleType.BaozouMatch.ToString(),
+                    //        IsMobile = true,
+                    //        PostSourceName = true
+                    //    });
+                    //}
                     baozouMatchCollection.Save(exist);
                 }
             }
@@ -318,6 +319,9 @@ namespace SpiderMan.Controllers {
             if (m.CapString.Contains("乒乓球")) {
                 m.Type = (int)eMatchType.Pingpong;
             }
+            if (m.CapString.Contains("天下足球")) {
+                m.Type = (int)eMatchType.Arts;
+            }
             return (m.Type != 0);
         }
 
@@ -407,7 +411,7 @@ namespace SpiderMan.Controllers {
                     Site = taskModel.Site,
                     Source = taskModel.SourceCode,
                     CommandType = eCommandType.Addition.ToString(),
-                    Url = m.BestVideo,
+                    Url = m.TransferData,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
                     Error = match.Id,
                     PostSourceName = true
@@ -455,16 +459,29 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
             var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
-            if (match != null && !string.IsNullOrEmpty(data.BestVideo)) {
-                if (match.Recording == null)
-                    match.Recording = new List<Link>();
-                if (match.Recording.Any(d => d.Name == data.CapString)) {
-                    match.Recording.First(d => d.Name == data.CapString).Url = data.BestVideo;
+            if (match != null && !string.IsNullOrEmpty(data.TransferData)) {
+                if (data.Title.Contains("全场录像")) {
+                    if (match.Recording == null)
+                        match.Recording = new List<Link>();
+                    if (match.Recording.Any(d => d.Name == data.Title)) {
+                        match.Recording.First(d => d.Name == data.Title).Url = data.TransferData;
+                    } else {
+                        match.Recording.Add(new Link {
+                            Name = data.Title,
+                            Url = data.TransferData
+                        });
+                    }
                 } else {
-                    match.Recording.Add(new Link {
-                        Name = data.CapString,
-                        Url = data.BestVideo
-                    });
+                    if (match.Highlights == null)
+                        match.Highlights = new List<Link>();
+                    if (match.Highlights.Any(d => d.Name == data.Title)) {
+                        match.Highlights.First(d => d.Name == data.Title).Url = data.TransferData;
+                    } else {
+                        match.Highlights.Add(new Link {
+                            Name = data.Title,
+                            Url = data.TransferData
+                        });
+                    }
                 }
                 baozouMatchCollection.Save(match);
             }
@@ -476,16 +493,29 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
             var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
-            if (match != null && !string.IsNullOrEmpty(data.BestVideoMobi)) {
-                if (match.RecordingMobi == null)
-                    match.RecordingMobi = new List<Link>();
-                if (match.RecordingMobi.Any(d => d.Name == data.CapString)) {
-                    match.RecordingMobi.First(d => d.Name == data.CapString).Url = data.BestVideoMobi;
+            if (match != null && !string.IsNullOrEmpty(data.TransferData)) {
+                if (data.Title.Contains("全场录像")) {
+                    if (match.RecordingMobi == null)
+                        match.RecordingMobi = new List<Link>();
+                    if (match.RecordingMobi.Any(d => d.Name == data.Title)) {
+                        match.RecordingMobi.First(d => d.Name == data.Title).Url = data.TransferData;
+                    } else {
+                        match.RecordingMobi.Add(new Link {
+                            Name = data.Title,
+                            Url = data.TransferData
+                        });
+                    }
                 } else {
-                    match.RecordingMobi.Add(new Link {
-                        Name = data.CapString,
-                        Url = data.BestVideoMobi
-                    });
+                    if (match.HighlightsMobi == null)
+                        match.HighlightsMobi = new List<Link>();
+                    if (match.HighlightsMobi.Any(d => d.Name == data.Title)) {
+                        match.HighlightsMobi.First(d => d.Name == data.Title).Url = data.TransferData;
+                    } else {
+                        match.HighlightsMobi.Add(new Link {
+                            Name = data.Title,
+                            Url = data.TransferData
+                        });
+                    }
                 }
                 baozouMatchCollection.Save(match);
             }

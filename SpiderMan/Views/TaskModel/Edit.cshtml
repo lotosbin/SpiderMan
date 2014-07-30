@@ -68,7 +68,7 @@
         </li>
         <li>
             @Html.LabelFor(model => model.Delay)
-            @Html.EditorFor(model => model.Delay)
+            @Html.TextBoxFor(model => model.Delay, new { Value = "0" })
         </li>
         <li>
             @Html.LabelFor(model => model.PostSourceName)
