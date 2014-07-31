@@ -121,8 +121,14 @@ namespace SpiderMan.Controllers {
                     Query<Match>.EQ(e => e.CapString, m.CapString),
                     Query<Match>.EQ(e => e.CapStringDetial, m.CapString)
                 ),
-                Query<Match>.EQ(e => e.TeamNameChinese, m.TeamNameChinese),
-                Query<Match>.EQ(e => e.TeamNameChineseForGuest, m.TeamNameChineseForGuest),
+                Query.Or(
+                    Query<Match>.EQ(e => e.TeamNameChinese, m.TeamNameChinese),
+                    Query<Match>.EQ(e => e.TeamNameChineseForGuest, m.TeamNameChinese)
+                ),
+                Query.Or(
+                    Query<Match>.EQ(e => e.TeamNameChinese, m.TeamNameChineseForGuest),
+                    Query<Match>.EQ(e => e.TeamNameChineseForGuest, m.TeamNameChineseForGuest)
+                ),
                 Query.And(
                     Query<Match>.GT(e => e.Time, m.Time.Subtract(new TimeSpan(3, 0, 0))),
                     Query<Match>.LT(e => e.Time, m.Time.AddHours(3))
