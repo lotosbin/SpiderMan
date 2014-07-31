@@ -413,7 +413,7 @@ namespace SpiderMan.Controllers {
                     CommandType = eCommandType.Addition.ToString(),
                     Url = m.TransferData,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
-                    Error = match.Id,
+                    TransferData = match.Id,
                     PostSourceName = true
                 });
             }
@@ -424,17 +424,17 @@ namespace SpiderMan.Controllers {
         [HttpPost]
         public void Addition_zhiboba(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
-            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<string>)) as IEnumerable<string>;
-            foreach (string url in data) {
+            var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
+            foreach (Match m in data) {
                 TaskQueue.tasks.Add(new SpiderTask {
                     Id = Guid.NewGuid(),
                     Site = "zhiboba",
                     Source = "zhiboba",
                     CommandType = eCommandType.One.ToString(),
-                    Url = url,
+                    Url = m.TransferData,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
-                    Error = task.Error,
-                    Delay = 2,
+                    TransferData = task.TransferData,
+                    Error = m.Title,
                     PostSourceName = true
                 });
                 TaskQueue.tasks.Add(new SpiderTask {
@@ -442,10 +442,10 @@ namespace SpiderMan.Controllers {
                     Site = "zhiboba",
                     Source = "zhiboba",
                     CommandType = eCommandType.One.ToString(),
-                    Url = url,
+                    Url = m.TransferData,
                     ArticleType = eArticleType.BaozouMatch.ToString(),
-                    Error = task.Error,
-                    Delay = 2,
+                    TransferData = task.TransferData,
+                    Error = m.Title,
                     IsMobile = true,
                     PostSourceName = true
                 });
@@ -458,27 +458,28 @@ namespace SpiderMan.Controllers {
         public void One_zhiboba(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
-            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
+            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.TransferData));
             if (match != null && !string.IsNullOrEmpty(data.TransferData)) {
-                if (data.Title.Contains("全场录像")) {
+                string title = task.Error;
+                if (title.Contains("全场录像")) {
                     if (match.Recording == null)
                         match.Recording = new List<Link>();
-                    if (match.Recording.Any(d => d.Name == data.Title)) {
-                        match.Recording.First(d => d.Name == data.Title).Url = data.TransferData;
+                    if (match.Recording.Any(d => d.Name == title)) {
+                        match.Recording.First(d => d.Name == title).Url = data.TransferData;
                     } else {
                         match.Recording.Add(new Link {
-                            Name = data.Title,
+                            Name = title,
                             Url = data.TransferData
                         });
                     }
                 } else {
                     if (match.Highlights == null)
                         match.Highlights = new List<Link>();
-                    if (match.Highlights.Any(d => d.Name == data.Title)) {
-                        match.Highlights.First(d => d.Name == data.Title).Url = data.TransferData;
+                    if (match.Highlights.Any(d => d.Name == title)) {
+                        match.Highlights.First(d => d.Name == title).Url = data.TransferData;
                     } else {
                         match.Highlights.Add(new Link {
-                            Name = data.Title,
+                            Name = title,
                             Url = data.TransferData
                         });
                     }
@@ -492,27 +493,28 @@ namespace SpiderMan.Controllers {
         public void One_zhiboba_mobi(string taskjson, string datajson) {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(Match)) as Match;
-            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.Error));
+            var match = baozouMatchCollection.FindOneByIdAs<Match>(new MongoDB.Bson.ObjectId(task.TransferData));
             if (match != null && !string.IsNullOrEmpty(data.TransferData)) {
-                if (data.Title.Contains("全场录像")) {
+                string title = task.Error;
+                if (title.Contains("全场录像")) {
                     if (match.RecordingMobi == null)
                         match.RecordingMobi = new List<Link>();
-                    if (match.RecordingMobi.Any(d => d.Name == data.Title)) {
-                        match.RecordingMobi.First(d => d.Name == data.Title).Url = data.TransferData;
+                    if (match.RecordingMobi.Any(d => d.Name == title)) {
+                        match.RecordingMobi.First(d => d.Name == title).Url = data.TransferData;
                     } else {
                         match.RecordingMobi.Add(new Link {
-                            Name = data.Title,
+                            Name = title,
                             Url = data.TransferData
                         });
                     }
                 } else {
                     if (match.HighlightsMobi == null)
                         match.HighlightsMobi = new List<Link>();
-                    if (match.HighlightsMobi.Any(d => d.Name == data.Title)) {
-                        match.HighlightsMobi.First(d => d.Name == data.Title).Url = data.TransferData;
+                    if (match.HighlightsMobi.Any(d => d.Name == title)) {
+                        match.HighlightsMobi.First(d => d.Name == title).Url = data.TransferData;
                     } else {
                         match.HighlightsMobi.Add(new Link {
-                            Name = data.Title,
+                            Name = title,
                             Url = data.TransferData
                         });
                     }
