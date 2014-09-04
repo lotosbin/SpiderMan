@@ -44,9 +44,10 @@ namespace SpiderMan.Controllers {
         public bool AnalyzeCapString(Match m) {
             m.Type = 0;
             m.Cap = 0;
+
             foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
-                if (m.CapString == capChinese || m.CapString.Contains(capChinese)) {
+                if (m.CapString == capChinese) {
                     m.Type = (int)eMatchType.Soccer;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
@@ -57,9 +58,10 @@ namespace SpiderMan.Controllers {
                 }
             }
             if (m.Type != 0) return true;
+
             foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
-                if (m.CapString == capChinese || m.CapString.Contains(capChinese)) {
+                if (m.CapString == capChinese) {
                     m.Type = (int)eMatchType.Nba;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
@@ -70,9 +72,10 @@ namespace SpiderMan.Controllers {
                 }
             }
             if (m.Type != 0) return true;
+
             foreach (var cap in (eTennisCap[])Enum.GetValues(typeof(eTennisCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
-                if (m.CapString == capChinese || m.CapString.Contains(capChinese)) {
+                if (m.CapString == capChinese) {
                     m.Type = (int)eMatchType.Tennis;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
@@ -83,9 +86,10 @@ namespace SpiderMan.Controllers {
                 }
             }
             if (m.Type != 0) return true;
+
             foreach (var cap in (eArtsCap[])Enum.GetValues(typeof(eArtsCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
-                if (m.CapString == capChinese || m.CapString.Contains(capChinese)) {
+                if (m.CapString == capChinese) {
                     m.Type = (int)eMatchType.Arts;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
@@ -96,6 +100,63 @@ namespace SpiderMan.Controllers {
                 }
             }
             if (m.Type != 0) return true;
+
+            foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
+                string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
+                if (m.CapString.Contains(capChinese)) {
+                    m.Type = (int)eMatchType.Soccer;
+                    m.Cap = (int)cap;
+                    if (m.CapString != capChinese) {
+                        m.CapStringDetial = m.CapString;
+                        m.CapString = capChinese;
+                    }
+                    break;
+                }
+            }
+            if (m.Type != 0) return true;
+
+            foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
+                string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
+                if (m.CapString.Contains(capChinese)) {
+                    m.Type = (int)eMatchType.Nba;
+                    m.Cap = (int)cap;
+                    if (m.CapString != capChinese) {
+                        m.CapStringDetial = m.CapString;
+                        m.CapString = capChinese;
+                    }
+                    break;
+                }
+            }
+            if (m.Type != 0) return true;
+
+            foreach (var cap in (eTennisCap[])Enum.GetValues(typeof(eTennisCap))) {
+                string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
+                if (m.CapString.Contains(capChinese)) {
+                    m.Type = (int)eMatchType.Tennis;
+                    m.Cap = (int)cap;
+                    if (m.CapString != capChinese) {
+                        m.CapStringDetial = m.CapString;
+                        m.CapString = capChinese;
+                    }
+                    break;
+                }
+            }
+            if (m.Type != 0) return true;
+
+            foreach (var cap in (eArtsCap[])Enum.GetValues(typeof(eArtsCap))) {
+                string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
+                if (m.CapString.Contains(capChinese)) {
+                    m.Type = (int)eMatchType.Arts;
+                    m.Cap = (int)cap;
+                    if (m.CapString != capChinese) {
+                        m.CapStringDetial = m.CapString;
+                        m.CapString = capChinese;
+                    }
+                    break;
+                }
+            }
+            if (m.Type != 0) return true;
+
             if (m.CapString.Contains("斯诺克")) {
                 m.Type = (int)eMatchType.Billiards;
             }
@@ -103,16 +164,17 @@ namespace SpiderMan.Controllers {
         }
 
         private bool InjectTeamName(Match m) {
-            bool exitTeam = false;
-            var team = baozouTeamCollection.FindOne(Query<Team>.EQ(e => e.NameChinese, m.TeamNameChinese));
-            if (team != null) { 
-                m.TeamName = team.Name; exitTeam = true; 
+            var team = baozouTeamCollection.AsQueryable<Team>().FirstOrDefault(d => d.NameChinese == m.TeamNameChinese || d.NameAlias.Contains(m.TeamNameChinese));
+            if (team != null) {
+                m.TeamName = team.Name;
+                m.TeamNameChinese = team.NameChinese;
             }
-            var teamGorGuest = baozouTeamCollection.FindOne(Query<Team>.EQ(e => e.NameChinese, m.TeamNameChineseForGuest));
-            if (teamGorGuest != null) { 
-                m.TeamNameForGuest = teamGorGuest.Name; exitTeam = true;
+            var teamGorGuest = baozouTeamCollection.AsQueryable<Team>().FirstOrDefault(d => d.NameChinese == m.TeamNameChineseForGuest || d.NameAlias.Contains(m.TeamNameChineseForGuest));
+            if (teamGorGuest != null) {
+                m.TeamNameForGuest = teamGorGuest.Name;
+                m.TeamNameChineseForGuest = teamGorGuest.NameChinese;
             }
-            return exitTeam;
+            return (team != null || teamGorGuest != null);
         }
 
         private Match QueryExitMatch(Match m) {
@@ -155,27 +217,6 @@ namespace SpiderMan.Controllers {
                     if (m.Status > 0) exist.Status = m.Status;
                     exist.Quarter = m.Quarter;
                     exist.QuarterTime = m.QuarterTime;
-                    //if (exist.Status == (int)eMatchStatus.Ago && exist.Time > DateTime.Now.Subtract(new TimeSpan(72, 0, 0))) {
-                    //    TaskQueue.tasks.Add(new SpiderTask {
-                    //        Id = Guid.NewGuid(),
-                    //        Source = "kanbisai",
-                    //        Site = "kanbisai",
-                    //        CommandType = eCommandType.One.ToString(),
-                    //        Url = exist.KanbisaiLink,
-                    //        ArticleType = eArticleType.BaozouMatch.ToString(),
-                    //        PostSourceName = true
-                    //    });
-                    //    TaskQueue.tasks.Add(new SpiderTask {
-                    //        Id = Guid.NewGuid(),
-                    //        Source = "kanbisai",
-                    //        Site = "kanbisai",
-                    //        CommandType = eCommandType.One.ToString(),
-                    //        Url = exist.KanbisaiLink,
-                    //        ArticleType = eArticleType.BaozouMatch.ToString(),
-                    //        IsMobile = true,
-                    //        PostSourceName = true
-                    //    });
-                    //}
                     baozouMatchCollection.Save(exist);
                 }
             }
