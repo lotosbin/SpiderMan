@@ -45,10 +45,10 @@ namespace SpiderMan.Controllers {
             m.Type = 0;
             m.Cap = 0;
 
-            foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
+            foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
                 if (m.CapString == capChinese) {
-                    m.Type = (int)eMatchType.Soccer;
+                    m.Type = (int)eMatchType.Nba;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
                         m.CapStringDetial = m.CapString;
@@ -59,10 +59,10 @@ namespace SpiderMan.Controllers {
             }
             if (m.Type != 0) return true;
 
-            foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
+            foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
                 if (m.CapString == capChinese) {
-                    m.Type = (int)eMatchType.Nba;
+                    m.Type = (int)eMatchType.Soccer;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
                         m.CapStringDetial = m.CapString;
@@ -101,10 +101,10 @@ namespace SpiderMan.Controllers {
             }
             if (m.Type != 0) return true;
 
-            foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
+            foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
                 if (m.CapString.Contains(capChinese)) {
-                    m.Type = (int)eMatchType.Soccer;
+                    m.Type = (int)eMatchType.Nba;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
                         m.CapStringDetial = m.CapString;
@@ -115,10 +115,10 @@ namespace SpiderMan.Controllers {
             }
             if (m.Type != 0) return true;
 
-            foreach (var cap in (eBasketballCap[])Enum.GetValues(typeof(eBasketballCap))) {
+            foreach (var cap in (eSoccerCap[])Enum.GetValues(typeof(eSoccerCap))) {
                 string capChinese = cap.GetAttachedData<string>(DescripCap.Chinese);
                 if (m.CapString.Contains(capChinese)) {
-                    m.Type = (int)eMatchType.Nba;
+                    m.Type = (int)eMatchType.Soccer;
                     m.Cap = (int)cap;
                     if (m.CapString != capChinese) {
                         m.CapStringDetial = m.CapString;
@@ -204,20 +204,20 @@ namespace SpiderMan.Controllers {
             var task = JsonConvert.DeserializeObject(taskjson, typeof(SpiderTask)) as SpiderTask;
             var data = JsonConvert.DeserializeObject(datajson, typeof(IEnumerable<Match>)) as IEnumerable<Match>;
             foreach (var m in data) {
-                var exist = QueryExitMatch(m);
-                if (exist == null) {
-                    if (AnalyzeCapString(m) && InjectTeamName(m)) {
+                if (AnalyzeCapString(m) && InjectTeamName(m)) {
+                    var exist = QueryExitMatch(m);
+                    if (exist == null) {
                         m.SourceCode = task.Source;
                         baozouMatchCollection.Insert(m);
+                    } else {
+                        exist.KanbisaiLink = m.KanbisaiLink;
+                        exist.Point = m.Point;
+                        exist.PointForGuest = m.PointForGuest;
+                        if (m.Status > 0) exist.Status = m.Status;
+                        exist.Quarter = m.Quarter;
+                        exist.QuarterTime = m.QuarterTime;
+                        baozouMatchCollection.Save(exist);
                     }
-                } else {
-                    exist.KanbisaiLink = m.KanbisaiLink;
-                    exist.Point = m.Point;
-                    exist.PointForGuest = m.PointForGuest;
-                    if (m.Status > 0) exist.Status = m.Status;
-                    exist.Quarter = m.Quarter;
-                    exist.QuarterTime = m.QuarterTime;
-                    baozouMatchCollection.Save(exist);
                 }
             }
         }
